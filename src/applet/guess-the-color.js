@@ -45,10 +45,10 @@ export class GuessTheColor extends HTMLElement {
         const rndColor = this.shadowRoot.querySelector('#random-color');
         const selForm = this.shadowRoot.querySelector('color-selection-form');
 
-        const color1 = GuessTheColor.#randomColor();
+        const color1 = Color.makeRandom();
         selColor.setColor(color1);
         selForm.setColor(color1);
-        const color2 = GuessTheColor.#randomColor();
+        const color2 = Color.makeRandom();
         rndColor.setColor(color2);
 
         selForm.addEventListener('change', (e) => {
@@ -57,7 +57,7 @@ export class GuessTheColor extends HTMLElement {
 
         const newColorButton = this.shadowRoot.querySelector('#new-color-button');
         newColorButton.addEventListener('click', () => {
-            this.setColor(GuessTheColor.#randomColor())
+            this.setColor(Color.makeRandom());
         });
         const checkButton = this.shadowRoot.querySelector('#check-button');
         checkButton.addEventListener('click', () => {
@@ -71,10 +71,6 @@ export class GuessTheColor extends HTMLElement {
     setColor(color) {
         this.shadowRoot.querySelector('#selected-color').setColor(color);
         this.shadowRoot.querySelector('color-selection-form').setColor(color);
-    }
-
-    static #randomColor() {
-        return Color.makeRandom();
     }
 }
 
