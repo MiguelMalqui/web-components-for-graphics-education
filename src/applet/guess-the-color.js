@@ -57,7 +57,7 @@ export class GuessTheColor extends HTMLElement {
 
         const newColorButton = this.shadowRoot.querySelector('#new-color-button');
         newColorButton.addEventListener('click', () => {
-            this.setColor(Color.makeRandom());
+            rndColor.setColor(Color.makeRandom());
         });
         const checkButton = this.shadowRoot.querySelector('#check-button');
         checkButton.addEventListener('click', () => {
