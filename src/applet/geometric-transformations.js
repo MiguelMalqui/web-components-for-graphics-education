@@ -3,7 +3,6 @@ template.innerHTML = `
 <style>
 canvas {
     width: 100%;
-    max-width: 720px;
 }
 
 #formula-container {
