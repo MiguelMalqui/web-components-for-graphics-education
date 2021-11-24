@@ -10,14 +10,11 @@ template.innerHTML = `
     flex-grow: 1;
 }
 
+#settings-panel {
+    margin-top: 1.5rem;
+}
 .matrix-form {
     padding: 0.5rem;
-}
-#projection-matrix-form {
-    margin: 1rem 0rem;
-}
-#view-matrix-form {
-    margin-bottom: 1rem;
 }
 
 .container {
@@ -49,7 +46,7 @@ input[type=number] {
     <canvas style="background-color: red;"></canvas>
     <canvas style="background-color: blue;"></canvas>
 </div>
-<div>
+<div id="settings-panel">
     <div class="matrix-form" id="projection-matrix-form">
         <select>
             <option>Perspective</option>
