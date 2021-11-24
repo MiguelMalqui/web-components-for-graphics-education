@@ -157,6 +157,26 @@ export class TypesOfCameras extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+        
+        this.addListeners();
+    }
+
+    addListeners() {
+        this.addChangeActiveFormsListener();
+    }
+
+    addChangeActiveFormsListener() {
+        const forms = this.shadowRoot.querySelectorAll('.matrix-form');
+        forms.forEach(form => {
+            const select = form.querySelector('select');
+            const containers = form.querySelectorAll('.container');
+            select.addEventListener('change', () => {
+                containers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                containers[select.selectedIndex].classList.add('active');
+            });
+        });
     }
     
 }
