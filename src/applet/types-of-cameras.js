@@ -83,10 +83,6 @@ template.innerHTML = `
         </div>
         <div class="container">
             <div>
-                <label>left</label>
-                <input type="number" value="39.6">
-            </div>
-            <div>
                 <label>distance</label>
                 <input type="number" value="39.6">
             </div>
