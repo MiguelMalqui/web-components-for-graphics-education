@@ -83,7 +83,7 @@ rotateTmpl.innerHTML = `
     <span class="geom-trans-id">R</span> = rotate(
         <input type="number" value="0">,
         <input type="number" value="0">,
-        <input type="number" value="0">,
+        <input type="number" value="1">,
         <input type="number" value="0">
     );
 </div>
