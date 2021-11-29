@@ -1,3 +1,9 @@
+import Matrix4x4 from "../helpers/maths/matrix4x4.js"
+import Vector3 from "../helpers/maths/vector3.js";
+import Scene from "../helpers/scene.js";
+import PerspectiveCamera from "../helpers/camera/perspective-camera.js";
+import CubeModel from "../helpers/models/cube-model.js";
+
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
@@ -45,7 +51,7 @@ canvas {
 
 </style>
 
-<canvas style="background-color: black;"></canvas>
+<canvas width="1920" height="1080"></canvas>
 <div id="formula-container">vertexWorldSpace = vertex</div>
 <div>
     <div>
@@ -105,10 +111,33 @@ export class GeometricTransformations extends HTMLElement {
 
         this.addListeners();
 
+        this.initScene();
+
         this.shadowRoot.querySelector('#add-scale-button').click();
         this.shadowRoot.querySelector('#add-rotate-button').click();
         this.shadowRoot.querySelector('#add-translate-button').click();
+    }
 
+    connectedCallback() {
+        this.animate();
+    }
+
+    animate() {
+        requestAnimationFrame(() => {this.animate()});
+        this.scene.render(this.camera);
+    }
+
+    initScene() {
+        const canvas = this.shadowRoot.querySelector('canvas');
+
+        this.scene = new Scene(canvas);
+        this.cube = new CubeModel();
+        this.scene.addModel(this.cube);
+
+        this.camera = new PerspectiveCamera(
+            2.0 * Math.asin(0.5), canvas.clientWidth / canvas.clientHeight, 0.1, 100
+        );
+        this.camera.setPositionLookAt(new Vector3(0, 0, 5), new Vector3(), new Vector3(0, 1, 0))
     }
 
     addListeners() {
@@ -129,9 +158,13 @@ export class GeometricTransformations extends HTMLElement {
         const geomTrans = template.content.firstElementChild.cloneNode(true);
         const geomTransId = geomTrans.querySelector('.geom-trans-id');
         geomTransId.innerHTML += (++this.transformCounter);
+        geomTrans.addEventListener('input', () => {
+            this.updateModelTransformMatrix();
+        })
+
         const container = this.shadowRoot.querySelector('#geom-trans-container');
         container.prepend(geomTrans);
-        this.updateFormula();
+        this.updateModelTransform();
 
         this.addDragListeners(geomTrans);
         this.addDeleteListener(geomTrans);
@@ -143,7 +176,7 @@ export class GeometricTransformations extends HTMLElement {
         });
         element.addEventListener('dragend', () => {
             element.classList.remove('dragging');
-            this.updateFormula();
+            this.updateModelTransform();
         });
     }
 
@@ -151,7 +184,7 @@ export class GeometricTransformations extends HTMLElement {
         const deleteButton = element.querySelector('.delete-button');
         deleteButton.addEventListener('click', () => {
             element.remove();
-            this.updateFormula();
+            this.updateModelTransform();
         });
     }
 
@@ -169,7 +202,36 @@ export class GeometricTransformations extends HTMLElement {
         });
     }
 
-    updateFormula() {
+    updateModelTransform() {
+        this.updateModelTransformFormula();
+        this.updateModelTransformMatrix();
+    }
+
+    updateModelTransformMatrix() {
+        const tranfroms = this.shadowRoot.querySelectorAll('.draggable');
+        const matrix = new Matrix4x4();
+        tranfroms.forEach(transform => {
+            const type = transform.querySelector('.geom-trans-id').innerHTML[0];
+            const inputs = transform.querySelectorAll('input');
+            switch (type) {
+                case 'T':
+                    matrix.translate(inputs[0].value, inputs[1].value, inputs[2].value);
+                    break;
+                case 'S':
+                    matrix.scale(inputs[0].value, inputs[1].value, inputs[2].value);
+                    break;
+                case 'R':
+                    matrix.rotate(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value);
+            
+                default:
+                    break;
+            }
+        })
+        this.cube.transform = matrix;
+
+    }
+
+    updateModelTransformFormula() {
         const geomTransIds = this.shadowRoot.querySelectorAll('.geom-trans-id');
         let geomTrans = '';
         geomTransIds.forEach(gt => geomTrans += `${gt.innerHTML} * `);
