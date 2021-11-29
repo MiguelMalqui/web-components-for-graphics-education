@@ -69,9 +69,9 @@ translateTmpl.innerHTML = `
 <div class="draggable" draggable="true">
     <span class="delete-button">✕</span>
     <span class="geom-trans-id">T</span> = translate(
-        <input type="number" value="0">,
-        <input type="number" value="0">,
-        <input type="number" value="0">
+        <input type="number" value="0" step="0.1">,
+        <input type="number" value="0" step="0.1">,
+        <input type="number" value="0" step="0.1">
     );
 </div>
 `;
@@ -81,10 +81,10 @@ rotateTmpl.innerHTML = `
 <div class="draggable" draggable="true">
     <span class="delete-button">✕</span>
     <span class="geom-trans-id">R</span> = rotate(
-        <input type="number" value="0">,
-        <input type="number" value="0">,
-        <input type="number" value="1">,
-        <input type="number" value="0">
+        <input type="number" value="0" step="0.1">,
+        <input type="number" value="0" step="0.1">,
+        <input type="number" value="1" step="0.1">,
+        <input type="number" value="0" step="0.1">
     );
 </div>
 `;
@@ -94,9 +94,9 @@ scaleTmpl.innerHTML = `
 <div class="draggable" draggable="true">
     <span class="delete-button">✕</span>
     <span class="geom-trans-id">S</span> = scale(
-        <input type="number" value="1">,
-        <input type="number" value="1">,
-        <input type="number" value="1">
+        <input type="number" value="1" step="0.1">,
+        <input type="number" value="1" step="0.1">,
+        <input type="number" value="1" step="0.1">
     );
 </div>
 `;
