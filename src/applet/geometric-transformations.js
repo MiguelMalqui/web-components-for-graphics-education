@@ -51,7 +51,7 @@ canvas {
 
 </style>
 
-<canvas width="1920" height="1080"></canvas>
+<canvas width="1280" height="720"></canvas>
 <div id="formula-container">vertexWorldSpace = vertex</div>
 <div>
     <div>
