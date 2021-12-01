@@ -57,6 +57,18 @@ export default class Vector3 {
     }
 
     /**
+     * Returns the euclidean distance form this vector to v
+     * @param {Vector3} v 
+     * @returns 
+     */
+    distanceTo(v) {
+        const x = this.x - v.x;
+        const y = this.y - v.y;
+        const z = this.z - v.z;
+        return Math.sqrt(x * x + y * y + z * z)
+    }
+
+    /**
      * Returns a new vector, result of add this vector and v
      * @param {Vector3} v 
      * @returns {Vector3}
