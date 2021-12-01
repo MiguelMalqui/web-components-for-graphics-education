@@ -1,18 +1,21 @@
+import Matrix4x4 from "../maths/matrix4x4.js";
 import Camera from "./camera.js";
 
 export default class PerspectiveCamera extends Camera {
-
-    constructor(fov = 2.0 * Math.asin(0.5), ra = 1, zNear, zFar) {
+    
+    constructor(fov, ra, zNear, zFar) {
         super(zNear, zFar);
 
         this.fov = fov;
         this.ra = ra;
 
-        this.updateCamera();
+        this.updateProjectionMatrix();
     }
 
-    updateCamera() {
-        this.projectionMatrix.perspective(this.fov, this.ra, this.zNear, this.zFar);
+    updateProjectionMatrix() {
+        this.projectionMatrix = Matrix4x4.perspective(
+            this.fov, this.ra, this.zNear, this.zFar
+        );
     }
 
 }
