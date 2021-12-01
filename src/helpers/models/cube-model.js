@@ -1,24 +1,38 @@
 import Model from "./model.js";
-import Color from "../color.js"
+import BoundingBox from "../bounding-box.js";
+import Vector3 from "../maths/vector3.js";
+import Color from "../color.js";
 
+/**
+ * Class representing a 3D cube model
+ */
 export default class CubeModel extends Model {
 
     static NUM_VERTICES = 36;
 
-    constructor(color, matAmbient, matDiffuse, matSpecular, matShininess) {
-        super(
-            CubeModel.NUM_VERTICES,
-            CubeModel.#createPositionsArray(),
-            CubeModel.#createNormalsArray(),
-            color? CubeModel.createColorArray(color, CubeModel.NUM_VERTICES) : CubeModel.#createColorsArray(),
-            matAmbient,
-            matDiffuse,
-            matSpecular,
-            matShininess
-        )
+    /**
+     * Creates a cube model
+     * @param {{
+     * color?: Color,
+     * matAmbient?: Vector3,
+     * matDiffuse?: Vector3,
+     * matSpecular?: Vector3,
+     * matShininess?: number
+     * }} params
+     */
+    constructor(params = {}) {
+        super({
+            positions: CubeModel.#createPositionsArray(),
+            normals: CubeModel.#createNormalsArray(),
+            colors: params.color ? Model.createColorArray(params.color, CubeModel.NUM_VERTICES) : CubeModel.#createColorArray(),
+            matAmbient: params.matAmbient ? params.matAmbient : new Vector3(1, 1, 1),
+            matDiffuse: params.matDiffuse ? params.matDiffuse : new Vector3(),
+            matSpecular: params.matSpecular ? params.matSpecular: new Vector3(),
+            matShininess: params.matShininess ? params.matShininess : 0,
+            boundingBox: new BoundingBox(new Vector3(-0.5, -0.5, -0.5), new Vector3(0.5, 0.5, 0.5))
+        });
     }
 
-    // TODO cambiar esto por una constate y hacer clone o algo
     static #createPositionsArray() {
         return [
             -0.5, -0.5, -0.5,   0.5, -0.5, -0.5,  -0.5, -0.5,  0.5,
@@ -53,7 +67,7 @@ export default class CubeModel extends Model {
         ];
     }
 
-    static #createColorsArray() {
+    static #createColorArray() {
         return [
             1, 0, 0,  1, 0, 0,  1, 0, 0,
             1, 0, 0,  1, 0, 0,  1, 0, 0,
