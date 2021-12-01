@@ -1,8 +1,8 @@
 import Matrix4x4 from "../helpers/maths/matrix4x4.js"
 import Vector3 from "../helpers/maths/vector3.js";
-import Scene from "../helpers/scene.js";
 import PerspectiveCamera from "../helpers/camera/perspective-camera.js";
 import CubeModel from "../helpers/models/cube-model.js";
+import Renderer from "../helpers/renderer.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -124,25 +124,26 @@ export class GeometricTransformations extends HTMLElement {
 
     animate() {
         requestAnimationFrame(() => { this.animate() });
-        this.scene.render(this.camera);
+        this.renderer.render(this.camera);
     }
 
     initScene() {
         const canvas = this.shadowRoot.querySelector('canvas');
 
-        this.scene = new Scene(canvas);
         this.cube = new CubeModel();
-        this.scene.addModel(this.cube);
-
+        
         const fov = 2.0 * Math.asin(0.5);
         const ra = canvas.clientWidth / canvas.clientHeight;
         const zNear = 0.1;
         const zFar = 100;
         this.camera = new PerspectiveCamera(fov, ra, zNear, zFar);
         const obs = new Vector3(0, 0, 5);
-        const vrp = new Vector3();
+        const vrp = new Vector3(0, 0, 0);
         const up = new Vector3(0, 1, 0);
-        this.camera.setPositionLookAt(obs, vrp, up);
+        this.camera.updateViewMatrixLookAt(obs, vrp, up);
+
+        this.renderer = new Renderer({canvas: canvas});
+        this.renderer.addModel(this.cube);
     }
 
     addListeners() {
