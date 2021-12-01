@@ -96,7 +96,7 @@ export default class Vector3 {
      * @returns {Vector3}
      */
     addScalar(s) {
-        return new Vector3(this.x * s, this.y * s, this.z * s);
+        return new Vector3(this.x + s, this.y + s, this.z + s);
     }
 
     /**
