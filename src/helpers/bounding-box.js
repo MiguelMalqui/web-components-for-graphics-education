@@ -4,22 +4,32 @@ import Vector3 from "./maths/vector3.js";
  * Class representing an axis-aligned bounding box in 3D space
  */
 export default class BoundingBox {
+    #pMin;
+    #pMax;
     /**
      * Creates a axis-aligned bounding box
      * @param {Vector3} pMin - the lower boundary of the box
      * @param {Vector3} pMax - the upper boundary of the box
      */
     constructor(pMin, pMax) {
-        /**
-         * the lower boundary of the box
-         * @type {Vector3}
-         */
-        this.pMin = pMin;
-        /**
-         * the upper boundary of the box
-         * @type {Vector3}
-         */
-        this.pMax = pMax;
+        this.#pMin = pMin;
+        this.#pMax = pMax;
+    }
+
+    /**
+     * the lower boundary of the box
+     * @type {Vector3}
+     */
+    get pMin() {
+        return this.#pMin;
+    }
+
+    /**
+     * the upper boundary of the box
+     * @type {Vector3}
+     */
+    get pMax() {
+        return this.#pMax;
     }
 
     /**
