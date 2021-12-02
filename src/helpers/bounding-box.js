@@ -6,6 +6,8 @@ import Vector3 from "./maths/vector3.js";
 export default class BoundingBox {
     #pMin;
     #pMax;
+    #center;
+    #radius;
     /**
      * Creates a axis-aligned bounding box
      * @param {Vector3} pMin - the lower boundary of the box
@@ -14,6 +16,9 @@ export default class BoundingBox {
     constructor(pMin, pMax) {
         this.#pMin = pMin;
         this.#pMax = pMax;
+        this.#radius = this.#calculateRadius();
+        this.#center = this.#calculateCenter();
+
     }
 
     /**
@@ -33,19 +38,27 @@ export default class BoundingBox {
     }
 
     /**
-     * Returns the center of the bounding box
-     * @returns {Vector3}
+     * the center of the bounding box
+     * @type {Vector3}
      */
-    getCenter() {
-        return (this.pMin.add(this.pMax)).imulScalar(0.5);
+    get center() {
+        return this.#center;
     }
 
     /**
-     * Returns the euclidean distance form pMin to pMax
-     * @returns {number}
+     * the euclidean distance form pMin to pMax
+     * @type {number}
      */
-    getRadious() {
-        return this.pMin.distanceTo(this.pMax);
+    get radius() {
+        return this.#radius;
+    }
+
+    #calculateRadius() {
+        return this.#pMin.distanceTo(this.#pMax);
+    }
+
+    #calculateCenter() {
+        return (this.#pMin.add(this.#pMax)).imulScalar(0.5);
     }
 
     /**
@@ -53,12 +66,14 @@ export default class BoundingBox {
      * @param {Vector3} p 
      */
     expandByPoint(p) {
-        if (p.x < this.pMin.x) this.pMin.x = p.x;
-        if (p.y < this.pMin.y) this.pMin.y = p.y;
-        if (p.z < this.pMin.z) this.pMin.z = p.z;
-        if (p.x > this.pMax.x) this.pMax.x = p.x;
-        if (p.y > this.pMax.y) this.pMax.y = p.y;
-        if (p.z > this.pMax.z) this.pMax.z = p.z;
+        if (p.x < this.#pMin.x) this.#pMin.x = p.x;
+        if (p.y < this.#pMin.y) this.#pMin.y = p.y;
+        if (p.z < this.#pMin.z) this.#pMin.z = p.z;
+        if (p.x > this.#pMax.x) this.#pMax.x = p.x;
+        if (p.y > this.#pMax.y) this.#pMax.y = p.y;
+        if (p.z > this.#pMax.z) this.#pMax.z = p.z;
+        this.#radius = this.#calculateRadius();
+        this.#center = this.#calculateCenter();
     }
 
     /**
@@ -66,8 +81,8 @@ export default class BoundingBox {
      * @param {BoundingBox} b 
      */
     expandByBoundingBox(b) {
-        this.expandByPoint(b.pMin);
-        this.expandByPoint(b.pMax);
+        this.expandByPoint(b.#pMin);
+        this.expandByPoint(b.#pMax);
     }
 
     /**
@@ -75,7 +90,7 @@ export default class BoundingBox {
      * @returns {BoundingBox}
      */
     clone() {
-        return new BoundingBox(this.pMin.clone(), this.pMax.clone());
+        return new BoundingBox(this.#pMin.clone(), this.#pMax.clone());
     }
 
     /**
@@ -83,7 +98,7 @@ export default class BoundingBox {
      * @param {BoundignBox} b 
      */
     copy(b) {
-        this.pMin.copy(b.pMin);
-        this.pMax.copy(b.pMax);
+        this.#pMin.copy(b.#pMin);
+        this.#pMax.copy(b.#pMax);
     }
 }
