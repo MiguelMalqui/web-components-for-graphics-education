@@ -1,9 +1,8 @@
 /** @type {WebGL2RenderingContext} */
 
-
 /**
- * 
- * @param {*} canvas 
+ * Initialize WebGL2 rendering context
+ * @param {HTMLCanvasElement} canvas 
  * @returns {WebGL2RenderingContext}
  */
 
@@ -21,9 +20,16 @@ function initWebGL2Context(canvas) {
     return gl;
 }
 
-function initShaderProgram(gl, vShaderSource, fShraderSource) {
-    const vs = compileShader(gl, gl.VERTEX_SHADER, vShaderSource);
-    const fs = compileShader(gl, gl.FRAGMENT_SHADER, fShraderSource);
+/**
+ * Initialize a shader program
+ * @param {WebGL2RenderingContext} gl 
+ * @param {string} vShader 
+ * @param {string} fShrader 
+ * @returns {WebGLProgram}
+ */
+function initShaderProgram(gl, vShader, fShrader) {
+    const vs = compileShader(gl, gl.VERTEX_SHADER, vShader);
+    const fs = compileShader(gl, gl.FRAGMENT_SHADER, fShrader);
 
     const shaderProgram = gl.createProgram();
     gl.attachShader(shaderProgram, vs);
@@ -40,6 +46,13 @@ function initShaderProgram(gl, vShaderSource, fShraderSource) {
     return shaderProgram;
 }
 
+/**
+ * Creates a shader of the given type, uploads the source and compiles it
+ * @param {WebGL2RenderingContext} gl 
+ * @param {number} type 
+ * @param {string} source 
+ * @returns 
+ */
 function compileShader(gl, type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
