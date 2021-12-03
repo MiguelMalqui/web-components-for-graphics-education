@@ -239,7 +239,7 @@ export default class Vector4 {
         const x = this.x;
         const y = this.y;
         const z = this.z;
-        const w = this.z;
+        const w = this.w;
         const rx = x * me[0] + y * me[4] + z * me[8] + w * me[12];
         const ry = x * me[1] + y * me[5] + z * me[9] + w * me[13];
         const rz = x * me[2] + y * me[6] + z * me[10] + w * me[14];
@@ -257,7 +257,7 @@ export default class Vector4 {
         const x = this.x;
         const y = this.y;
         const z = this.z;
-        const w = this.z;
+        const w = this.w;
         this.x = x * me[0] + y * me[4] + z * me[8] + w * me[12];
         this.y = x * me[1] + y * me[5] + z * me[9] + w * me[13];
         this.z = x * me[2] + y * me[6] + z * me[10] + w * me[14];
