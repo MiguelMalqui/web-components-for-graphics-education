@@ -54,7 +54,7 @@ export default class BoundingBox {
     }
 
     #calculateRadius() {
-        return this.#pMin.distanceTo(this.#pMax);
+        return 0.5 * this.#pMin.distanceTo(this.#pMax);
     }
 
     #calculateCenter() {
