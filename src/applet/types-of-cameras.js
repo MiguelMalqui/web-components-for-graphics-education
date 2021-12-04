@@ -185,8 +185,8 @@ export class TypesOfCameras extends HTMLElement {
 
     animate() {
         requestAnimationFrame(() => { this.animate() });
-        this.sceneView.render(this.camera1);
-        this.cameraView.render(this.camera2);
+        this.sceneView.render(this.cameraSceneView);
+        this.cameraView.render(this.cameraCameraView);
     }
 
     initScene() {
@@ -198,15 +198,15 @@ export class TypesOfCameras extends HTMLElement {
 
         let canvas = this.shadowRoot.querySelector("#scene-view");
         this.sceneView = new SceneRenderer(canvas, { scene, drawWorldAxes: true, autoClear: true });
-        this.camera1 = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
-        new CameraControler(this.camera1, canvas, { distance: 5, theta: 0.2 });
+        this.cameraSceneView = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
+        new CameraControler(this.cameraSceneView, canvas, { distance: 5, theta: 0.2 });
 
         canvas = this.shadowRoot.querySelector("#camera-view");
         this.cameraView = new SceneRenderer(canvas, { scene, autoClear: true });
-        this.cameraP = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
+        this.cameraP = new PerspectiveCamera();
         this.cameraO = new OrthograficCamera()
 
-        this.camera2 = this.cameraP;
+        this.cameraCameraView = this.cameraP;
     }
 
     addListeners() {
