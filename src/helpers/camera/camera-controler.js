@@ -60,7 +60,7 @@ export default class CameraControler {
 
     #addMoveAroundTargetListener() {
         this.#element.addEventListener('mousedown', (e) => {
-            if (e.button == 1) {
+            if (e.button == 0) {
                 this.xx = e.x;
                 this.yy = e.y;
                 this.action = CameraControler.#ACTION.ROTATE;
