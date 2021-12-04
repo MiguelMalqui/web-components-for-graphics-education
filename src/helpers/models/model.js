@@ -12,43 +12,26 @@ export default class Model {
     #positions;
     #normals;
     #colors;
-    #matAmbient;
-    #matDiffuse;
-    #matSpecular;
-    #matShininess;
     #boundingBox;
 
     /**
-     * Creates a 3D model
-     * @param {{
-     * positions : number[],
-     * normals : number[],
-     * colors: number[],
-     * matAmbient: Vector3,
-     * matDiffuse: Vector3,
-     * matSpecular: Vector3,
-     * matShininess: number,
-     * boundingBox?: BoundingBox
-     * }} params
+     * 
+     * @param {number[]} positions 
+     * @param {number[]} colors 
+     * @param {number[]} normals 
      */
-    constructor(params) {
-
-        this.#numVertices = Math.floor(params.positions.length / 3);
-        if (this.#numVertices == 0) {
+    constructor(positions, colors = [], normals = []) {
+        if (positions.length < 3) {
             throw new Error("Model should have at least one vertex");
         }
 
-        this.#positions = params.positions;
-        this.#normals = params.normals;
-        this.#colors = params.colors;
-        this.#matAmbient = params.matAmbient;
-        this.#matDiffuse = params.matDiffuse;
-        this.#matSpecular = params.matSpecular;
-        this.#matShininess = params.matShininess;
+        this.#numVertices = Math.floor(positions.length / 3);
+        this.#positions = positions;
+        this.#colors = colors;
+        this.#normals = normals;
+        this.#boundingBox = Model.computeBoundingBox(positions);
         this.transform = new Matrix4x4();
-        this.#boundingBox = params.boundingBox ? params.boundingBox : Model.computeBoundingBox(params.positions);
     }
-
 
     /**
      * the number of vertices of the model
@@ -80,38 +63,6 @@ export default class Model {
      */
     get colors() {
         return this.#colors;
-    }
-
-    /**
-     * the ambient reflection constant of the model materail
-     * @type {Vector3}
-     */
-    get matAmbient() {
-        return this.#matAmbient;
-    }
-
-    /**
-     * the diffuse reflection constant of the model material
-     * @type {Vector3}
-     */
-    get matDiffuse() {
-        return this.#matDiffuse;
-    }
-
-    /**
-     * the specular reflection constant of the model material
-     * @type {Vector3}
-     */
-    get matSpecular() {
-        return this.#matSpecular;
-    }
-
-    /**
-     * the shaniness constant of the model material
-     * @type {Vector3}
-     */
-    get matShininess() {
-        return this.#matShininess;
     }
 
     /**

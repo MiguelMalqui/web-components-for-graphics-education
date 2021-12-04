@@ -2,10 +2,7 @@ import Model from "./model.js";
 
 export default class AxesModel extends Model {
     constructor() {
-        super({
-            positions: AxesModel.#createPositionsArray(),
-            colors: AxesModel.#createColorArray()
-        });
+        super(AxesModel.#createPositionsArray(), AxesModel.#createColorArray());
     }
 
     static #createPositionsArray() {
