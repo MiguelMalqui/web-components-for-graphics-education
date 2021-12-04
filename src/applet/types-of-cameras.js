@@ -265,7 +265,11 @@ export class TypesOfCameras extends HTMLElement {
     }
 
     updateViewLookAt() {
-        this.camera2.updateViewMatrixLookAt(this.getOBS(), this.getVRP(), this.getUP());
+        const obs = this.getOBS();
+        const vrp = this.getVRP();
+        const up = this.getUP();
+        this.cameraP.updateViewMatrixLookAt(obs, vrp, up);
+        this.cameraO.updateViewMatrixLookAt(obs, vrp, up);
     }
 
     updateOrthographicProj() {
@@ -284,7 +288,8 @@ export class TypesOfCameras extends HTMLElement {
         const theta = this.shadowRoot.querySelector("#theta");
         const psi = this.shadowRoot.querySelector("#psi");
         const vrp = this.getVRP2();
-        this.camera2.updateVieMatrixEulerAngles(distance, phi, theta, psi, vrp);
+        this.cameraP.updateVieMatrixEulerAngles(distance, phi, theta, psi, vrp);
+        this.cameraO.updateVieMatrixEulerAngles(distance, phi, theta, psi, vrp);
     }
 
     getOBS() {
