@@ -43,6 +43,14 @@ export default class Camera {
         throw new Error("Method 'updateCamera()' must be implemented");
     }
 
+    /**
+     * positive number zoom in, negative number zoom out
+     * @param {number} n 
+     */
+    zoom(n) {
+        throw new Error("Method 'zoom()' must be implemented");
+    }
+
     updateModel() {
         throw new Error("Method 'upateModel()' must be implemented");
     }

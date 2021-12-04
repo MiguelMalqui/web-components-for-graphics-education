@@ -39,4 +39,13 @@ export default class PerspectiveCamera extends Camera {
         );
     }
 
+    /**
+     * positive number zoom in, negative number zoom out
+     * @param {number} n 
+     */
+    zoom(n) {
+        this.fov -= n;
+        this.updateProjectionMatrix();
+    }
+
 }

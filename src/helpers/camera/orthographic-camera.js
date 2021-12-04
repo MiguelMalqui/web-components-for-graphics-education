@@ -51,4 +51,24 @@ export default class OrthograficCamera extends Camera {
         );
     }
 
+    /**
+     * positive number zoom in, negative number zoom out
+     * @param {number} n 
+     */
+    zoom(n) {
+        const ra = (this.right - this.left) / (this.top - this.bottom);
+        if (ar < 1.0) {
+            this.left += n;
+            this.right -= n;
+            this.bottom += n/ra;
+            this.top -= n/ra;
+        } else {
+            this.left += n*ra;
+            this.right -= n*ra;
+            this.bottom += n;
+            this.top -= ra;
+        }
+        this.updateProjectionMatrix();
+    }
+
 }
