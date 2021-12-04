@@ -145,7 +145,7 @@ input[type=number] {
         <div class="container" id="euler">
             <div>
                 <label>distance</label>
-                <input type="number" value="5" step="0.01" id="distance">
+                <input type="number" value="5" step="0.1" id="distance">
             </div>
             <div class="euler-angles-form">
                 <div>
@@ -163,9 +163,9 @@ input[type=number] {
             </div>
             <div>
                 <label>VRP</label>
-                <input type="number" value="0" id="vrp2x">
-                <input type="number" value="0" id="vrp2y">
-                <input type="number" value="0" id="vrp2z">
+                <input type="number" value="0" step="0.1" id="vrp2x">
+                <input type="number" value="0" step="0.1" id="vrp2y">
+                <input type="number" value="0" step="0.1" id="vrp2z">
             </div>
         </div>
     </div>
