@@ -33,9 +33,11 @@ export default class Scene {
     #updateBoundingBox(model) {
         // if first model to be added
         if (this.models.length == 0) {
-            this.boundingBox = model.boundingBox.clone();
+            const box = model.computeBoundingBoxAfterModelTransform();
+            this.boundingBox = box;
         } else {
-            this.boundingBox.expandByBoundingBox(model.boundingBox);
+            const box = model.computeBoundingBoxAfterModelTransform();
+            this.boundingBox.expandByBoundingBox(box);
         }
     }
 
