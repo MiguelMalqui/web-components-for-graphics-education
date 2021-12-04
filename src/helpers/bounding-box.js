@@ -101,4 +101,8 @@ export default class BoundingBox {
         this.#pMin.copy(b.#pMin);
         this.#pMax.copy(b.#pMax);
     }
+
+    toString() {
+        return `BoundingBox(${this.#pMin}, ${this.#pMax})`;
+    }
 }
