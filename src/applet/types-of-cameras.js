@@ -110,12 +110,12 @@ input[type=number] {
             </div>
         </div>
     </div>
-    <div class="matrix-form" id="look-at">
+    <div class="matrix-form">
         <select>
             <option>LookAt</option>
             <option>Euler</option>
         </select>
-        <div class="container active">
+        <div class="container active" id="look-at">
             <div>
                 <label>OBS</label>
                 <input type="number" value="0" step="0.01" id="obsx">
