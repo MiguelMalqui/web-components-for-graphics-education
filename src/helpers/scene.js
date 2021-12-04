@@ -13,26 +13,30 @@ export default class Scene {
          * @type {[Model]}
          */
         this.models = [];
-
+        /**
+         * the bounding box that contains all the models of the scene when they
+         * where added
+         * @type {BoundingBox}
+         */
         this.boundingBox = Scene.#DEFAULT_BOX.clone();
     }
 
     /**
-     * 
+     * Adds a model to the scene
      * @param {Model} model 
      */
     addModel(model) {
-        this.#updateBoundingBox(model);
         this.models.push(model);
+        this.#updateBoundingBox(model);
     }
 
     /**
-     * 
+     * Updates the bounding box of the scene to include the new model
      * @param {Model} model 
      */
     #updateBoundingBox(model) {
         // if first model to be added
-        if (this.models.length == 0) {
+        if (this.models.length == 1) {
             const box = model.computeBoundingBoxAfterModelTransform();
             this.boundingBox = box;
         } else {
@@ -41,6 +45,10 @@ export default class Scene {
         }
     }
 
+    /**
+     * Returns the bounding box that contains all the models of the scene
+     * @returns {BoundingBox}
+     */
     computeBoundingBox() {
         if (this.models.length == 0) {
             return Scene.#DEFAULT_BOX.clone();
