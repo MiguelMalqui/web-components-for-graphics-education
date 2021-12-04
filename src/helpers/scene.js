@@ -1,117 +1,80 @@
-/** @type {WebGL2RenderingContext} */
-
-
-import { initWebGL2Context, initShaderProgram } from "./webgl-utils.js";
-import basicShader from "./shaders/basic-shader.js";
-
+import Model from "./models/model.js";
+import BoundingBox from "./bounding-box.js"
+import Vector3 from "./maths/vector3.js";
 
 export default class Scene {
-    constructor(canvas, config = {}) {
-        this.objects = [];
 
-        this.context = initWebGL2Context(canvas);
-        this.shaderProgram = initShaderProgram(
-            this.context,
-            config.vShader? config.vShader : basicShader.vert,
-            config.fShader? config.fShader : basicShader.frag
-        )
+    static #DEFAULT_BOX = new BoundingBox(
+        new Vector3(-1, -1, -1), new Vector3(1, 1, 1)
+    );
 
-        // setup
-        this.autoClear = config.autoClear? config.autoClear : true;
+    #observers;
 
-        // get attribute locations
-        this.positionLoc = this.context.getAttribLocation(this.shaderProgram, 'position');
-        this.normalLoc = this.context.getAttribLocation(this.shaderProgram, 'normal');
-        this.colorLoc = this.context.getAttribLocation(this.shaderProgram, 'color');
-        // get uniform locations
-        this.modelMatrixLoc = this.context.getUniformLocation(this.shaderProgram, 'modelMatrix');
-        this.viewMatrixLoc = this.context.getUniformLocation(this.shaderProgram, 'viewMatrix');
-        this.projectionMatrixLoc = this.context.getUniformLocation(this.shaderProgram, 'projectionMatrix');
+    constructor() {
+        /**
+         * @type {[Model]}
+         */
+        this.models = [];
+        /**
+         * the bounding box that contains all the models of the scene when they
+         * where added
+         * @type {BoundingBox}
+         */
+        this.boundingBox = Scene.#DEFAULT_BOX.clone();
 
+        this.#observers = [];
     }
 
-    addModel(model) {
-        const vao = this.#createModelVAO(model)
-        this.objects.push({model: model, vao: vao});
-
+    addObserver(observer) {
+        this.#observers.push(observer);
     }
 
-    render(camera) {
-        const gl = this.context;
-
-        if (this.autoClear) {
-            this.clear();
-        }
-
-        gl.useProgram(this.shaderProgram);
-
-        if (this.projectionMatrixLoc) {
-            gl.uniformMatrix4fv(this.projectionMatrixLoc, false, camera.projectionMatrix.elements);
-        }
-        if (this.viewMatrixLoc) {
-            gl.uniformMatrix4fv(this.viewMatrixLoc, false, camera.viewMatrix.elements);
-        }
-
-        this.#drawObjects();
-    }
-
-    clear() {
-        const gl = this.context;
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.enable(gl.DEPTH_TEST);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    }
-
-
-    #drawObjects() {
-        this.objects.forEach(object => {
-            this.#drawObject(object);
+    notifyAllObservers(event, info) {
+        this.#observers.forEach(o => {
+            o.updateObserver(event, info);
         });
     }
 
-    #drawObject(object) {
-        const gl = this.context;
-        
-        if (this.modelMatrixLoc) {
-            gl.uniformMatrix4fv(this.modelMatrixLoc, false, object.model.transform.elements);
-        }
-        gl.bindVertexArray(object.vao);
-        gl.drawArrays(gl.TRIANGLES, 0, object.model.numVertices);
-        gl.bindVertexArray(null);
+    /**
+     * Adds a model to the scene
+     * @param {Model} model 
+     */
+    addModel(model) {
+        this.models.push(model);
+        this.#updateBoundingBox(model);
+        this.notifyAllObservers("model-added", { model });
     }
 
-    #createModelVAO(model) {
-        const gl = this.context;
-
-        const VAO = gl.createVertexArray();
-        gl.bindVertexArray(VAO);
-
-        if (this.positionLoc >= 0) {
-            const positionsVBO = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionsVBO);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.positions), gl.STATIC_DRAW);
-            gl.vertexAttribPointer(this.positionLoc, 3, gl.FLOAT, false, 0, 0);
-            gl.enableVertexAttribArray(this.positionLoc);
+    /**
+     * Updates the bounding box of the scene to include the new model
+     * @param {Model} model 
+     */
+    #updateBoundingBox(model) {
+        // if first model to be added
+        if (this.models.length == 1) {
+            const box = model.computeBoundingBoxAfterModelTransform();
+            this.boundingBox = box;
+        } else {
+            const box = model.computeBoundingBoxAfterModelTransform();
+            this.boundingBox.expandByBoundingBox(box);
         }
-        if (this.normalLoc >= 0) {
-            const normalsVBO = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, normalsVBO);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.normals), gl.STATIC_DRAW);
-            gl.vertexAttribPointer(this.normalLoc, 3, gl.FLOAT, false, 0, 0);
-            gl.enableVertexAttribArray(this.normalLoc);
-        }
-        if (this.colorLoc >= 0) {
-            const colorsVBO = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, colorsVBO);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.colors), gl.STATIC_DRAW);
-            gl.vertexAttribPointer(this.colorLoc, 3, gl.FLOAT, false, 0, 0);
-            gl.enableVertexAttribArray(this.colorLoc);
-        }
-
-        gl.bindVertexArray(null);
-
-        return VAO;
     }
 
+    /**
+     * Returns the bounding box that contains all the models of the scene
+     * @returns {BoundingBox}
+     */
+    computeBoundingBox() {
+        if (this.models.length == 0) {
+            return Scene.#DEFAULT_BOX.clone();
+        }
 
+        const box = this.models[0].computeBoundingBoxAfterModelTransform();
+        for (let i = 1; i < this.models.length; i++) {
+            const b = this.models[i].computeBoundingBoxAfterModelTransform();
+            box.expandByBoundingBox(b);
+        }
+
+        return box;
+    }
 }

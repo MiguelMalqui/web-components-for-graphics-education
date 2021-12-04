@@ -5,7 +5,7 @@ describe('Color', () => {
     describe('makeRGB', () => {
         test('should ignore decimal part of the components', () => {
             const c = Color.makeRGB(0.2, 10.5, 100.8);
-            expect(c.getRGB()).toEqual({ red: 0, green: 10, blue: 100 });
+            expect(c.getRGB()).toEqual({ red: 0, green: 10, blue: 100, alpha: 255 });
         });
         test('should thorw RangeError when a RGB component is out of the range', () => {
             const t1 = () => { Color.makeRGB(-1, -1, -1) };
