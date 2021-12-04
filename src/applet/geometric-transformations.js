@@ -2,7 +2,8 @@ import Matrix4x4 from "../helpers/maths/matrix4x4.js"
 import Vector3 from "../helpers/maths/vector3.js";
 import PerspectiveCamera from "../helpers/camera/perspective-camera.js";
 import CubeModel from "../helpers/models/cube-model.js";
-import Renderer from "../helpers/renderer.js";
+import SceneRenderer from "../helpers/renderers/scene-renderer.js";
+import CameraControler from "../helpers/camera/camera-controler.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -130,19 +131,17 @@ export class GeometricTransformations extends HTMLElement {
     initScene() {
         const canvas = this.shadowRoot.querySelector('canvas');
 
-        this.cube = new CubeModel();
-        
-        const fov = 2.0 * Math.asin(0.5);
         const ra = canvas.clientWidth / canvas.clientHeight;
-        const zNear = 0.1;
-        const zFar = 100;
-        this.camera = new PerspectiveCamera(fov, ra, zNear, zFar);
-        const obs = new Vector3(0, 0, 5);
-        const vrp = new Vector3(0, 0, 0);
-        const up = new Vector3(0, 1, 0);
-        this.camera.updateViewMatrixLookAt(obs, vrp, up);
+        this.camera = new PerspectiveCamera(1.0, ra, 0.1, 100);
+        new CameraControler(this.camera, canvas, { distance: 5 });
 
-        this.renderer = new Renderer({canvas: canvas});
+        this.renderer = new SceneRenderer(canvas, {
+            autoClear: true,
+            drawWorldAxes: true,
+            drawObjectsAxes: true
+        });
+
+        this.cube = new CubeModel();
         this.renderer.addModel(this.cube);
     }
 
