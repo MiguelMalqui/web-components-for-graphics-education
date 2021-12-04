@@ -142,7 +142,7 @@ export class GeometricTransformations extends HTMLElement {
         });
 
         this.cube = new CubeModel();
-        this.renderer.addModel(this.cube);
+        this.renderer.scene.addModel(this.cube);
     }
 
     addListeners() {
