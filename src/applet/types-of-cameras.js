@@ -86,19 +86,19 @@ input[type=number] {
         <div class="container" id="ortho">
             <div>
                 <label>left</label>
-                <input type="number" value="-1" step="0.01" id="left">
+                <input type="number" value="-2" step="0.01" id="left">
             </div>
             <div>
                 <label>right</label>
-                <input type="number" value="1" step="0.01" id="right">
+                <input type="number" value="2" step="0.01" id="right">
             </div>
             <div>
                 <label>botton</label>
-                <input type="number" value="-1" step="0.01" id="bottom">
+                <input type="number" value="-1.5" step="0.01" id="bottom">
             </div>
             <div>
                 <label>top</label>
-                <input type="number" value="1" step="0.01" id="top">
+                <input type="number" value="1.5" step="0.01" id="top">
             </div>
             <div>
                 <label>zNear</label>
@@ -110,7 +110,7 @@ input[type=number] {
             </div>
         </div>
     </div>
-    <div class="matrix-form">
+    <div class="matrix-form" id="view-matrix-form">
         <select>
             <option>LookAt</option>
             <option>Euler</option>
@@ -118,21 +118,21 @@ input[type=number] {
         <div class="container active" id="look-at">
             <div>
                 <label>OBS</label>
-                <input type="number" value="0" step="0.01" id="obsx">
-                <input type="number" value="1" step="0.01" id="obsy">
-                <input type="number" value="5" step="0.01" id="obsz">
+                <input type="number" value="0" step="0.1" id="obsx">
+                <input type="number" value="0" step="0.1" id="obsy">
+                <input type="number" value="5" step="0.1" id="obsz">
             </div>
             <div>
                 <label>VRP</label>
-                <input type="number" value="0" step="0.01" id="vrpx">
-                <input type="number" value="0" step="0.01" id="vrpy">
-                <input type="number" value="0" step="0.01" id="vrpz">
+                <input type="number" value="0" step="0.1" id="vrpx">
+                <input type="number" value="0" step="0.1" id="vrpy">
+                <input type="number" value="0" step="0.1" id="vrpz">
             </div>
             <div>
                 <label>UP</label>
-                <input type="number" value="0" step="0.01" id="upx">
-                <input type="number" value="1" step="0.01" id="upy">
-                <input type="number" value="0" step="0.01" id="upz">
+                <input type="number" value="0" step="0.1" id="upx">
+                <input type="number" value="1" step="0.1" id="upy">
+                <input type="number" value="0" step="0.1" id="upz">
             </div>
         </div>
         <div class="container" id="euler">
@@ -171,11 +171,12 @@ export class TypesOfCameras extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.addListeners();
-
         this.initScene();
 
+        this.addListeners();
+
         this.updatePerpectiveProj();
+        this.updateOrthographicProj();
         this.updateViewLookAt();
     }
 
@@ -211,7 +212,12 @@ export class TypesOfCameras extends HTMLElement {
 
     addListeners() {
         this.addChangeActiveFormsListener();
-        this.addUpdateCamerasListener();
+        this.addChengeActiveCameraListener();
+        this.addChangeActiveViewGeneratorListener();
+        this.addPerspectiveInputListener();
+        this.addLookAtInputListener();
+        this.addOrthographicInputListener();
+        this.addEulerInputListener();
     }
 
     addChangeActiveFormsListener() {
@@ -224,16 +230,32 @@ export class TypesOfCameras extends HTMLElement {
                     container.classList.remove('active');
                 });
                 containers[select.selectedIndex].classList.add('active');
-                console.log(select.value);
             });
         });
     }
 
-    addUpdateCamerasListener() {
-        this.addPerspectiveInputListener();
-        this.addLookAtInputListener();
-        this.addOrthographicInputListener();
-        this.addEulerInputListener();
+    addChengeActiveCameraListener() {
+        const shadow = this.shadowRoot;
+        const select = shadow.querySelector("#projection-matrix-form select");
+        select.addEventListener("change", () => {
+            if (select.value == "Perspective") {
+                this.cameraCameraView = this.cameraP;
+            } else {
+                this.cameraCameraView = this.cameraO;
+            }
+        });
+    }
+
+    addChangeActiveViewGeneratorListener() {
+        const shadow = this.shadowRoot;
+        const select = shadow.querySelector("#view-matrix-form select");
+        select.addEventListener("change", () => {
+            if (select.value == "LookAt") {
+                this.updateViewLookAt();
+            } else {
+                this.updateViewEuler();
+            }
+        });
     }
 
     addPerspectiveInputListener() {
@@ -248,19 +270,19 @@ export class TypesOfCameras extends HTMLElement {
 
     addOrthographicInputListener() {
         const ortho = this.shadowRoot.querySelector("#ortho");
-        ortho.addEventListener("input", () => {this.updateOrthographicProj()});
+        ortho.addEventListener("input", () => { this.updateOrthographicProj() });
     }
 
     addEulerInputListener() {
         const euler = this.shadowRoot.querySelector("#euler");
-        euler.addEventListener("input", () => {this.updateViewEuler()})
+        euler.addEventListener("input", () => { this.updateViewEuler() })
     }
 
     updatePerpectiveProj() {
-        this.cameraP.fov = this.shadowRoot.querySelector("#fov").value;
-        this.cameraP.ra = this.shadowRoot.querySelector("#ra").value;
-        this.cameraP.zNear = this.shadowRoot.querySelector("#znear").value;
-        this.cameraP.zFar = this.shadowRoot.querySelector("#zfar").value;
+        this.cameraP.fov = this.getNumberFromInput("#fov");
+        this.cameraP.ra = this.getNumberFromInput("#ra");
+        this.cameraP.zNear = this.getNumberFromInput("#znear");
+        this.cameraP.zFar = this.getNumberFromInput("#zfar");
         this.cameraP.updateProjectionMatrix();
     }
 
@@ -273,51 +295,61 @@ export class TypesOfCameras extends HTMLElement {
     }
 
     updateOrthographicProj() {
-        this.cameraO.left = this.shadowRoot.querySelector('#left');
-        this.cameraO.right = this.shadowRoot.querySelector('#right');
-        this.cameraO.bottom = this.shadowRoot.querySelector('#bottom');
-        this.cameraO.top = this.shadowRoot.querySelector('#top');
-        this.cameraO.zNear = this.shadowRoot.querySelector("#znear2");
-        this.cameraO.zFar = this.shadowRoot.querySelector("#zfar2");
+        this.cameraO.left = this.getNumberFromInput('#left');
+        this.cameraO.right = this.getNumberFromInput('#right');
+        this.cameraO.bottom = this.getNumberFromInput('#bottom');
+        this.cameraO.top = this.getNumberFromInput('#top');
+        this.cameraO.zNear = this.getNumberFromInput("#znear2");
+        this.cameraO.zFar = this.getNumberFromInput("#zfar2");
         this.cameraO.updateProjectionMatrix();
     }
 
     updateViewEuler() {
-        const distance = this.shadowRoot.querySelector("#distance");
-        const phi = this.shadowRoot.querySelector("#phi");
-        const theta = this.shadowRoot.querySelector("#theta");
-        const psi = this.shadowRoot.querySelector("#psi");
+        const distance = this.getNumberFromInput("#distance");
+        const phi = this.getNumberFromInput("#phi");
+        const theta = this.getNumberFromInput("#theta");
+        const psi = this.getNumberFromInput("#psi");
         const vrp = this.getVRP2();
         this.cameraP.updateVieMatrixEulerAngles(distance, phi, theta, psi, vrp);
         this.cameraO.updateVieMatrixEulerAngles(distance, phi, theta, psi, vrp);
     }
 
     getOBS() {
-        const obsx = this.shadowRoot.querySelector("#obsx").value;
-        const obsy = this.shadowRoot.querySelector("#obsy").value;
-        const obsz = this.shadowRoot.querySelector("#obsz").value;
+        const obsx = this.getNumberFromInput("#obsx");
+        const obsy = this.getNumberFromInput("#obsy");
+        const obsz = this.getNumberFromInput("#obsz");
         return new Vector3(obsx, obsy, obsz);
     }
 
     getVRP() {
-        const vrpx = this.shadowRoot.querySelector("#vrpx").value;
-        const vrpy = this.shadowRoot.querySelector("#vrpy").value;
-        const vrpz = this.shadowRoot.querySelector("#vrpz").value;
+        const vrpx = this.getNumberFromInput("#vrpx");
+        const vrpy = this.getNumberFromInput("#vrpy");
+        const vrpz = this.getNumberFromInput("#vrpz");
         return new Vector3(vrpx, vrpy, vrpz);
     }
 
     getUP() {
-        const upx = this.shadowRoot.querySelector("#upx").value;
-        const upy = this.shadowRoot.querySelector("#upy").value;
-        const upz = this.shadowRoot.querySelector("#upz").value;
+        const upx = this.getNumberFromInput("#upx");
+        const upy = this.getNumberFromInput("#upy");
+        const upz = this.getNumberFromInput("#upz");
         return new Vector3(upx, upy, upz);
     }
 
     getVRP2() {
-        const vrpx = this.shadowRoot.querySelector("#vrp2x").value;
-        const vrpy = this.shadowRoot.querySelector("#vrp2y").value;
-        const vrpz = this.shadowRoot.querySelector("#vrp2z").value;
+        const vrpx = this.getNumberFromInput("#vrp2x");
+        const vrpy = this.getNumberFromInput("#vrp2y");
+        const vrpz = this.getNumberFromInput("#vrp2z");
         return new Vector3(vrpx, vrpy, vrpz);
+    }
+
+    getNumberFromInput(selector) {
+        const shadow = this.shadowRoot;
+        const value = shadow.querySelector(selector).value;
+        const number = Number(value);
+        if (Number.isNaN(number)) {
+            return 0;
+        }
+        return number;
     }
 
 }
