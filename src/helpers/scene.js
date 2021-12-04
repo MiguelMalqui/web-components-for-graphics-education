@@ -8,6 +8,8 @@ export default class Scene {
         new Vector3(-1, -1, -1), new Vector3(1, 1, 1)
     );
 
+    #observers;
+
     constructor() {
         /**
          * @type {[Model]}
@@ -19,6 +21,18 @@ export default class Scene {
          * @type {BoundingBox}
          */
         this.boundingBox = Scene.#DEFAULT_BOX.clone();
+
+        this.#observers = [];
+    }
+
+    addObserver(observer) {
+        this.#observers.push(observer);
+    }
+
+    notifyAllObservers(event, info) {
+        this.#observers.forEach(o => {
+            o.updateObserver(event, info);
+        });
     }
 
     /**
@@ -28,6 +42,7 @@ export default class Scene {
     addModel(model) {
         this.models.push(model);
         this.#updateBoundingBox(model);
+        this.notifyAllObservers("model-added", { model });
     }
 
     /**
@@ -59,7 +74,7 @@ export default class Scene {
             const b = this.models[i].computeBoundingBoxAfterModelTransform();
             box.expandByBoundingBox(b);
         }
-        
+
         return box;
     }
 }

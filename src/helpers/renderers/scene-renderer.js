@@ -36,6 +36,7 @@ export default class SceneRenderer extends Renderer {
          * @type {Scene}
          */
         this.scene = params.scene ? params.scene : new Scene();
+        this.scene.addObserver(this);
         /**
          * @type {boolean}
          */
@@ -86,10 +87,16 @@ export default class SceneRenderer extends Renderer {
         this.#drawAxes(camera);
     }
 
-    addModel(model) {
-        this.scene.addModel(model);
-        const VAO = this.#createModelVAO(model);
-        this.#VAOs.push(VAO); 
+    /**
+     * 
+     * @param {string} event 
+     * @param {Object} info 
+     * @param {Model} info.model
+     */
+    updateObserver(event, info) {
+        if (event === "model-added") {
+            this.#VAOs.push(this.#createModelVAO(info.model));
+        }
     }
 
     #drawScene() {
