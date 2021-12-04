@@ -14,12 +14,19 @@ template.innerHTML = `
 <style>
 #canvases-container {
     display: flex;
-    // flex-wrap: wrap;
-    // gap: 0.25rem;
+    gap: 0.25rem;
 }
 #canvases-container>canvas {
-    // flex-grow: 1;
     width: 50%;
+}
+
+@media only screen and (max-width: 576px) {
+    #canvases-container {
+        flex-direction: column;
+    }
+    #canvases-container>canvas {
+        width: 100%
+    }
 }
 
 #settings-panel {
