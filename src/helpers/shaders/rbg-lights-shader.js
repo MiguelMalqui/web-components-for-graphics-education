@@ -56,6 +56,10 @@ vec3 colFocusR = vec3(1, 0, 0);
 vec3 colFocusG = vec3(0, 1, 0);
 vec3 colFocusB = vec3(0, 0, 1);
 
+uniform float intensityR;
+uniform float intensityG;
+uniform float intensityB;
+
 out vec4 color;
 
 vec3 Lambert (vec4 posFocusSCO, vec3 colFocus) {
@@ -71,9 +75,9 @@ vec3 Lambert (vec4 posFocusSCO, vec3 colFocus) {
 }
 
 void main() {
-    vec3 r = Lambert(posFocusSCOR, colFocusR);
-    vec3 g = Lambert(posFocusSCOG, colFocusG);
-    vec3 b = Lambert(posFocusSCOB, colFocusB);
+    vec3 r = Lambert(posFocusSCOR, intensityR * colFocusR);
+    vec3 g = Lambert(posFocusSCOG, intensityG * colFocusG);
+    vec3 b = Lambert(posFocusSCOB, intensityB * colFocusB);
     vec3 c = r + g + b;
     color = vec4(c.xyz, 1);
 }

@@ -77,6 +77,15 @@ export class RGBLights extends HTMLElement {
         requestAnimationFrame(() => { this.animate() });
         const gl = this.renderer.context;
         const program = this.renderer.program;
+        
+        const inetensityRLoc = gl.getUniformLocation(program, "intensityR");
+        const inetensityGLoc = gl.getUniformLocation(program, "intensityG");
+        const inetensityBLoc = gl.getUniformLocation(program, "intensityB");
+        
+        gl.useProgram(program);
+        gl.uniform1f(inetensityRLoc, this.intensities.red);
+        gl.uniform1f(inetensityGLoc, this.intensities.green);
+        gl.uniform1f(inetensityBLoc, this.intensities.blue);
         this.renderer.render(this.camera);
     }
 
