@@ -5,11 +5,11 @@ import Model from "./model.js";
 export default class Sphere extends Model {
 
     constructor(color, segments, rings) {
-        const s = Sphere.#positionArray(segments, rings);
+        const positions = Sphere.#positionArray(segments, rings);
         super(
-            s,
+            positions,
             Model.createColorArray(color, (segments) * (rings) * 2 * 3),
-            s
+            positions
         )
     }
 
@@ -24,15 +24,13 @@ export default class Sphere extends Model {
          *      |  /     |
          *      v3______v4
          */
-        let numFaces = 0;
-        let numVertices = 0;
         for (let i = 0; i < rings; i++) {
             const ax = dx * i;
             const bx = ax + dx;
-            let v1 = (new Vector4(0, 1, 0, 0)).mulMatrix((new Matrix4x4()).rotate(ax, 1, 0, 0));
-            let v2 = (new Vector4(0, 1, 0, 0)).mulMatrix((new Matrix4x4()).rotate(ax, 1, 0, 0));
-            let v3 = (new Vector4(0, 1, 0, 0)).mulMatrix((new Matrix4x4()).rotate(bx, 1, 0, 0));
-            let v4 = (new Vector4(0, 1, 0, 0)).mulMatrix((new Matrix4x4()).rotate(bx, 1, 0, 0));
+            let v1 = (new Vector4(0, 0.5, 0, 0)).mulMatrix((new Matrix4x4()).rotate(ax, 1, 0, 0));
+            let v2 = (new Vector4(0, 0.5, 0, 0)).mulMatrix((new Matrix4x4()).rotate(ax, 1, 0, 0));
+            let v3 = (new Vector4(0, 0.5, 0, 0)).mulMatrix((new Matrix4x4()).rotate(bx, 1, 0, 0));
+            let v4 = (new Vector4(0, 0.5, 0, 0)).mulMatrix((new Matrix4x4()).rotate(bx, 1, 0, 0));
 
             for (let j = 0; j < segments; j++) {
                 const ay = dy * j;
@@ -47,11 +45,9 @@ export default class Sphere extends Model {
                 positions.push(v21.x, v21.y, v21.z);
                 positions.push(v31.x, v31.y, v31.z);
                 positions.push(v41.x, v41.y, v41.z);
-                numFaces += 2;
-                numVertices += 6;
             }
         }
-        
+
         return positions;
     }
 }
