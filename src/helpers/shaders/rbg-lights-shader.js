@@ -1,0 +1,88 @@
+const RGBLightsShader = {
+
+vert : `#version 300 es
+in vec3 position;
+in vec3 color;
+in vec3 normal;
+
+vec3 posFocusR = vec3(1, 1.5, 1);
+vec3 posFocusG = vec3(-1, 1.5, 1);
+vec3 posFocusB = vec3(0, 1.5, -1);
+
+out vec3 out_color;
+
+out vec4 vertexSCO;
+out vec3 normalSCO;
+
+out vec4 posFocusSCOR;
+out vec4 posFocusSCOG;
+out vec4 posFocusSCOB;
+
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+void main() {
+    vertexSCO = viewMatrix * modelMatrix * vec4(position, 1.0f);
+
+    mat3 NormalMatrix = inverse(transpose(mat3(viewMatrix * modelMatrix)));
+    normalSCO = NormalMatrix * normal;
+
+    // Passem els components del focus de llum
+    posFocusSCOR = viewMatrix * vec4(posFocusR, 1.0f);
+    posFocusSCOG = viewMatrix * vec4(posFocusG, 1.0f);
+    posFocusSCOB = viewMatrix * vec4(posFocusB, 1.0f);
+
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position.xyz, 1);
+    out_color = color;
+}
+`,
+
+frag : `#version 300 es
+precision mediump float;
+
+in vec3 out_color;
+
+in vec4 vertexSCO;
+in vec3 normalSCO;
+
+in vec4 posFocusSCOR;
+in vec4 posFocusSCOG;
+in vec4 posFocusSCOB;
+
+vec3 matambFS = vec3(0.3);
+vec3 matdiffFS = vec3(0.7);
+
+vec3 llumAmbient  = vec3(0.1);
+
+vec3 colFocusR = vec3(1, 0, 0);
+vec3 colFocusG = vec3(0, 1, 0);
+vec3 colFocusB = vec3(0, 0, 1);
+
+out vec4 color;
+
+vec3 Lambert (vec4 posFocusSCO, vec3 colFocus) {
+    vec3 NormSCO = normalize(normalSCO);
+    vec3 L = normalize(posFocusSCO.xyz - vertexSCO.xyz);
+
+    vec3 colRes = llumAmbient * matambFS;
+
+    if (dot (L, NormSCO) > 0.0) {
+        colRes = colRes + colFocus * matdiffFS * dot (L, NormSCO);
+    }
+    return (colRes);
+}
+
+void main() {
+    vec3 r = Lambert(posFocusSCOR, colFocusR);
+    vec3 g = Lambert(posFocusSCOG, colFocusG);
+    vec3 b = Lambert(posFocusSCOB, colFocusB);
+    vec3 c = r + g + b;
+    color = vec4(c.xyz, 1);
+    // color = vec4(out_color, 1);
+}
+`
+
+}
+
+export default RGBLightsShader;
