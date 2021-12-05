@@ -1,9 +1,12 @@
 import CameraControler from "../helpers/camera/camera-controler.js";
 import PerspectiveCamera from "../helpers/camera/perspective-camera.js";
+import Color from "../helpers/color.js";
 import CubeModel from "../helpers/models/cube-model.js";
 import PlaneModel from "../helpers/models/plane-model.js";
+import Sphere from "../helpers/models/sphere.js";
 import SceneRenderer from "../helpers/renderers/scene-renderer.js";
 import Scene from "../helpers/scene.js";
+import RGBLightsShader from "../helpers/shaders/rbg-lights-shader.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -79,12 +82,18 @@ export class RGBLights extends HTMLElement {
 
     initScene() {
         const plane = new PlaneModel(); plane.transform.translate(0, -0.5, 0).scale(3, 1, 3);
-        const cube = new CubeModel();
+        const cube = new CubeModel(); cube.transform.translate(1, 0, 1).rotate(0.5, 0, 1, 0);
+        const sphe = new Sphere(Color.makeRGB(255,0,0), 10, 10);
         const scene = new Scene();
-        scene.addModel(plane); scene.addModel(cube);
+        scene.addModel(plane); scene.addModel(cube); scene.addModel(sphe);
 
         const canvas = this.shadowRoot.querySelector("canvas");
-        this.renderer = new SceneRenderer(canvas, { scene, autoClear: true });
+        this.renderer = new SceneRenderer(canvas, { 
+            scene, 
+            autoClear: true,
+            vShader: RGBLightsShader.vert,
+            fShader: RGBLightsShader.frag
+        });
         this.camera = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
         new CameraControler(this.camera, canvas, { distance: 5});
     }
