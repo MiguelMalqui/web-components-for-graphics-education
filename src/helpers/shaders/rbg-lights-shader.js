@@ -1,15 +1,16 @@
 const RGBLightsShader = {
 
 vert : `#version 300 es
+
+#define PI 3.1415926538
+#define THETA 2.0 * PI / 3.0
+
 in vec3 position;
-in vec3 color;
 in vec3 normal;
 
-vec3 posFocusR = vec3(1, 1.5, 1);
-vec3 posFocusG = vec3(-1, 1.5, 1);
-vec3 posFocusB = vec3(0, 1.5, -1);
-
-out vec3 out_color;
+vec3 posFocusR = vec3(sin(THETA), 1.5, cos(THETA));
+vec3 posFocusG = vec3(sin(2.0 * THETA), 1.5, cos(2.0 * THETA));
+vec3 posFocusB = vec3(sin(3.0 * THETA), 1.5, cos(3.0 * THETA));
 
 out vec4 vertexSCO;
 out vec3 normalSCO;
@@ -28,20 +29,16 @@ void main() {
     mat3 NormalMatrix = inverse(transpose(mat3(viewMatrix * modelMatrix)));
     normalSCO = NormalMatrix * normal;
 
-    // Passem els components del focus de llum
     posFocusSCOR = viewMatrix * vec4(posFocusR, 1.0f);
     posFocusSCOG = viewMatrix * vec4(posFocusG, 1.0f);
     posFocusSCOB = viewMatrix * vec4(posFocusB, 1.0f);
 
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position.xyz, 1);
-    out_color = color;
 }
 `,
 
 frag : `#version 300 es
 precision mediump float;
-
-in vec3 out_color;
 
 in vec4 vertexSCO;
 in vec3 normalSCO;
@@ -50,10 +47,10 @@ in vec4 posFocusSCOR;
 in vec4 posFocusSCOG;
 in vec4 posFocusSCOB;
 
-vec3 matambFS = vec3(0.3);
-vec3 matdiffFS = vec3(0.7);
+vec3 matambFS = vec3(1);
+vec3 matdiffFS = vec3(1);
 
-vec3 llumAmbient  = vec3(0.1);
+vec3 llumAmbient  = vec3(0.0);
 
 vec3 colFocusR = vec3(1, 0, 0);
 vec3 colFocusG = vec3(0, 1, 0);
@@ -79,7 +76,6 @@ void main() {
     vec3 b = Lambert(posFocusSCOB, colFocusB);
     vec3 c = r + g + b;
     color = vec4(c.xyz, 1);
-    // color = vec4(out_color, 1);
 }
 `
 
