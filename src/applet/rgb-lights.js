@@ -43,6 +43,37 @@ export class RGBLights extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+            
+        this.intensities = { red: 1, green: 1, blue: 1 };
+
+        this.addListeners();
+    }
+
+    addListeners() {
+        this.addUpdateIntendityListener("#red-form", "red");
+        this.addUpdateIntendityListener("#green-form", "green");
+        this.addUpdateIntendityListener("#blue-form", "blue");
+    }
+    
+    addUpdateIntendityListener(formId, intenrityKey) {
+        const form = this.shadowRoot.querySelector(formId);
+        const numberField = form.querySelector("input[type=number]");
+        const slider = form.querySelector("input[type=range]");
+        
+        numberField.addEventListener("change", () => {
+            let number = Number(numberField.value);
+            if (Number.isNaN(number) || number < 0) number = 0;
+            else if (number > 1) number = 1;
+            numberField.value = number;
+            slider.value = number;
+            this.intensities[intenrityKey] = number;
+        });
+        
+        slider.addEventListener("input", () => {
+            const number = Number(slider.value);
+            numberField.value = number;
+            this.intensities[intenrityKey] = number;
+        });
     }
 }
 
