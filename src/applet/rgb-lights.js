@@ -81,11 +81,10 @@ export class RGBLights extends HTMLElement {
     }
 
     initScene() {
-        const plane = new PlaneModel(); plane.transform.translate(0, -0.5, 0).scale(3, 1, 3);
-        const cube = new CubeModel(); cube.transform.translate(1, 0, 1).rotate(0.5, 0, 1, 0);
-        const sphe = new Sphere(Color.makeRGB(255,0,0), 10, 10);
+        const sphere = new Sphere(Color.makeRGB(255,0,0), 20, 10);
+        const plane = new PlaneModel(); plane.transform.translate(0, -0.5, 0).scale(2, 1, 2);
         const scene = new Scene();
-        scene.addModel(plane); scene.addModel(cube); scene.addModel(sphe);
+        scene.addModel(sphere); scene.addModel(plane);
 
         const canvas = this.shadowRoot.querySelector("canvas");
         this.renderer = new SceneRenderer(canvas, { 
@@ -95,7 +94,7 @@ export class RGBLights extends HTMLElement {
             fShader: RGBLightsShader.frag
         });
         this.camera = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
-        new CameraControler(this.camera, canvas, { distance: 5});
+        new CameraControler(this.camera, canvas, { distance: 2});
     }
 
     addListeners() {
