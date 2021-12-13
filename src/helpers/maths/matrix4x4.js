@@ -106,6 +106,129 @@ export default class Matrix4x4 {
         return ce;
     }
 
+    static #inverse(me) {
+        const inv = [];
+        inv[0] = me[5]  * me[10] * me[15] - 
+                 me[5]  * me[11] * me[14] - 
+                 me[9]  * me[6]  * me[15] + 
+                 me[9]  * me[7]  * me[14] +
+                 me[13] * me[6]  * me[11] - 
+                 me[13] * me[7]  * me[10];
+
+        inv[4] = -me[4]  * me[10] * me[15] + 
+                  me[4]  * me[11] * me[14] + 
+                  me[8]  * me[6]  * me[15] - 
+                  me[8]  * me[7]  * me[14] - 
+                  me[12] * me[6]  * me[11] + 
+                  me[12] * me[7]  * me[10];
+
+        inv[8] = me[4]  * me[9] * me[15] - 
+                 me[4]  * me[11] * me[13] - 
+                 me[8]  * me[5] * me[15] + 
+                 me[8]  * me[7] * me[13] + 
+                 me[12] * me[5] * me[11] - 
+                 me[12] * me[7] * me[9];
+
+        inv[12] = -me[4]  * me[9] * me[14] + 
+                   me[4]  * me[10] * me[13] +
+                   me[8]  * me[5] * me[14] - 
+                   me[8]  * me[6] * me[13] - 
+                   me[12] * me[5] * me[10] + 
+                   me[12] * me[6] * me[9];
+
+        inv[1] = -me[1]  * me[10] * me[15] + 
+                  me[1]  * me[11] * me[14] + 
+                  me[9]  * me[2] * me[15] - 
+                  me[9]  * me[3] * me[14] - 
+                  me[13] * me[2] * me[11] + 
+                  me[13] * me[3] * me[10];
+
+        inv[5] = me[0]  * me[10] * me[15] - 
+                 me[0]  * me[11] * me[14] - 
+                 me[8]  * me[2] * me[15] + 
+                 me[8]  * me[3] * me[14] + 
+                 me[12] * me[2] * me[11] - 
+                 me[12] * me[3] * me[10];
+
+        inv[9] = -me[0]  * me[9] * me[15] + 
+                  me[0]  * me[11] * me[13] + 
+                  me[8]  * me[1] * me[15] - 
+                  me[8]  * me[3] * me[13] - 
+                  me[12] * me[1] * me[11] + 
+                  me[12] * me[3] * me[9];
+
+        inv[13] = me[0]  * me[9] * me[14] - 
+                  me[0]  * me[10] * me[13] - 
+                  me[8]  * me[1] * me[14] + 
+                  me[8]  * me[2] * me[13] + 
+                  me[12] * me[1] * me[10] - 
+                  me[12] * me[2] * me[9];
+
+        inv[2] = me[1]  * me[6] * me[15] - 
+                 me[1]  * me[7] * me[14] - 
+                 me[5]  * me[2] * me[15] + 
+                 me[5]  * me[3] * me[14] + 
+                 me[13] * me[2] * me[7] - 
+                 me[13] * me[3] * me[6];
+
+        inv[6] = -me[0]  * me[6] * me[15] + 
+                  me[0]  * me[7] * me[14] + 
+                  me[4]  * me[2] * me[15] - 
+                  me[4]  * me[3] * me[14] - 
+                  me[12] * me[2] * me[7] + 
+                  me[12] * me[3] * me[6];
+
+        inv[10] = me[0]  * me[5] * me[15] - 
+                  me[0]  * me[7] * me[13] - 
+                  me[4]  * me[1] * me[15] + 
+                  me[4]  * me[3] * me[13] + 
+                  me[12] * me[1] * me[7] - 
+                  me[12] * me[3] * me[5];
+
+        inv[14] = -me[0]  * me[5] * me[14] + 
+                   me[0]  * me[6] * me[13] + 
+                   me[4]  * me[1] * me[14] - 
+                   me[4]  * me[2] * me[13] - 
+                   me[12] * me[1] * me[6] + 
+                   me[12] * me[2] * me[5];
+
+        inv[3] = -me[1] * me[6] * me[11] + 
+                  me[1] * me[7] * me[10] + 
+                  me[5] * me[2] * me[11] - 
+                  me[5] * me[3] * me[10] - 
+                  me[9] * me[2] * me[7] + 
+                  me[9] * me[3] * me[6];
+
+        inv[7] = me[0] * me[6] * me[11] - 
+                 me[0] * me[7] * me[10] - 
+                 me[4] * me[2] * me[11] + 
+                 me[4] * me[3] * me[10] + 
+                 me[8] * me[2] * me[7] - 
+                 me[8] * me[3] * me[6];
+
+        inv[11] = -me[0] * me[5] * me[11] + 
+                   me[0] * me[7] * me[9] + 
+                   me[4] * me[1] * me[11] - 
+                   me[4] * me[3] * me[9] - 
+                   me[8] * me[1] * me[7] + 
+                   me[8] * me[3] * me[5];
+
+        inv[15] = me[0] * me[5] * me[10] - 
+                  me[0] * me[6] * me[9] - 
+                  me[4] * me[1] * me[10] + 
+                  me[4] * me[2] * me[9] + 
+                  me[8] * me[1] * me[6] - 
+                  me[8] * me[2] * me[5];
+        
+        const det = 1 / (me[0] * inv[0] + me[1] * inv[4] + me[2] * inv[8] + me[3] * inv[12]);
+
+        for (let i = 0; i < inv.length; i++) {
+            inv[i] *= det;
+        }
+
+        return inv;
+    }
+
     /**
      * Returns a new matrix, result of add this matrix and m
      * @param {Matrix4x4} m 
@@ -224,6 +347,17 @@ export default class Matrix4x4 {
         for (let i = 0; i < result.elements.length; i++) {
             this.elements[i] = this.elements[i] / s;
         }
+        return this;
+    }
+
+    inverse() {
+        const result = new Matrix4x4();
+        result.elements = Matrix4x4.#inverse(this.elements);
+        return result;
+    }
+
+    invert() {
+        this.elements = Matrix4x4.#inverse(this.elements);
         return this;
     }
 
