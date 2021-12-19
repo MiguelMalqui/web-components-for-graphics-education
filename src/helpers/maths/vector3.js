@@ -118,7 +118,7 @@ export default class Vector3 {
     }
 
     /**
-     * Returns a new vector, reuslt of subtract the scalar value s from this
+     * Returns a new vector, result of subtract the scalar value s from this
      * vector's x, y and z values
      * @param {number} s 
      * @returns {Vector3}
@@ -141,7 +141,7 @@ export default class Vector3 {
     }
 
     /**
-     * Returns a new vector, reuslt of multiply this vector by scalar s
+     * Returns a new vector, result of multiply this vector by scalar s
      * @param {number} s 
      * @returns {Vector3}
      */
@@ -162,7 +162,7 @@ export default class Vector3 {
     }
 
     /**
-     * Returns a new vector, reuslt of divide this vector by scalar s
+     * Returns a new vector, result of divide this vector by scalar s
      * @param {number} s 
      * @returns {Vector3}
      */
