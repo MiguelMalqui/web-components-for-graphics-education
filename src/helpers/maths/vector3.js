@@ -9,40 +9,25 @@ export default class Vector3 {
      * @param {number} z - the z coordinate, default is 0
      */
     constructor(x = 0, y = 0, z = 0) {
-        this.elements = [x, y, z];
+        /**
+         * @type {number} the x coordinate of the vector
+         */
+        this.x = x;
+        /**
+         * @type {number} the y coordinate of the vector
+         */
+        this.y = y;
+        /**
+         * @type {number} the z coordinate of the vector
+         */
+        this.z = z;
     }
 
     /**
-     * @type {number} the x coordinate of the vector
+     * @type {number[]} the coordinates of the vector as an array
      */
-    get x() {
-        return this.elements[0];
-    }
-
-    set x(x) {
-        this.elements[0] = x;
-    }
-
-    /**
-     * @type {number} the y coordinate of the vector
-     */
-    get y() {
-        return this.elements[1];
-    }
-
-    set y(y) {
-        this.elements[1] = y;
-    }
-
-    /**
-     * @type {number} the z coordinate of the vector
-     */
-    get z() {
-        return this.elements[2];
-    }
-
-    set z(z) {
-        this.elements[2] = z;
+    get elements() {
+        return [this.x, this.y, this.z];
     }
 
     /**
