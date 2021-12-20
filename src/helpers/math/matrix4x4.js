@@ -386,7 +386,7 @@ export default class Matrix4x4 {
     /**
      * Multiplies this matrix by another that rotates coordinates trough angle
      * about the vector (x, y, z)
-     * @param {number} angle - the angle in radias
+     * @param {number} angle - the angle in radians
      * @param {number} vx - the x coordinate of the vector
      * @param {number} vy - the y coordinate of the vector
      * @param {number} vz - the z coordinate of the vector
@@ -413,7 +413,7 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Returns a new matrix with the identical elemtnes to this matrix
+     * Returns a new matrix with the identical elements to this matrix
      * @returns {Matrix4x4}
      */
     clone() {
@@ -491,7 +491,7 @@ export default class Matrix4x4 {
      * @param {number} right - right coordinate
      * @param {number} bottom - bottom coordinate
      * @param {number} top - top coordinate
-     * @param {numeber} zNear - near clipping distance
+     * @param {number} zNear - near clipping distance
      * @param {number} zFar - far clipping distance
      */
     static orthogonal(left, right, bottom, top, zNear, zFar) {
@@ -521,7 +521,7 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Cosntruct a rotation matrix, looking from obs torwards vrp oriented by 
+     * Construct a rotation matrix, looking from obs towards vrp oriented by 
      * the up vector
      * @param {Vector3} obs 
      * @param {Vector3} vrp 
