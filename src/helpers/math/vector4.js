@@ -13,7 +13,18 @@ export default class Vector4 {
      * @param {number} w - the w coordinate, default is 0
      */
     constructor(x = 0, y = 0, z = 0, w = 0) {
-        this.elements = [x, y, z, w];
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    /**
+     * the coordinates of the vector as an array
+     * @type {number[]}
+     */
+    get elements() {
+        return [this.x, this.y, this.z, this.w];
     }
 
     /**
@@ -25,50 +36,6 @@ export default class Vector4 {
      */
     static fromVector3(v3, w) {
         return new Vector4(v3.x, v3.y, v3.z, w);
-    }
-
-    /**
-     * @type {number} the x coordinate of the vector
-     */
-    get x() {
-        return this.elements[0];
-    }
-
-    set x(x) {
-        this.elements[0] = x;
-    }
-
-    /**
-     * @type {number} the y coordinate of the vector
-     */
-    get y() {
-        return this.elements[1];
-    }
-
-    set y(y) {
-        this.elements[1] = y;
-    }
-
-    /**
-     * @type {number} the z coordinate of the vector
-     */
-    get z() {
-        return this.elements[2];
-    }
-
-    set z(z) {
-        this.elements[2] = z;
-    }
-
-    /**
-     * @type {number} the w coordinate of the vector
-     */
-    get w() {
-        return this.elements[3];
-    }
-
-    set w(w) {
-        this.elements[3] = w;
     }
 
     /**
