@@ -207,7 +207,7 @@ export default class Vector3 {
     }
 
     /**
-     * Normalizes the currect vector in place.
+     * Normalizes the current vector in place.
      * @returns
      */
     normalize() {
