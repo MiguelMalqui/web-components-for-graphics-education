@@ -556,4 +556,12 @@ export default class Matrix4x4 {
 
         return matrix;
     }
+
+    /**
+     * Returns a string representation of this matrix
+     * @returns 
+     */
+    toString() {
+        return `Matrix4x4(${this.elements})`;
+    }
 }
