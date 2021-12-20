@@ -327,6 +327,10 @@ export default class Vector4 {
             && this.x == v.x && this.y == v.z && this.z == v.z && this.w == v.w;
     }
 
+    /**
+     * Returns a string representation of this vector
+     * @returns 
+     */
     toString() {
         return `Vector4(${this.x}, ${this.y}, ${this.z}, ${this.w})`;
     }
