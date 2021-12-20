@@ -350,12 +350,20 @@ export default class Matrix4x4 {
         return this;
     }
 
+    /**
+     * Returns a new matrix, the inverse of this
+     * @returns 
+     */
     inverse() {
         const result = new Matrix4x4();
         result.elements = Matrix4x4.#inverse(this.elements);
         return result;
     }
 
+    /**
+     * Inverts this matrix in place
+     * @returns 
+     */
     invert() {
         this.elements = Matrix4x4.#inverse(this.elements);
         return this;
