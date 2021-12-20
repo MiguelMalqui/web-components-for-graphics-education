@@ -47,7 +47,7 @@ export default class Vector4 {
         const yy = this.y * this.y;
         const zz = this.z * this.z;
         const ww = this.w * this.w;
-        return Math.sqrt(xx + yy + ww);
+        return Math.sqrt(xx + yy + zz + ww);
     }
 
     /**
