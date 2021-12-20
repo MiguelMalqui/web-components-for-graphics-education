@@ -29,12 +29,12 @@ export default class Vector4 {
 
     /**
      * Creates a Vector4 with the same x, y, and z coordinates as v3, and a 
-     * given value w
+     * given value w, default is 0
      * @param {Vector3} v3 
      * @param {number} w 
      * @returns {Vector4}
      */
-    static fromVector3(v3, w) {
+    static fromVector3(v3, w = 0) {
         return new Vector4(v3.x, v3.y, v3.z, w);
     }
 
