@@ -256,6 +256,10 @@ export default class Vector3 {
             && this.x == v.x && this.y == v.z && this.z == v.z;
     }
 
+    /**
+     * Returns a string representation of this vector
+     * @returns 
+     */
     toString() {
         return `Vector3(${this.x}, ${this.y}, ${this.z})`;
     }
