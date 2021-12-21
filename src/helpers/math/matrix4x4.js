@@ -5,10 +5,25 @@ import Vector3 from "./vector3.js";
  */
 export default class Matrix4x4 {
     /**
-     * Creates a identity 4x4 matrix
+     * Creates a matrix from the 16 arguments in a row-major order, or an 
+     * identity matrix if there are no arguments
      */
-    constructor() {
-        this.elements = Matrix4x4.#identity();
+    constructor(
+        m11, m12, m13, m14,
+        m21, m22, m23, m24,
+        m31, m32, m33, m34,
+        m41, m42, m43, m44
+    ) {
+        if (arguments.length == 0) {
+            this.elements = Matrix4x4.#identity();
+        } else {
+            this.elements = [
+                m11, m21, m31, m41,
+                m12, m22, m32, m42,
+                m13, m23, m33, m43,
+                m14, m24, m34, m44
+            ];
+        }
     }
 
     /**
