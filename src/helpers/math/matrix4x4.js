@@ -263,7 +263,7 @@ export default class Matrix4x4 {
      * @returns
      */
     iadd(m) {
-        for (let i = 0; i < result.elements.length; i++) {
+        for (let i = 0; i < this.elements.length; i++) {
             this.elements[i] = this.elements[i] + m.elements[i];
         }
         return this;
