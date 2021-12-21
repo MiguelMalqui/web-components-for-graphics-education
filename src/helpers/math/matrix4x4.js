@@ -359,7 +359,7 @@ export default class Matrix4x4 {
      * @returns
      */
     idivScalar(s) {
-        for (let i = 0; i < result.elements.length; i++) {
+        for (let i = 0; i < this.elements.length; i++) {
             this.elements[i] = this.elements[i] / s;
         }
         return this;
