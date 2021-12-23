@@ -77,19 +77,6 @@ export default class Vector4 {
     }
 
     /**
-     * Adds v to this vector in place
-     * @param {Vector4} v 
-     * @returns 
-     */
-    iadd(v) {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-        this.w += v.w;
-        return this;
-    }
-
-    /**
      * Returns a new vector, result of add the scalar value s to this vector's 
      * x, y, z and w values
      * @param {number} s 
@@ -104,19 +91,6 @@ export default class Vector4 {
     }
 
     /**
-     * Adds the scalar value s to this vector's x, y, z and w values in place
-     * @param {number} s 
-     * @returns 
-     */
-    iaddScalar(s) {
-        this.x += s;
-        this.y += s;
-        this.z += s;
-        this.w += s;
-        return this;
-    }
-
-    /**
      * Returns a new vector, result of subtract v from this vector
      * @param {Vector} v 
      * @returns {Vector4}
@@ -127,19 +101,6 @@ export default class Vector4 {
         const z = this.z - v.z;
         const w = this.w - v.w;
         return new Vector4(x, y, z, w);
-    }
-
-    /**
-     * Subtracts v from this vector in place
-     * @param {Vector} v 
-     * @returns 
-     */
-    isub(v) {
-        this.x -= v.x;
-        this.y -= v.y;
-        this.z -= v.z;
-        this.w -= v.w;
-        return this;
     }
 
     /**
@@ -157,20 +118,6 @@ export default class Vector4 {
     }
 
     /**
-     * Subtracts the scalar value s from this vector's x, y, z and w values in 
-     * place
-     * @param {number} s 
-     * @returns 
-     */
-    isubScalar(s) {
-        this.x -= s;
-        this.y -= s;
-        this.z -= s;
-        this.w -= s;
-        return this;
-    }
-
-    /**
      * Returns a new vector, reuslt of multiply this vector by scalar s
      * @param {number} s 
      * @returns {Vector4}
@@ -181,19 +128,6 @@ export default class Vector4 {
         const z = this.z * s;
         const w = this.w * s;
         return new Vector4(x, y, z, w);
-    }
-
-    /**
-     * Multiplies this vector by scalar s in place
-     * @param {number} s 
-     * @returns 
-     */
-    imulScalar(s) {
-        this.x *= s;
-        this.y *= s;
-        this.z *= s;
-        this.w *= s;
-        return this;
     }
 
     /**
@@ -215,24 +149,6 @@ export default class Vector4 {
     }
 
     /**
-     * Multiplies this vector by matrix m in place
-     * @param {Matrix4x4} m 
-     * @returns 
-     */
-    imulMatrix(m) {
-        const me = m.elements;
-        const x = this.x;
-        const y = this.y;
-        const z = this.z;
-        const w = this.w;
-        this.x = x * me[0] + y * me[4] + z * me[8] + w * me[12];
-        this.y = x * me[1] + y * me[5] + z * me[9] + w * me[13];
-        this.z = x * me[2] + y * me[6] + z * me[10] + w * me[14];
-        this.w = x * me[3] + y * me[7] + z * me[11] + w * me[15];
-        return this;
-    }
-
-    /**
      * Returns a new vector, reuslt of divide this vector by scalar s
      * @param {number} s 
      * @returns {Vector4}
@@ -243,19 +159,6 @@ export default class Vector4 {
         const z = this.z / s;
         const w = this.w / s;
         return new Vector4(x, y, z, w);
-    }
-
-    /**
-     * Divides this vector by scalar s in place
-     * @param {number} s 
-     * @returns 
-     */
-    idivScalar(s) {
-        this.x /= s;
-        this.y /= s;
-        this.z /= s;
-        this.w /= s;
-        return this;
     }
 
     /**
