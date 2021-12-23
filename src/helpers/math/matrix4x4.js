@@ -235,13 +235,19 @@ export default class Matrix4x4 {
                   me[8] * me[1] * me[6] - 
                   me[8] * me[2] * me[5];
         
-        const det = 1 / (me[0] * inv[0] + me[1] * inv[4] + me[2] * inv[8] + me[3] * inv[12]);
+        const det = me[0] * inv[0] + me[1] * inv[4] + me[2] * inv[8] + me[3] * inv[12];
+
+        if (det == 0) {
+            return [false, inv]
+        }
+
+        det = 1.0 / det;
 
         for (let i = 0; i < inv.length; i++) {
             inv[i] *= det;
         }
 
-        return inv;
+        return [true, inv];
     }
 
     /**
@@ -308,22 +314,17 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Returns a new matrix, the inverse of this
+     * Returns a new matrix, the inverse of this. Returns identity if this 
+     * matrix cannot be inverted
      * @returns 
      */
-    inverse() {
-        const result = new Matrix4x4();
-        result.elements = Matrix4x4.#inverse(this.elements);
-        return result;
-    }
-
-    /**
-     * Inverts this matrix in place
-     * @returns 
-     */
-    invert() {
-        this.elements = Matrix4x4.#inverse(this.elements);
-        return this;
+    inverted() {
+        const [invertible, inv] = Matrix4x4.#inverse(this.elements);
+        if (invertible) {
+            return new Matrix4x4(...inv);
+        } else {
+            return new Matrix4x4();
+        }
     }
 
     /**
