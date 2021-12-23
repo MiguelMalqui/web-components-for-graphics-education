@@ -63,18 +63,6 @@ export default class Vector3 {
     }
 
     /**
-     * Adds v to this vector in place
-     * @param {Vector3} v 
-     * @returns 
-     */
-    iadd(v) {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-        return this;
-    }
-
-    /**
      * Returns a new vector, result of add the scalar value s to this vector's 
      * x, y and z values
      * @param {number} s 
@@ -85,36 +73,12 @@ export default class Vector3 {
     }
 
     /**
-     * Adds the scalar value s to this vector's x, y and z values in place
-     * @param {number} s 
-     * @returns 
-     */
-    iaddScalar(s) {
-        this.x += s;
-        this.y += s;
-        this.z += s;
-        return this;
-    }
-
-    /**
      * Returns a new vector, result of subtract v from this vector
      * @param {Vector} v 
      * @returns {Vector3}
      */
     sub(v) {
         return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
-    }
-
-    /**
-     * Subtracts v from this vector in place
-     * @param {Vector} v 
-     * @returns 
-     */
-    isub(v) {
-        this.x -= v.x;
-        this.y -= v.y;
-        this.z -= v.z;
-        return this;
     }
 
     /**
@@ -128,19 +92,6 @@ export default class Vector3 {
     }
 
     /**
-     * Subtracts the scalar value s from this vector's x, y and z values in 
-     * place
-     * @param {number} s 
-     * @returns 
-     */
-    isubScalar(s) {
-        this.x -= s;
-        this.y -= s;
-        this.z -= s;
-        return this;
-    }
-
-    /**
      * Returns a new vector, result of multiply this vector by scalar s
      * @param {number} s 
      * @returns {Vector3}
@@ -150,36 +101,12 @@ export default class Vector3 {
     }
 
     /**
-     * Multiplies this vector by scalar s in place
-     * @param {number} s 
-     * @returns 
-     */
-    imulScalar(s) {
-        this.x *= s;
-        this.y *= s;
-        this.z *= s;
-        return this;
-    }
-
-    /**
      * Returns a new vector, result of divide this vector by scalar s
      * @param {number} s 
      * @returns {Vector3}
      */
     divScalar(s) {
         return new Vector3(this.x / s, this.y / s, this.z / s);
-    }
-
-    /**
-     * Divides this vector by scalar s in place
-     * @param {number} s 
-     * @returns 
-     */
-    idivScalar(s) {
-        this.x /= s;
-        this.y /= s;
-        this.z /= s;
-        return this;
     }
 
     /**
