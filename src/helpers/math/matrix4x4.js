@@ -235,7 +235,7 @@ export default class Matrix4x4 {
                   me[8] * me[1] * me[6] - 
                   me[8] * me[2] * me[5];
         
-        const det = me[0] * inv[0] + me[1] * inv[4] + me[2] * inv[8] + me[3] * inv[12];
+        let det = me[0] * inv[0] + me[1] * inv[4] + me[2] * inv[8] + me[3] * inv[12];
 
         if (det == 0) {
             return [false, inv]
