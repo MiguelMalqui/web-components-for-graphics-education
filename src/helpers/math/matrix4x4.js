@@ -258,18 +258,6 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Adds this matrix and m in place
-     * @param {Matrix4x4} m 
-     * @returns
-     */
-    iadd(m) {
-        for (let i = 0; i < this.elements.length; i++) {
-            this.elements[i] = this.elements[i] + m.elements[i];
-        }
-        return this;
-    }
-
-    /**
      * Returns a new matrix, result of subtract m from this matrix
      * @param {Matrix4x4} m 
      * @returns {Matrix4x4}
@@ -283,18 +271,6 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Subtracts m from this matrix in place
-     * @param {Matrix4x4} m 
-     * @returns
-     */
-    isub(m) {
-        for (let i = 0; i < this.elements.length; i++) {
-            this.elements[i] = this.elements[i] - m.elements[i];
-        }
-        return this;
-    }
-
-    /**
      * Returns a new matrix, result of post multiply this matrix by m
      * @param {Matrix4x4} m 
      * @returns {Matrix4x4}
@@ -303,16 +279,6 @@ export default class Matrix4x4 {
         const result = new Matrix4x4();
         result.elements = Matrix4x4.#multiply(this.elements, m.elements);
         return result;
-    }
-
-    /**
-     * Post multiplies this matrix by m in place
-     * @param {Matrix4x4} m 
-     * @returns
-     */
-    imul(m) {
-        this.elements = Matrix4x4.#multiply(this.elements, m.elements);
-        return this;
     }
 
     /**
@@ -329,18 +295,6 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Multiplies this matrix by scalar s in place
-     * @param {number} s 
-     * @returns
-     */
-    imulScalar(s) {
-        for (let i = 0; i < this.elements.length; i++) {
-            this.elements[i] = this.elements[i] * s;
-        }
-        return this;
-    }
-
-    /**
      * Returns a new matrix, result of divide this matrix by scalar s
      * @param {number} s 
      * @returns {Matrix4x4}
@@ -351,18 +305,6 @@ export default class Matrix4x4 {
             result.elements[i] = this.elements[i] / s;
         }
         return result;
-    }
-
-    /**
-     * Divides this matrix by scalar s in place
-     * @param {number} s 
-     * @returns
-     */
-    idivScalar(s) {
-        for (let i = 0; i < this.elements.length; i++) {
-            this.elements[i] = this.elements[i] / s;
-        }
-        return this;
     }
 
     /**
