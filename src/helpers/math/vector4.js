@@ -104,7 +104,7 @@ export default class Vector4 {
     }
 
     /**
-     * Returns a new vector, reuslt of subtract the scalar value s from this
+     * Returns a new vector, result of subtract the scalar value s from this
      * vector's x, y, z and w values
      * @param {number} s 
      * @returns {Vector4}
@@ -118,7 +118,7 @@ export default class Vector4 {
     }
 
     /**
-     * Returns a new vector, reuslt of multiply this vector by scalar s
+     * Returns a new vector, result of multiply this vector by scalar s
      * @param {number} s 
      * @returns {Vector4}
      */
@@ -149,7 +149,7 @@ export default class Vector4 {
     }
 
     /**
-     * Returns a new vector, reuslt of divide this vector by scalar s
+     * Returns a new vector, result of divide this vector by scalar s
      * @param {number} s 
      * @returns {Vector4}
      */
@@ -175,7 +175,7 @@ export default class Vector4 {
     }
 
     /**
-     * Normalizes the currect vector in place.
+     * Normalizes the current vector in place.
      * @returns
      */
     normalize() {
