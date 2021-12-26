@@ -1,4 +1,4 @@
-import Color from "../src/helpers/color.js";
+import Color from "../../../src/helpers/math/color.js"
 
 describe('Color', () => {
 
