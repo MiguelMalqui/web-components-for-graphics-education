@@ -235,7 +235,7 @@ export default class Color {
     }
 
     /**
-     * Determinates whether another object is equal to this
+     * Determines whether another object is equal to this
      * @param {*} obj 
      * @returns 
      */
@@ -276,7 +276,7 @@ export default class Color {
     }
 
     /**
-     * Converts the components of the RGB model to the three componets of the
+     * Converts the components of the RGB model to the three components of the
      * HSB model.
      * @param {number} red The red component of the color, in the range [0, 255]
      * @param {number} green The green component of the color, in the range [0, 255]
@@ -287,13 +287,13 @@ export default class Color {
         let r = red / 255;
         let g = green / 255;
         let b = blue / 255;
-        let cmax = Math.max(r, g, b);
-        let cmin = Math.min(r, g, b);
-        let delta = cmax - cmin;
+        let cMax = Math.max(r, g, b);
+        let cMin = Math.min(r, g, b);
+        let delta = cMax - cMin;
 
         let h = 0;
         if (delta != 0) {
-            switch (cmax) {
+            switch (cMax) {
                 case r:
                     h = 60 * ((g - b) / delta);
                     if (h < 0) h += 360;
@@ -309,13 +309,13 @@ export default class Color {
 
         return {
             hue: h,
-            saturation: (cmax == 0) ? 0 : delta / cmax,
-            brightness: cmax
+            saturation: (cMax == 0) ? 0 : delta / cMax,
+            brightness: cMax
         }
     }
 
     /**
-     * Converts the components of the HSB model to the three componets of the
+     * Converts the components of the HSB model to the three components of the
      * RGB model.
      * @param {number} hue The hue component of the color, in the range [0.0, 360.0)
      * @param {number} saturation The saturation of the color, in the range [0.0, 1.0]
@@ -348,7 +348,7 @@ export default class Color {
     }
 
     /**
-     * Converts the components of the CMYK model to the three componets of the
+     * Converts the components of the CMYK model to the three components of the
      * RGB model.
      * @param {number} cyan The cyan component of the color, in the range [0.0, 1.0]
      * @param {number} magenta The magenta component of the color, in the range [0.0, 1.0]
@@ -365,7 +365,7 @@ export default class Color {
     }
 
     /**
-     * Converts the components of the RGB model to the four componets of the
+     * Converts the components of the RGB model to the four components of the
      * CMYK model.
      * @param {number} red The red component of the color, in the range [0, 255]
      * @param {number} green The green component of the color, in the range [0, 255]
@@ -395,7 +395,7 @@ export default class Color {
     }
 
     /**
-     * Converts the components of the CMYK model to the three componets of the
+     * Converts the components of the CMYK model to the three components of the
      * HSB model.
      * @param {number} cyan The cyan component of the color, in the range [0.0, 1.0]
      * @param {number} magenta The magenta component of the color, in the range [0.0, 1.0]
@@ -409,7 +409,7 @@ export default class Color {
     }
 
     /**
-     * Converts the components of the HSB model to the four componets of the
+     * Converts the components of the HSB model to the four components of the
      * CMYK model.
      * @param {number} hue The hue component of the color, in the range [0.0, 360.0)
      * @param {number} saturation The saturation of the color, in the range [0.0, 1.0]
