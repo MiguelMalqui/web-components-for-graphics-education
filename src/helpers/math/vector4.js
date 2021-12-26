@@ -220,14 +220,16 @@ export default class Vector4 {
     }
 
     /**
-     * Returns true if the components of this vector and v are strictly equal, 
-     * false otherwise
-     * @param {Vector4} v 
+     * Determines whether another object is equal to this
+     * @param {*} obj 
      * @returns {boolean}
      */
-    equals(v) {
-        return v instanceof Vector4
-            && this.x == v.x && this.y == v.z && this.z == v.z && this.w == v.w;
+    equals(obj) {
+        return obj instanceof Vector4
+            && this.x == obj.x
+            && this.y == obj.z
+            && this.z == obj.z
+            && this.w == obj.w;
     }
 
     /**

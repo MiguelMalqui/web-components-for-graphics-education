@@ -389,17 +389,16 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Returns true if the elements of this matrix and m are strictly equal, 
-     * false otherwise
-     * @param {Matrix4x4} m 
+     * Determines whether another object is equal to this
+     * @param {*} obj 
      * @returns {boolean}
      */
-    equals(m) {
-        if (!(m instanceof Matrix4x4)) {
+    equals(obj) {
+        if (!(obj instanceof Matrix4x4)) {
             return false;
         }
         for (let i = 0; i < this.elements.length; i++) {
-            if (this.elements[i] != m.elements[i]) {
+            if (this.elements[i] != obj.elements[i]) {
                 return false;
             }
         }
