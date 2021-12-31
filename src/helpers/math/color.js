@@ -12,7 +12,7 @@ export default class Color {
      */
     constructor() {
         this.#r = this.#g = this.#b = 0;
-        this.#a = 255;
+        this.#a = 1.0;
     }
 
     /**
@@ -20,10 +20,10 @@ export default class Color {
      * @param {number} red The red component of the color, in the range [0, 255]
      * @param {number} green The green component of the color, in the range [0, 255]
      * @param {number} blue The blue component of the color, in the range [0, 255]
-     * @param {number} alpha The alpha component of the color, in the range [0, 255]
+     * @param {number} alpha The alpha component of the color, in the range [0.0, 1.0]
      * @throws {RangeError}
      */
-    static makeRGB(red, green, blue, alpha = 255) {
+    static makeRGB(red, green, blue, alpha = 1.0) {
         const color = new Color();
         color.setRGB(red, green, blue, alpha);
         return color;
@@ -34,10 +34,10 @@ export default class Color {
      * @param {number} hue The hue component of the color, in the range [0.0, 360.0)
      * @param {number} saturation The saturation of the color, in the range [0.0, 1.0]
      * @param {number} brightness The brightness of the color, in the range [0.0, 1.0]
-     * @param {number} alpha The alpha component of the color, in the range [0, 255]
+     * @param {number} alpha The alpha component of the color, in the range [0.0, 1.0]
      * @throws {RangeError}
      */
-    static makeHSB(hue, saturation, brightness, alpha = 255) {
+    static makeHSB(hue, saturation, brightness, alpha = 1.0) {
         const color = new Color();
         color.setHSB(hue, saturation, brightness, alpha);
         return color;
@@ -49,10 +49,10 @@ export default class Color {
      * @param {number} magenta The magenta component of the color, in the range [0.0, 1.0]
      * @param {number} yellow The yellow component of the color, in the range [0.0, 1.0]
      * @param {number} black The black component of the color, in the range [0.0, 1.0]
-     * @param {number} alpha The alpha component of the color, in the range [0, 255]
+     * @param {number} alpha The alpha component of the color, in the range [0.0, 1.0]
      * @throws {RangeError}
      */
-    static makeCMYK(cyan, magenta, yellow, black, alpha = 255) {
+    static makeCMYK(cyan, magenta, yellow, black, alpha = 1.0) {
         const color = new Color();
         color.setCMYK(cyan, magenta, yellow, black, alpha);
         return color;
@@ -118,7 +118,7 @@ export default class Color {
     }
 
     /**
-     * @type {number} The alpha component of the color, in the range [0, 255]
+     * @type {number} The alpha component of the color, in the range [0.0, 1.0]
      * @throws {RangeError}
      */
     get alpha() {
@@ -127,7 +127,7 @@ export default class Color {
 
     set alpha(alpha) {
         alpha = Math.floor(alpha);
-        if (alpha < 0 || alpha > 255) {
+        if (alpha < 0.0 || alpha > 1.0) {
             throw new RangeError("Alpha out of range [0, 255]");
         }
         this.#a = alpha;
@@ -141,7 +141,7 @@ export default class Color {
      * @param {number} alpha The alpha component of the color, in the range [0, 255]
      * @throws {RangeError}
      */
-    setRGB(red, green, blue, alpha = 255) {
+    setRGB(red, green, blue, alpha = 1.0) {
         this.red = red;
         this.green = green;
         this.blue = blue;
@@ -168,7 +168,7 @@ export default class Color {
      * @param {number} alpha The alpha component of the color, in the range [0, 255]
      * @throws {RangeError}
      */
-    setHSB(hue, saturation, brightness, alpha = 255) {
+    setHSB(hue, saturation, brightness, alpha = 1.0) {
         if (hue < 0 || hue >= 360) throw new RangeError("Hue out of range [0.0, 360.0)");
         if (saturation < 0.0 || saturation > 1.0) throw new RangeError("Saturation out of range [0.0, 1.0]");
         if (brightness < 0.0 || brightness > 1.0) throw new RangeError("Brightness out of range [0.0, 1.0]");
@@ -201,7 +201,7 @@ export default class Color {
      * @param {number} alpha The alpha component of the color, in the range [0, 255]
      * @throws {RangeError}
      */
-    setCMYK(cyan, magenta, yellow, black, alpha = 255) {
+    setCMYK(cyan, magenta, yellow, black, alpha = 1.0) {
         if (cyan < 0.0 || cyan > 1.0) throw new RangeError("Cyan out of range [0.0, 1.0]");
         if (magenta < 0.0 || magenta > 1.0) throw new RangeError("Magenta out of range [0.0, 1.0]");
         if (yellow < 0.0 || yellow > 1.0) throw new RangeError("Yellow out of range [0.0, 1.0]");
@@ -272,7 +272,7 @@ export default class Color {
      * @returns Returns a this color as a CSS `rgba` string
      */
     cssRGBA() {
-        return `rgb(${this.#r}, ${this.#g}, ${this.#b}, ${this.#a / 255})`;
+        return `rgb(${this.#r}, ${this.#g}, ${this.#b}, ${this.#a})`;
     }
 
     /**
