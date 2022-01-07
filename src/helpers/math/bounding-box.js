@@ -6,23 +6,18 @@ import Vector3 from "./vector3.js"
 export default class BoundingBox {
     #pMin;
     #pMax;
-    #center;
-    #radius;
     /**
      * Creates a axis-aligned bounding box
-     * @param {Vector3} pMin - the lower boundary of the box
-     * @param {Vector3} pMax - the upper boundary of the box
+     * @param {Vector3} pMin - the lower boundary of the bounding box
+     * @param {Vector3} pMax - the upper boundary of the bounding box
      */
     constructor(pMin, pMax) {
         this.#pMin = pMin;
         this.#pMax = pMax;
-        this.#radius = this.#calculateRadius();
-        this.#center = this.#calculateCenter();
-
     }
 
     /**
-     * the lower boundary of the box
+     * The lower boundary of the bounding box
      * @type {Vector3}
      */
     get pMin() {
@@ -30,7 +25,7 @@ export default class BoundingBox {
     }
 
     /**
-     * the upper boundary of the box
+     * The upper boundary of the bounding box
      * @type {Vector3}
      */
     get pMax() {
@@ -38,31 +33,23 @@ export default class BoundingBox {
     }
 
     /**
-     * the center of the bounding box
+     * The center of the bounding box
      * @type {Vector3}
      */
     get center() {
-        return this.#center;
+        return this.#pMin.add(this.#pMax).mulScalar(0.5);
     }
 
     /**
-     * the euclidean distance form pMin to pMax
+     * Half the euclidean distance form pMin to pMax
      * @type {number}
      */
     get radius() {
-        return this.#radius;
-    }
-
-    #calculateRadius() {
         return 0.5 * this.#pMin.distanceTo(this.#pMax);
     }
 
-    #calculateCenter() {
-        return (this.#pMin.add(this.#pMax)).imulScalar(0.5);
-    }
-
     /**
-     * Expands the boundaries of this box to include point p
+     * Expands the boundaries of this bounding box to include point p
      * @param {Vector3} p 
      */
     expandByPoint(p) {
@@ -72,12 +59,10 @@ export default class BoundingBox {
         if (p.x > this.#pMax.x) this.#pMax.x = p.x;
         if (p.y > this.#pMax.y) this.#pMax.y = p.y;
         if (p.z > this.#pMax.z) this.#pMax.z = p.z;
-        this.#radius = this.#calculateRadius();
-        this.#center = this.#calculateCenter();
     }
 
     /**
-     * Expands the boundaries of this box to include bounding box b
+     * Expands the boundaries of this bounding box to include bounding box b
      * @param {BoundingBox} b 
      */
     expandByBoundingBox(b) {
@@ -95,7 +80,7 @@ export default class BoundingBox {
 
     /**
      * Copies the boundary points of the passed bounding box b to this
-     * @param {BoundignBox} b 
+     * @param {BoundingBox} b 
      */
     copy(b) {
         this.#pMin.copy(b.#pMin);
