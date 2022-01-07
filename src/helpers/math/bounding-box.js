@@ -1,4 +1,4 @@
-import Vector3 from "./maths/vector3.js";
+import Vector3 from "./vector3.js"
 
 /**
  * Class representing an axis-aligned bounding box in 3D space
