@@ -342,8 +342,8 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Multiplies this matrix by another that rotates coordinates trough angle
-     * about the vector (x, y, z)
+     * Multiplies this matrix by another that rotates coordinates through angle
+     * radians about the vector (x, y, z)
      * @param {number} angle - the angle in radians
      * @param {number} vx - the x coordinate of the vector
      * @param {number} vy - the y coordinate of the vector
@@ -354,6 +354,36 @@ export default class Matrix4x4 {
         const re = Matrix4x4.#rotation(angle, vx, vy, vz);
         this.elements = Matrix4x4.#multiply(this.elements, re);
         return this;
+    }
+
+    /**
+     * Multiplies this matrix by another that rotates coordinates through angle
+     * radians about the x axis
+     * @param {number} angle - the angle in radians
+     * @returns 
+     */
+    xRotate(angle) {
+        return this.rotate(angle, 1, 0, 0);
+    }
+
+    /**
+     * Multiplies this matrix by another that rotates coordinates through angle
+     * radians about the y axis
+     * @param {number} angle - the angle in radians
+     * @returns 
+     */
+    yRotate(angle) {
+        return this.rotate(angle, 0, 1, 0);
+    }
+
+    /**
+     * Multiplies this matrix by another that rotates coordinates through angle
+     * radians about the z axis
+     * @param {number} angle - the angle in radians
+     * @returns 
+     */
+    zRotate(angle) {
+        return this.rotate(angle, 0, 0, 1);
     }
 
     /**
