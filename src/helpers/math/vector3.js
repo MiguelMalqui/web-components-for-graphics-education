@@ -179,7 +179,7 @@ export default class Vector3 {
      */
     equals(obj) {
         return obj instanceof Vector3
-            && this.x == obj.x && this.y == obj.z && this.z == obj.z;
+            && this.x == obj.x && this.y == obj.y && this.z == obj.z;
     }
 
     /**
