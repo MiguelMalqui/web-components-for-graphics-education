@@ -1,4 +1,4 @@
-import Color from "../../helpers/color.js";
+import Color from "../../framework3d/math/color.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -109,15 +109,15 @@ export default class HSBSelectionForm extends HTMLElement {
         const thisColor = this.getColor();
         if (!thisColor.equals(color)) {
             const hsb = color.getHSB();
-            hsb.hue = Math.round(hsb.hue);
-            hsb.saturation = Math.round(hsb.saturation * 100);
-            hsb.brightness = Math.round(hsb.brightness * 100);
-            this.shadowRoot.querySelector('#hue-number-field').value = hsb.hue;
-            this.shadowRoot.querySelector('#hue-slider').value = hsb.hue;
-            this.shadowRoot.querySelector('#saturation-number-field').value = hsb.saturation;
-            this.shadowRoot.querySelector('#saturation-slider').value = hsb.saturation;
-            this.shadowRoot.querySelector('#brightness-number-field').value = hsb.brightness;
-            this.shadowRoot.querySelector('#brightness-slider').value = hsb.brightness;
+            hsb.h = Math.round(hsb.h);
+            hsb.s = Math.round(hsb.s * 100);
+            hsb.b = Math.round(hsb.b * 100);
+            this.shadowRoot.querySelector('#hue-number-field').value = hsb.h;
+            this.shadowRoot.querySelector('#hue-slider').value = hsb.h;
+            this.shadowRoot.querySelector('#saturation-number-field').value = hsb.s;
+            this.shadowRoot.querySelector('#saturation-slider').value = hsb.s;
+            this.shadowRoot.querySelector('#brightness-number-field').value = hsb.b;
+            this.shadowRoot.querySelector('#brightness-slider').value = hsb.b;
         }
     }
 }

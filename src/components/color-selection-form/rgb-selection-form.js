@@ -1,4 +1,4 @@
-import Color from "../../helpers/color.js";
+import Color from "../../framework3d/math/color.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -97,12 +97,12 @@ export default class RGBSelectionForm extends HTMLElement {
     }
 
     setColor(color) {
-        this.shadowRoot.querySelector('#red-number-field').value = color.red;
-        this.shadowRoot.querySelector('#red-slider').value = color.red;
-        this.shadowRoot.querySelector('#green-number-field').value = color.green;
-        this.shadowRoot.querySelector('#green-slider').value = color.green;
-        this.shadowRoot.querySelector('#blue-number-field').value = color.blue;
-        this.shadowRoot.querySelector('#blue-slider').value = color.blue;
+        this.shadowRoot.querySelector('#red-number-field').value = color.r;
+        this.shadowRoot.querySelector('#red-slider').value = color.r;
+        this.shadowRoot.querySelector('#green-number-field').value = color.g;
+        this.shadowRoot.querySelector('#green-slider').value = color.g;
+        this.shadowRoot.querySelector('#blue-number-field').value = color.b;
+        this.shadowRoot.querySelector('#blue-slider').value = color.b;
     }
 }
 

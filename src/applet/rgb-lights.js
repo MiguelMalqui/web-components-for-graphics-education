@@ -1,12 +1,13 @@
+import Matrix4x4 from "../framework3d/math/matrix4x4.js";
+import PerspectiveCamera from "../framework3d/cameras/perspective-camera.js";
+import SceneRenderer from "../framework3d/renderer/scene-renderer.js";
+import Object3D from "../framework3d/core/object-3d.js";
+import PlaneGeometry from "../framework3d/geometries/plane-geometry.js";
+import UVSphereGeometry from "../framework3d/geometries/uv-sphere-geometry.js";
+
 import CameraControler from "../helpers/camera/camera-controler.js";
-import PerspectiveCamera from "../helpers/camera/perspective-camera.js";
-import Color from "../helpers/color.js";
-import CubeModel from "../helpers/models/cube-model.js";
-import PlaneModel from "../helpers/models/plane-model.js";
-import Sphere from "../helpers/models/sphere.js";
-import SceneRenderer from "../helpers/renderers/scene-renderer.js";
-import Scene from "../helpers/scene.js";
-import RGBLightsShader from "../helpers/shaders/rbg-lights-shader.js";
+// TODO mover esto !!!
+import RGBLightsShader from "../framework3d/shaders/rbg-lights-shader.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -90,20 +91,24 @@ export class RGBLights extends HTMLElement {
     }
 
     initScene() {
-        const sphere = new Sphere(Color.makeRGB(255,0,0), 20, 10);
-        const plane = new PlaneModel(); plane.transform.translate(0, -0.5, 0).scale(2, 1, 2);
-        const scene = new Scene();
-        scene.addModel(sphere); scene.addModel(plane);
+        const sphere = new Object3D(new UVSphereGeometry()); // new Sphere(Color.makeRGB(255,0,0), 20, 10);
+        const plane = new Object3D(new PlaneGeometry()); plane.transform = Matrix4x4.translation(0, -0.5, 0).scale(2, 1, 2);// new PlaneModel(); plane.transform = Matrix4x4.translation(0, -0.5, 0).scale(2, 1, 2);
+        // const scene = new Scene();
+        // scene.addModel(sphere); scene.addModel(plane);
 
         const canvas = this.shadowRoot.querySelector("canvas");
         this.renderer = new SceneRenderer(canvas, { 
-            scene, 
             autoClear: true,
             vShader: RGBLightsShader.vert,
             fShader: RGBLightsShader.frag
         });
+
+        // this.renderer.addObject(sphere);
+        this.renderer.addObject(plane);
+        this.renderer.addObject(sphere);
         this.camera = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
-        new CameraControler(this.camera, canvas, { distance: 2});
+        new CameraControler(this.camera, canvas, { distance: 2, theta: 0.5});
+        // console.log(this.camera);
     }
 
     addListeners() {

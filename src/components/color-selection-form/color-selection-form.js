@@ -1,4 +1,4 @@
-import Color from "../../helpers/color.js";
+import Color from "../../framework3d/math/color.js";
 import RGBSelectionForm from "./rgb-selection-form.js";
 import HSBSelectionForm from "./hsb-selection-form.js";
 import CMYKSelectionForm from "./cmyk-selection-form .js";

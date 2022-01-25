@@ -1,9 +1,10 @@
-import Matrix4x4 from "../helpers/maths/matrix4x4.js"
-import Vector3 from "../helpers/maths/vector3.js";
-import PerspectiveCamera from "../helpers/camera/perspective-camera.js";
-import CubeModel from "../helpers/models/cube-model.js";
-import SceneRenderer from "../helpers/renderers/scene-renderer.js";
+import Matrix4x4 from "../framework3d/math/matrix4x4.js";
+import Vector3 from "../framework3d/math/vector3.js";
+import PerspectiveCamera from "../framework3d/cameras/perspective-camera.js";
+import BoxGeometry from "../framework3d/geometries/box-geometry.js";
+import SceneRenderer from "../framework3d/renderer/scene-renderer.js";
 import CameraControler from "../helpers/camera/camera-controler.js";
+import Object3D from "../framework3d/core/object-3d.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -141,8 +142,8 @@ export class GeometricTransformations extends HTMLElement {
             drawObjectsAxes: true
         });
 
-        this.cube = new CubeModel();
-        this.renderer.scene.addModel(this.cube);
+        this.cube = new Object3D(new BoxGeometry(1,1.5,0.25));
+        this.renderer.addObject(this.cube);
     }
 
     addListeners() {
@@ -240,20 +241,20 @@ export class GeometricTransformations extends HTMLElement {
 
     updateModelTransformationMatrix() {
         const tranfroms = this.shadowRoot.querySelectorAll('.draggable');
-        const matrix = new Matrix4x4();
+        let matrix = new Matrix4x4();
         tranfroms.forEach(transform => {
             const type = transform.querySelector('.geom-trans-id').innerHTML[0];
             const inputs = transform.querySelectorAll('input');
             const args = [...inputs].map(input => input.value);
             switch (type) {
                 case 'T':
-                    matrix.translate(args[0], args[1], args[2]);
+                    matrix = matrix.translate(args[0], args[1], args[2]);
                     break;
                 case 'S':
-                    matrix.scale(args[0], args[1], args[2]);
+                    matrix = matrix.scale(args[0], args[1], args[2]);
                     break;
                 case 'R':
-                    matrix.rotate(args[0], args[1], args[2], args[3]);
+                    matrix = matrix.rotate(args[0], args[1], args[2], args[3]);
                     break;
             }
         })
