@@ -461,19 +461,19 @@ export default class Matrix4x4 {
 
     /**
      * Construct a perspective projection matrix
-     * @param {number} fov - field of view
-     * @param {number} ar - aspect ratio
+     * @param {number} fieldOfView - field of view
+     * @param {number} aspectRatio - aspect ratio
      * @param {number} zNear - near clipping distance 
      * @param {number} zFar - far clipping distance 
      */
-    static perspective(fov, ra, zNear, zFar) {
-        const a = Math.tan(fov / 2.0);
+    static perspective(fieldOfView, aspectRatio, zNear, zFar) {
+        const a = Math.tan(fieldOfView / 2.0);
         const c = (zNear + zFar) / (zNear - zFar);
         const d = 2 * zNear * zFar / (zNear - zFar);
 
         const matrix = new Matrix4x4();
 
-        matrix.data[0] = 1.0 / (ra * a);
+        matrix.data[0] = 1.0 / (aspectRatio * a);
         matrix.data[1] = 0.0;
         matrix.data[2] = 0.0;
         matrix.data[3] = 0.0;
