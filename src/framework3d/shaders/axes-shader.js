@@ -12,9 +12,6 @@ uniform mat4 modelMatrix;
 uniform mat4 modelViewProjectionMatrix;
 
 void main() {
-    // mat4 inv = inverse(modelMatrix);
-    // mat4 viewProjectionMatrix = modelViewProjectionMatrix * inv;
-    // gl_Position = viewProjectionMatrix * ((modelMatrix * vec4(position.xyz, 1.0)) + vec4(0.5,0.5,0.5,0));
     gl_Position = modelViewProjectionMatrix * vec4(position.xyz, 1.0);
     vColor = color;
     vPosition = vec3(modelMatrix * vec4(position.xyz, 1.0)).xyz;

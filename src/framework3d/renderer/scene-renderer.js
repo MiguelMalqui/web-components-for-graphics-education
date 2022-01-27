@@ -2,17 +2,17 @@ import Matrix4x4 from "../math/matrix4x4.js";
 import Vector3 from "../math/vector3.js";
 import Scene from "../core/scene.js";
 import Object3D from "../core/object-3d.js";
-import Camera from "../core/camera.js"
-import Renderer from "./renderer.js";
-import AxesRenderer from "./axes-renderer.js"
-import basicShader from "../shaders/basic-shader.js"
+import Camera from "../core/camera.js";
+import basicShader from "../shaders/basic-shader.js";
+import axesShader from "../shaders/axes-shader.js";
+import { initWebGL2Context, initShaderProgram } from "../utils/webgl-utils.js";
 
-export default class SceneRenderer extends Renderer {
+export default class SceneRenderer {
     /**
      * @type {WebGLVertexArrayObject[]}
      */
     #VAOs;
-    #axesRenderer;
+    #axesDrawer;
     #positionLoc;
     #normalLoc;
     #colorLoc;
@@ -23,18 +23,25 @@ export default class SceneRenderer extends Renderer {
     static #COLORS = new Float32Array(300).map(() => Math.random());
 
     /**
-     * 
-     * @param {HTMLCanvasElement} canvas 
+     * Creates a scene renderer
+     * @param {HTMLCanvasElement} canvas where renderer will draw
      * @param {Object} config 
-     * @param {string} [config.vShader] - vertex shader
-     * @param {string} [config.fShader] - fragment shader
-     * @param {boolean} [config.autoClear] - clear before render, default is false
-     * @param {boolean} [config.drawWorldAxes] - draw world axes, default is false
-     * @param {boolean} [config.drawObjectsAxes] - draw axes for each object, default is false
+     * @param {string} [config.vShader] vertex shader
+     * @param {string} [config.fShader] fragment shader
+     * @param {boolean} [config.autoClear] clear before render, default is false
+     * @param {boolean} [config.drawWorldAxes] draw world axes, default is false
+     * @param {boolean} [config.drawObjectsAxes] draw axes for each object, default is false
      */
     constructor(canvas, config = {}) {
-        super(
-            canvas,
+        /**
+         * @type {WebGL2RenderingContext}
+         */
+        this.context = initWebGL2Context(canvas);
+        /**
+         * @type {WebGLProgram}
+         */
+        this.program = initShaderProgram(
+            this.context,
             config.vShader ? config.vShader : basicShader.vert,
             config.fShader ? config.fShader : basicShader.frag
         );
@@ -60,6 +67,9 @@ export default class SceneRenderer extends Renderer {
         this.#VAOs = [];
 
         const gl = this.context;
+        gl.enable(gl.DEPTH_TEST);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
         this.#positionLoc = gl.getAttribLocation(this.program, "position");
         this.#normalLoc = gl.getAttribLocation(this.program, "normal");
         this.#colorLoc = gl.getAttribLocation(this.program, "color");
@@ -67,7 +77,7 @@ export default class SceneRenderer extends Renderer {
         this.#viewMatrixLoc = gl.getUniformLocation(this.program, "viewMatrix");
         this.#projectionMatrixLoc = gl.getUniformLocation(this.program, "projectionMatrix");
 
-        this.#axesRenderer = new AxesRenderer(canvas);
+        this.#axesDrawer = new AxesDrawer(this.context);
     }
 
     /**
@@ -77,6 +87,28 @@ export default class SceneRenderer extends Renderer {
     addObject(object) {
         this.scene.addObject(object);
         this.#VAOs.push(this.#createObjectVAO(object));
+    }
+
+    /**
+     * Sets the viewport, which specifies the affine transformation of x and y 
+     * from normalized device coordinates to window coordinates
+     * @param {number} x specifies the horizontal coordinate for the lower 
+     * left corner of the viewport origin
+     * @param {number} y specifies the vertical coordinate for the lower left
+     * corner of the viewport origin
+     * @param {number} width specifies the width of the viewport
+     * @param {number} height specifies the height of the viewport
+     */
+    setViewport(x, y, width, height) {
+        this.context.viewport(x, y, width, height);
+    }
+
+    /**
+     * Clears depth buffer. Clears color buffer with black
+     */
+    clear() {
+        const gl = this.context;
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
     /**
@@ -117,7 +149,7 @@ export default class SceneRenderer extends Renderer {
 
     #drawWorldAxes(camera) {
         const transform = Matrix4x4.scaling(100, 100, 100);
-        this.#axesRenderer.render(camera, { transform });
+        this.#axesDrawer.draw(camera, { transform });
     }
 
     #drawObjectsAxes(camera) {
@@ -140,7 +172,7 @@ export default class SceneRenderer extends Renderer {
             sz = (sz + ll) / sz;
             t = t.scale(sx, sy, sz);
 
-            this.#axesRenderer.render(camera, {
+            this.#axesDrawer.draw(camera, {
                 transform: t,
                 dashed: true,
                 dashLength: 0.1
@@ -190,3 +222,108 @@ export default class SceneRenderer extends Renderer {
     }
 }
 
+
+
+class AxesDrawer {
+    #axesVAO;
+    #axesTransform;
+    #mdlLoc;
+    #mvpLoc;
+    #dashed;
+    #invLen;
+    /**
+     * Creates a xyz axes drawer
+     * @param {WebGL2RenderingContext} context 
+     */
+    constructor(context) {
+        /**
+         * @type {WebGL2RenderingContext}
+         */
+        this.context = context;
+        /**
+         * @type {WebGLProgram}
+         */
+        this.program = initShaderProgram(
+            this.context,
+            axesShader.vert,
+            axesShader.frag
+        );
+
+        this.#axesVAO = this.#createAxesVAO();
+        this.#axesTransform = new Matrix4x4();
+
+        const gl = this.context;
+        this.#mdlLoc = gl.getUniformLocation(this.program, "modelMatrix");
+        this.#mvpLoc = gl.getUniformLocation(this.program, "modelViewProjectionMatrix");
+        this.#dashed = gl.getUniformLocation(this.program, "dashed");
+        this.#invLen = gl.getUniformLocation(this.program, "invDashLength");
+    }
+
+    /**
+     * Draw xyz axes
+     * @param {Camera} camera camera to use to render
+     * @param {Object} [options]
+     * @param {Matrix4x4} [options.transform] model transform to use, default is identity
+     * @param {boolean} [options.dashed] draw a dashed lines, default is false
+     * @param {number} [options.dashLength] dash length, default is 0.1
+     */
+    draw(camera, { transform = this.#axesTransform, dashed = false, dashLength = 0.1 }) {
+        const gl = this.context;
+
+        gl.useProgram(this.program);
+
+        const proj = camera.projectionMatrix;
+        const view = camera.viewMatrix;
+        const mvp = proj.mul(view).mul(transform);
+        gl.uniformMatrix4fv(this.#mdlLoc, false, transform.data);
+        gl.uniformMatrix4fv(this.#mvpLoc, false, mvp.data)
+        gl.uniform1i(this.#dashed, dashed);
+        gl.uniform1f(this.#invLen, 1 / dashLength);
+
+        gl.bindVertexArray(this.#axesVAO);
+        gl.drawArrays(gl.LINES, 0, 6);
+        gl.bindVertexArray(null);
+    }
+
+    #createAxesVAO() {
+        const gl = this.context;
+
+        const VAO = gl.createVertexArray();
+        gl.bindVertexArray(VAO);
+
+        const posLoc = gl.getAttribLocation(this.program, "position");
+        const colLoc = gl.getAttribLocation(this.program, "color");
+
+        const positionsVBO = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionsVBO);
+        gl.bufferData(
+            gl.ARRAY_BUFFER,
+            new Float32Array([
+                0, 0, 0, 1, 0, 0,
+                0, 0, 0, 0, 1, 0,
+                0, 0, 0, 0, 0, 1
+            ]),
+            gl.STATIC_DRAW
+        );
+        gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(posLoc);
+
+        const colorsVBO = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, colorsVBO);
+        gl.bufferData(
+            gl.ARRAY_BUFFER,
+            new Float32Array([
+                1, 0, 0, 1, 0, 0,
+                0, 1, 0, 0, 1, 0,
+                0, 0, 1, 0, 0, 1
+            ]),
+            gl.STATIC_DRAW
+        );
+        gl.vertexAttribPointer(colLoc, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(colLoc);
+
+        gl.bindVertexArray(null);
+
+        return VAO;
+    }
+}
