@@ -7,6 +7,9 @@ import basicShader from "../shaders/basic-shader.js";
 import axesShader from "../shaders/axes-shader.js";
 import { initWebGL2Context, initShaderProgram } from "../utils/webgl-utils.js";
 
+/**
+ * Class that renders a scene
+ */
 export default class SceneRenderer {
     /**
      * @type {WebGLVertexArrayObject[]}

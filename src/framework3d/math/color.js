@@ -4,7 +4,6 @@ export default class Color {
     #g;
     #b;
     #a;
-
     /**
      * Create a color with red=0, green=0 and blue=0.
      * 
@@ -12,7 +11,7 @@ export default class Color {
      */
     constructor() {
         this.#r = this.#g = this.#b = 0;
-        this.#a = 1.0;
+        this.#a = 1;
     }
 
     /**
@@ -21,9 +20,9 @@ export default class Color {
      * @param {number} r The red component of the color, in the range [0, 255]
      * @param {number} g The green component of the color, in the range [0, 255]
      * @param {number} b The blue component of the color, in the range [0, 255]
-     * @param {number} a The alpha-channel of the color, in the range [0.0, 1.0]
+     * @param {number} a The alpha-channel of the color, in the range [0, 1]
      */
-    static makeRGB(r, g, b, a = 1.0) {
+    static makeRGB(r, g, b, a = 1) {
         const color = new Color();
         color.setRGB(r, g, b, a);
         return color;
@@ -32,12 +31,12 @@ export default class Color {
     /**
      * Creates a color with the specified h, s and b values of the HSB color
      * model the alpha-channel value of a.
-     * @param {number} h The hue component of the color, in the range [0.0, 360.0)
-     * @param {number} s The saturation of the color, in the range [0.0, 1.0]
-     * @param {number} b The brightness of the color, in the range [0.0, 1.0]
-     * @param {number} a The alpha-channel of the color, in the range [0.0, 1.0]
+     * @param {number} h The hue component of the color, in the range [0, 360)
+     * @param {number} s The saturation of the color, in the range [0, 1]
+     * @param {number} b The brightness of the color, in the range [0, 1]
+     * @param {number} a The alpha-channel of the color, in the range [0, 1]
      */
-    static makeHSB(h, s, b, a = 1.0) {
+    static makeHSB(h, s, b, a = 1) {
         const color = new Color();
         color.setHSB(h, s, b, a);
         return color;
@@ -46,13 +45,13 @@ export default class Color {
     /**
      * Creates a color with the specified c, m, y and k values of the CMYK color
      * model the alpha-channel value of a.
-     * @param {number} c The cyan component of the color, in the range [0.0, 1.0]
-     * @param {number} m The magenta component of the color, in the range [0.0, 1.0]
-     * @param {number} y The yellow component of the color, in the range [0.0, 1.0]
-     * @param {number} k The black component of the color, in the range [0.0, 1.0]
-     * @param {number} a The alpha-channel of the color, in the range [0.0, 1.0]
+     * @param {number} c The cyan component of the color, in the range [0, 1]
+     * @param {number} m The magenta component of the color, in the range [0, 1]
+     * @param {number} y The yellow component of the color, in the range [0, 1]
+     * @param {number} k The black component of the color, in the range [0, 1]
+     * @param {number} a The alpha-channel of the color, in the range [0, 1]
      */
-    static makeCMYK(c, m, y, k, a = 1.0) {
+    static makeCMYK(c, m, y, k, a = 1) {
         const color = new Color();
         color.setCMYK(c, m, y, k, a);
         return color;
@@ -118,16 +117,16 @@ export default class Color {
     }
 
     /**
-     * @type {number} The alpha-channel of the color, in the range [0.0, 1.0]
+     * @type {number} The alpha-channel of the color, in the range [0, 1]
      */
     get a() {
         return this.#a;
     }
 
     set a(a) {
-        if (a < 0.0 || a > 1.0) {
-            console.warn("Alpha out of range [0.0, 1.0]");
-            a = 1.0;
+        if (a < 0 || a > 1) {
+            console.warn("Alpha out of range [0, 1]");
+            a = 1;
         }
         this.#a = a;
     }
@@ -137,9 +136,9 @@ export default class Color {
      * @param {number} r The red component of the color, in the range [0, 255]
      * @param {number} g The green component of the color, in the range [0, 255]
      * @param {number} b The blue component of the color, in the range [0, 255]
-     * @param {number} a The alpha component of the color, in the range [0.0, 1.0]
+     * @param {number} a The alpha component of the color, in the range [0, 1]
      */
-    setRGB(r, g, b, a = 1.0) {
+    setRGB(r, g, b, a = 1) {
         this.r = r;
         this.g = g;
         this.b = b;
@@ -160,23 +159,23 @@ export default class Color {
 
     /**
      * Sets the value of this color using the components of RGB color model
-     * @param {number} r The red component of the color, in the range [0.0, 1.0]
-     * @param {number} g The green component of the color, in the range [0.0, 1.0]
-     * @param {number} b The blue component of the color, in the range [0.0, 1.0]
-     * @param {number} a The alpha component of the color, in the range [0.0, 1.0]
+     * @param {number} r The red component of the color, in the range [0, 1]
+     * @param {number} g The green component of the color, in the range [0, 1]
+     * @param {number} b The blue component of the color, in the range [0, 1]
+     * @param {number} a The alpha component of the color, in the range [0, 1]
      */
-    setRGBf(r, g, b, a = 1.0) {
-        if (r < 0.0 || r > 1.0) {
-            console.warn("Red (f) out of range [0.0, 1.0]");
-            r = 0.0;
+    setRGBf(r, g, b, a = 1) {
+        if (r < 0 || r > 1) {
+            console.warn("Red (f) out of range [0, 1]");
+            r = 0;
         }
-        if (g < 0.0 || g > 1.0) {
-            console.warn("Green (f) out of range [0.0, 1.0]");
-            g = 0.0;
+        if (g < 0 || g > 1) {
+            console.warn("Green (f) out of range [0, 1]");
+            g = 0;
         }
-        if (b < 0.0 || b > 1.0) {
-            console.warn("Blue (f) out of range [0.0, 1.0]");
-            b = 0.0;
+        if (b < 0 || b > 1) {
+            console.warn("Blue (f) out of range [0, 1]");
+            b = 0;
         }
         this.#r = Math.floor(r * 255);
         this.#g = Math.floor(g * 255);
@@ -198,22 +197,22 @@ export default class Color {
 
     /**
      * Sets the value of this color using the components of HSB color model
-     * @param {number} h The hue component of the color, in the range [0.0, 360.0)
-     * @param {number} s The saturation of the color, in the range [0.0, 1.0]
-     * @param {number} b The brightness of the color, in the range [0.0, 1.0]
-     * @param {number} a The alpha component of the color, in the range [0.0, 1.0]
+     * @param {number} h The hue component of the color, in the range [0, 360)
+     * @param {number} s The saturation of the color, in the range [0, 1]
+     * @param {number} b The brightness of the color, in the range [0, 1]
+     * @param {number} a The alpha component of the color, in the range [0, 1]
      */
-    setHSB(h, s, b, a = 1.0) {
+    setHSB(h, s, b, a = 1) {
         if (h < 0 || h >= 360) {
-            console.warn("Hue out of range [0.0, 360.0)");
+            console.warn("Hue out of range [0, 360)");
             h = 0;
         }
-        if (s < 0.0 || s > 1.0) {
-            console.warn("Saturation out of range [0.0, 1.0]");
+        if (s < 0 || s > 1) {
+            console.warn("Saturation out of range [0, 1]");
             s = 0;
         }
-        if (b < 0.0 || b > 1.0) {
-            console.warn("Brightness out of range [0.0, 1.0]");
+        if (b < 0 || b > 1) {
+            console.warn("Brightness out of range [0, 1]");
             b = 0;
         }
         const rgb = Color.#HSBtoRGB(h, s, b);
@@ -238,27 +237,27 @@ export default class Color {
 
     /**
      * Sets the value of this color using the components of CMYK color model
-     * @param {number} c The cyan component of the color, in the range [0.0, 1.0]
-     * @param {number} m The magenta component of the color, in the range [0.0, 1.0]
-     * @param {number} y The yellow component of the color, in the range [0.0, 1.0]
-     * @param {number} k The black component of the color, in the range [0.0, 1.0]
-     * @param {number} a The alpha component of the color, in the range [0.0, 1.0]
+     * @param {number} c The cyan component of the color, in the range [0, 1]
+     * @param {number} m The magenta component of the color, in the range [0, 1]
+     * @param {number} y The yellow component of the color, in the range [0, 1]
+     * @param {number} k The black component of the color, in the range [0, 1]
+     * @param {number} a The alpha component of the color, in the range [0, 1]
      */
-    setCMYK(c, m, y, k, a = 1.0) {
-        if (c < 0.0 || c > 1.0) {
-            console.warn("Cyan out of range [0.0, 1.0]");
+    setCMYK(c, m, y, k, a = 1) {
+        if (c < 0 || c > 1) {
+            console.warn("Cyan out of range [0, 1]");
             c = 0;
         }
-        if (m < 0.0 || m > 1.0) {
-            console.warn("Magenta out of range [0.0, 1.0]");
+        if (m < 0 || m > 1) {
+            console.warn("Magenta out of range [0, 1]");
             m = 0;
         }
-        if (y < 0.0 || y > 1.0) {
-            console.warn("Yellow out of range [0.0, 1.0]");
+        if (y < 0 || y > 1) {
+            console.warn("Yellow out of range [0, 1]");
             y = 0;
         }
-        if (k < 0.0 || k > 1.0) {
-            console.warn("Black out of range [0.0, 1.0]");
+        if (k < 0 || k > 1) {
+            console.warn("Black out of range [0, 1]");
             k = 1;
         }
         const rgb = Color.#CMYKtoRGB(c, m, y, k);
@@ -283,10 +282,10 @@ export default class Color {
     }
 
     /**
-     * Luminance of the color, in the range [0.0, 1.0]
+     * Luminance of the color, in the range [0, 1]
      */
     luminance() {
-        return (0.299 * this.#r + 0.587 * this.#g + 0.114 * this.#b) / 255.0;
+        return (0.299 * this.#r + 0.587 * this.#g + 0.114 * this.#b) / 255;
     }
 
     /**
@@ -295,11 +294,16 @@ export default class Color {
      * @returns 
      */
     equals(obj) {
-        return obj instanceof Color && this.#r == obj.r && this.#g == obj.g && this.#b == obj.b && this.#a == obj.a;
+        return obj instanceof Color
+            && this.#r == obj.r
+            && this.#g == obj.g
+            && this.#b == obj.b
+            && this.#a == obj.a;
     }
 
     /**
-     * Returns the similarity with this color, in the range [0.0, 1.0], ignoring the alpha channel
+     * Returns the similarity with this color, in the range [0, 1], ignoring the
+     * alpha channel
      * @param {Color} color 
      */
     similarity(color) {
@@ -372,9 +376,9 @@ export default class Color {
     /**
      * Converts the components of the HSB model to the three components of the
      * RGB model.
-     * @param {number} h The hue component of the color, in the range [0.0, 360.0)
-     * @param {number} s The saturation of the color, in the range [0.0, 1.0]
-     * @param {number} b The brightness of the color, in the range [0.0, 1.0]
+     * @param {number} h The hue component of the color, in the range [0, 360)
+     * @param {number} s The saturation of the color, in the range [0, 1]
+     * @param {number} b The brightness of the color, in the range [0, 1]
      * @returns The RGB values of the color
      */
     static #HSBtoRGB(h, s, b) {
@@ -402,10 +406,10 @@ export default class Color {
     /**
      * Converts the components of the CMYK model to the three components of the
      * RGB model.
-     * @param {number} c The cyan component of the color, in the range [0.0, 1.0]
-     * @param {number} m The magenta component of the color, in the range [0.0, 1.0]
-     * @param {number} y The yellow component of the color, in the range [0.0, 1.0]
-     * @param {number} k The black component of the color, in the range [0.0, 1.0]
+     * @param {number} c The cyan component of the color, in the range [0, 1]
+     * @param {number} m The magenta component of the color, in the range [0, 1]
+     * @param {number} y The yellow component of the color, in the range [0, 1]
+     * @param {number} k The black component of the color, in the range [0, 1]
      * @returns The RGB components of the color
      */
     static #CMYKtoRGB(c, m, y, k) {
@@ -449,10 +453,10 @@ export default class Color {
     /**
      * Converts the components of the CMYK model to the three components of the
      * HSB model.
-     * @param {number} c The cyan component of the color, in the range [0.0, 1.0]
-     * @param {number} m The magenta component of the color, in the range [0.0, 1.0]
-     * @param {number} y The yellow component of the color, in the range [0.0, 1.0]
-     * @param {number} k The black component of the color, in the range [0.0, 1.0]
+     * @param {number} c The cyan component of the color, in the range [0, 1]
+     * @param {number} m The magenta component of the color, in the range [0, 1]
+     * @param {number} y The yellow component of the color, in the range [0, 1]
+     * @param {number} k The black component of the color, in the range [0, 1]
      * @returns The HSB components of the color
      */
     static #CMYKtoHSB(c, m, y, k) {
@@ -463,9 +467,9 @@ export default class Color {
     /**
      * Converts the components of the HSB model to the four components of the
      * CMYK model.
-     * @param {number} h The hue component of the color, in the range [0.0, 360.0)
-     * @param {number} s The saturation of the color, in the range [0.0, 1.0]
-     * @param {number} b The brightness of the color, in the range [0.0, 1.0]
+     * @param {number} h The hue component of the color, in the range [0, 360)
+     * @param {number} s The saturation of the color, in the range [0, 1]
+     * @param {number} b The brightness of the color, in the range [0, 1]
      * @returns The CMYK components of the color
      */
     static #HSBtoCMYK(h, s, b) {

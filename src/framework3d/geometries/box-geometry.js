@@ -1,11 +1,14 @@
 import Geometry from "../core/geometry.js";
 
+/**
+ * Class representing a box geometry
+ */
 export default class BoxGeometry extends Geometry {
     /**
-     * 
-     * @param {number} width 
-     * @param {number} height 
-     * @param {number} depth 
+     * Creates a box geometry
+     * @param {number} width  width of the box, default is 1
+     * @param {number} height height of the box, default is 1
+     * @param {number} depth depth of the box, default is 1
      */
     constructor(width = 1, height = 1, depth = 1) {
         super(
@@ -14,14 +17,17 @@ export default class BoxGeometry extends Geometry {
         );
 
         /**
+         * Width of the box
          * @type {number}
          */
         this.width = width;
         /**
+         * Height of the box
          * @type {number}
          */
         this.height = height;
         /**
+         * Depth of the box
          * @type {number}
          */
         this.depth = depth;

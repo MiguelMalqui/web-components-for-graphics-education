@@ -1,30 +1,42 @@
 import Box from "../math/box.js";
 import Vector3 from "../math/vector3.js";
 
+/**
+ * Class representing a geometry made of triangles
+ */
 export default class Geometry {
     /**
-     * 
-     * @param {Float32Array} positions 
-     * @param {Float32Array} normals 
+     * Creates a geometry.
+     * Each three vertex represent one triangle.
+     * @param {Float32Array} positions Positions of the vertices.
+     * Each three numbers represent one vertex position. 
+     * @param {Float32Array} normals Normals of the vertices.
+     * Each three numbers represent one vertex normal. 
      */
     constructor(positions, normals) {
         /**
+         * Positions of the vertices.
+         * Each three numbers represent one vertex position.
          * @type {Float32Array}
          */
         this.positions = positions;
         /**
+         * Normals of the vertices.
+         * Each three numbers represent one vertex normal.
          * @type {Float32Array}
          */
         this.normals = normals;
 
         /**
+         * Smallest axes-aligned box that enclose the geometry
          * @type {Box}
          */
         this.boundingBox = Geometry.#computeBoundingBox(this.positions);
     }
 
     /**
-     * 
+     * Computes a bounding box of a given array of numbers 
+     * where each three numbers represent one position
      * @param {Float32Array} positions 
      */
     static #computeBoundingBox(positions) {

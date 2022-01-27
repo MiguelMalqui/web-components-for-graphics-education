@@ -1,91 +1,25 @@
 import Object3D from "./object-3d.js";
 
+/**
+ * Class representing a scene
+ */
 export default class Scene {
+    /**
+     * Creates a scene
+     */
     constructor() {
         /**
+         * Objects of the scene
          * @type {Object3D[]}
          */
         this.objects = [];
     }
 
+    /**
+     * Adds an object to the scene
+     * @param {Object3D} object 
+     */
     addObject(object) {
         this.objects.push(object);
     }
 }
-
-// export default class Scene {
-
-//     static #DEFAULT_BOX = new Box(
-//         new Vector3(-1, -1, -1), new Vector3(1, 1, 1)
-//     );
-
-//     #observers;
-
-//     constructor() {
-//         /**
-//          * @type {[Model]}
-//          */
-//         this.models = [];
-//         /**
-//          * the bounding box that contains all the models of the scene when they
-//          * where added
-//          * @type {Box}
-//          */
-//         this.boundingBox = Scene.#DEFAULT_BOX.clone();
-
-//         this.#observers = [];
-//     }
-
-//     addObserver(observer) {
-//         this.#observers.push(observer);
-//     }
-
-//     notifyAllObservers(event, info) {
-//         this.#observers.forEach(o => {
-//             o.updateObserver(event, info);
-//         });
-//     }
-
-//     /**
-//      * Adds a model to the scene
-//      * @param {Model} model 
-//      */
-//     addModel(model) {
-//         this.models.push(model);
-//         this.#updateBoundingBox(model);
-//         this.notifyAllObservers("model-added", { model });
-//     }
-
-//     /**
-//      * Updates the bounding box of the scene to include the new model
-//      * @param {Model} model 
-//      */
-//     #updateBoundingBox(model) {
-//         // if first model to be added
-//         if (this.models.length == 1) {
-//             const box = model.computeBoundingBoxAfterModelTransform();
-//             this.boundingBox = box;
-//         } else {
-//             const box = model.computeBoundingBoxAfterModelTransform();
-//             this.boundingBox.expandByBoundingBox(box);
-//         }
-//     }
-
-//     /**
-//      * Returns the bounding box that contains all the models of the scene
-//      * @returns {Box}
-//      */
-//     computeBoundingBox() {
-//         if (this.models.length == 0) {
-//             return Scene.#DEFAULT_BOX.clone();
-//         }
-
-//         const box = this.models[0].computeBoundingBoxAfterModelTransform();
-//         for (let i = 1; i < this.models.length; i++) {
-//             const b = this.models[i].computeBoundingBoxAfterModelTransform();
-//             box.expandByBoundingBox(b);
-//         }
-
-//         return box;
-//     }
-// }

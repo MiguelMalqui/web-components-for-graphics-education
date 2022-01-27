@@ -122,15 +122,15 @@ export default class Matrix4x4 {
      * @returns 
      */
     mulVector4(v) {
-        const me = this.data;
+        const m = this.data;
         const x = v.x;
         const y = v.y;
         const z = v.z;
         const w = v.w;
-        const rx = x * me[0] + y * me[4] + z * me[8] + w * me[12];
-        const ry = x * me[1] + y * me[5] + z * me[9] + w * me[13];
-        const rz = x * me[2] + y * me[6] + z * me[10] + w * me[14];
-        const rw = x * me[3] + y * me[7] + z * me[11] + w * me[15];
+        const rx = x * m[0] + y * m[4] + z * m[8] + w * m[12];
+        const ry = x * m[1] + y * m[5] + z * m[9] + w * m[13];
+        const rz = x * m[2] + y * m[6] + z * m[10] + w * m[14];
+        const rw = x * m[3] + y * m[7] + z * m[11] + w * m[15];
         return new Vector4(rx, ry, rz, rw);
     }
 
@@ -148,126 +148,127 @@ export default class Matrix4x4 {
     }
 
     /**
-     * Returns a new Matrix4x4, result of invert this matrix. Return identity if it cannot be inverted
+     * Returns a new Matrix4x4, result of invert this matrix. Return identity 
+     * if it cannot be inverted
      * @returns 
      */
     inverse() {
         const inv = [];
-        const me = this.data;
+        const m = this.data;
 
-        inv[0] = me[5]  * me[10] * me[15] - 
-                 me[5]  * me[11] * me[14] - 
-                 me[9]  * me[6]  * me[15] + 
-                 me[9]  * me[7]  * me[14] +
-                 me[13] * me[6]  * me[11] - 
-                 me[13] * me[7]  * me[10];
+        inv[0] = m[5]  * m[10] * m[15] - 
+                 m[5]  * m[11] * m[14] - 
+                 m[9]  * m[6]  * m[15] + 
+                 m[9]  * m[7]  * m[14] +
+                 m[13] * m[6]  * m[11] - 
+                 m[13] * m[7]  * m[10];
 
-        inv[4] = -me[4]  * me[10] * me[15] + 
-                  me[4]  * me[11] * me[14] + 
-                  me[8]  * me[6]  * me[15] - 
-                  me[8]  * me[7]  * me[14] - 
-                  me[12] * me[6]  * me[11] + 
-                  me[12] * me[7]  * me[10];
+        inv[4] = -m[4]  * m[10] * m[15] + 
+                  m[4]  * m[11] * m[14] + 
+                  m[8]  * m[6]  * m[15] - 
+                  m[8]  * m[7]  * m[14] - 
+                  m[12] * m[6]  * m[11] + 
+                  m[12] * m[7]  * m[10];
 
-        inv[8] = me[4]  * me[9] * me[15] - 
-                 me[4]  * me[11] * me[13] - 
-                 me[8]  * me[5] * me[15] + 
-                 me[8]  * me[7] * me[13] + 
-                 me[12] * me[5] * me[11] - 
-                 me[12] * me[7] * me[9];
+        inv[8] = m[4]  * m[9] * m[15] - 
+                 m[4]  * m[11] * m[13] - 
+                 m[8]  * m[5] * m[15] + 
+                 m[8]  * m[7] * m[13] + 
+                 m[12] * m[5] * m[11] - 
+                 m[12] * m[7] * m[9];
 
-        inv[12] = -me[4]  * me[9] * me[14] + 
-                   me[4]  * me[10] * me[13] +
-                   me[8]  * me[5] * me[14] - 
-                   me[8]  * me[6] * me[13] - 
-                   me[12] * me[5] * me[10] + 
-                   me[12] * me[6] * me[9];
+        inv[12] = -m[4]  * m[9] * m[14] + 
+                   m[4]  * m[10] * m[13] +
+                   m[8]  * m[5] * m[14] - 
+                   m[8]  * m[6] * m[13] - 
+                   m[12] * m[5] * m[10] + 
+                   m[12] * m[6] * m[9];
 
-        inv[1] = -me[1]  * me[10] * me[15] + 
-                  me[1]  * me[11] * me[14] + 
-                  me[9]  * me[2] * me[15] - 
-                  me[9]  * me[3] * me[14] - 
-                  me[13] * me[2] * me[11] + 
-                  me[13] * me[3] * me[10];
+        inv[1] = -m[1]  * m[10] * m[15] + 
+                  m[1]  * m[11] * m[14] + 
+                  m[9]  * m[2] * m[15] - 
+                  m[9]  * m[3] * m[14] - 
+                  m[13] * m[2] * m[11] + 
+                  m[13] * m[3] * m[10];
 
-        inv[5] = me[0]  * me[10] * me[15] - 
-                 me[0]  * me[11] * me[14] - 
-                 me[8]  * me[2] * me[15] + 
-                 me[8]  * me[3] * me[14] + 
-                 me[12] * me[2] * me[11] - 
-                 me[12] * me[3] * me[10];
+        inv[5] = m[0]  * m[10] * m[15] - 
+                 m[0]  * m[11] * m[14] - 
+                 m[8]  * m[2] * m[15] + 
+                 m[8]  * m[3] * m[14] + 
+                 m[12] * m[2] * m[11] - 
+                 m[12] * m[3] * m[10];
 
-        inv[9] = -me[0]  * me[9] * me[15] + 
-                  me[0]  * me[11] * me[13] + 
-                  me[8]  * me[1] * me[15] - 
-                  me[8]  * me[3] * me[13] - 
-                  me[12] * me[1] * me[11] + 
-                  me[12] * me[3] * me[9];
+        inv[9] = -m[0]  * m[9] * m[15] + 
+                  m[0]  * m[11] * m[13] + 
+                  m[8]  * m[1] * m[15] - 
+                  m[8]  * m[3] * m[13] - 
+                  m[12] * m[1] * m[11] + 
+                  m[12] * m[3] * m[9];
 
-        inv[13] = me[0]  * me[9] * me[14] - 
-                  me[0]  * me[10] * me[13] - 
-                  me[8]  * me[1] * me[14] + 
-                  me[8]  * me[2] * me[13] + 
-                  me[12] * me[1] * me[10] - 
-                  me[12] * me[2] * me[9];
+        inv[13] = m[0]  * m[9] * m[14] - 
+                  m[0]  * m[10] * m[13] - 
+                  m[8]  * m[1] * m[14] + 
+                  m[8]  * m[2] * m[13] + 
+                  m[12] * m[1] * m[10] - 
+                  m[12] * m[2] * m[9];
 
-        inv[2] = me[1]  * me[6] * me[15] - 
-                 me[1]  * me[7] * me[14] - 
-                 me[5]  * me[2] * me[15] + 
-                 me[5]  * me[3] * me[14] + 
-                 me[13] * me[2] * me[7] - 
-                 me[13] * me[3] * me[6];
+        inv[2] = m[1]  * m[6] * m[15] - 
+                 m[1]  * m[7] * m[14] - 
+                 m[5]  * m[2] * m[15] + 
+                 m[5]  * m[3] * m[14] + 
+                 m[13] * m[2] * m[7] - 
+                 m[13] * m[3] * m[6];
 
-        inv[6] = -me[0]  * me[6] * me[15] + 
-                  me[0]  * me[7] * me[14] + 
-                  me[4]  * me[2] * me[15] - 
-                  me[4]  * me[3] * me[14] - 
-                  me[12] * me[2] * me[7] + 
-                  me[12] * me[3] * me[6];
+        inv[6] = -m[0]  * m[6] * m[15] + 
+                  m[0]  * m[7] * m[14] + 
+                  m[4]  * m[2] * m[15] - 
+                  m[4]  * m[3] * m[14] - 
+                  m[12] * m[2] * m[7] + 
+                  m[12] * m[3] * m[6];
 
-        inv[10] = me[0]  * me[5] * me[15] - 
-                  me[0]  * me[7] * me[13] - 
-                  me[4]  * me[1] * me[15] + 
-                  me[4]  * me[3] * me[13] + 
-                  me[12] * me[1] * me[7] - 
-                  me[12] * me[3] * me[5];
+        inv[10] = m[0]  * m[5] * m[15] - 
+                  m[0]  * m[7] * m[13] - 
+                  m[4]  * m[1] * m[15] + 
+                  m[4]  * m[3] * m[13] + 
+                  m[12] * m[1] * m[7] - 
+                  m[12] * m[3] * m[5];
 
-        inv[14] = -me[0]  * me[5] * me[14] + 
-                   me[0]  * me[6] * me[13] + 
-                   me[4]  * me[1] * me[14] - 
-                   me[4]  * me[2] * me[13] - 
-                   me[12] * me[1] * me[6] + 
-                   me[12] * me[2] * me[5];
+        inv[14] = -m[0]  * m[5] * m[14] + 
+                   m[0]  * m[6] * m[13] + 
+                   m[4]  * m[1] * m[14] - 
+                   m[4]  * m[2] * m[13] - 
+                   m[12] * m[1] * m[6] + 
+                   m[12] * m[2] * m[5];
 
-        inv[3] = -me[1] * me[6] * me[11] + 
-                  me[1] * me[7] * me[10] + 
-                  me[5] * me[2] * me[11] - 
-                  me[5] * me[3] * me[10] - 
-                  me[9] * me[2] * me[7] + 
-                  me[9] * me[3] * me[6];
+        inv[3] = -m[1] * m[6] * m[11] + 
+                  m[1] * m[7] * m[10] + 
+                  m[5] * m[2] * m[11] - 
+                  m[5] * m[3] * m[10] - 
+                  m[9] * m[2] * m[7] + 
+                  m[9] * m[3] * m[6];
 
-        inv[7] = me[0] * me[6] * me[11] - 
-                 me[0] * me[7] * me[10] - 
-                 me[4] * me[2] * me[11] + 
-                 me[4] * me[3] * me[10] + 
-                 me[8] * me[2] * me[7] - 
-                 me[8] * me[3] * me[6];
+        inv[7] = m[0] * m[6] * m[11] - 
+                 m[0] * m[7] * m[10] - 
+                 m[4] * m[2] * m[11] + 
+                 m[4] * m[3] * m[10] + 
+                 m[8] * m[2] * m[7] - 
+                 m[8] * m[3] * m[6];
 
-        inv[11] = -me[0] * me[5] * me[11] + 
-                   me[0] * me[7] * me[9] + 
-                   me[4] * me[1] * me[11] - 
-                   me[4] * me[3] * me[9] - 
-                   me[8] * me[1] * me[7] + 
-                   me[8] * me[3] * me[5];
+        inv[11] = -m[0] * m[5] * m[11] + 
+                   m[0] * m[7] * m[9] + 
+                   m[4] * m[1] * m[11] - 
+                   m[4] * m[3] * m[9] - 
+                   m[8] * m[1] * m[7] + 
+                   m[8] * m[3] * m[5];
 
-        inv[15] = me[0] * me[5] * me[10] - 
-                  me[0] * me[6] * me[9] - 
-                  me[4] * me[1] * me[10] + 
-                  me[4] * me[2] * me[9] + 
-                  me[8] * me[1] * me[6] - 
-                  me[8] * me[2] * me[5];
+        inv[15] = m[0] * m[5] * m[10] - 
+                  m[0] * m[6] * m[9] - 
+                  m[4] * m[1] * m[10] + 
+                  m[4] * m[2] * m[9] + 
+                  m[8] * m[1] * m[6] - 
+                  m[8] * m[2] * m[5];
         
-        let det = me[0] * inv[0] + me[1] * inv[4] + me[2] * inv[8] + me[3] * inv[12];
+        let det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
         if (det == 0) {
             return new Matrix4x4();
@@ -356,9 +357,9 @@ export default class Matrix4x4 {
      * @returns {Matrix4x4}
      */
     clone() {
-        const m = new Matrix4x4();
-        m.data = [...this.data];
-        return m;
+        const matrix = new Matrix4x4();
+        matrix.data = [...this.data];
+        return matrix;
     }
 
     /**

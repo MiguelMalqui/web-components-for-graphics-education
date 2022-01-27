@@ -5,19 +5,35 @@ import Camera from "../core/camera.js";
  * Class representing a perspective camera
  */
 export default class PerspectiveCamera extends Camera {
+    /**
+     * Camera frustum vertical field of view
+     * @type {number}
+     * 
+     */
     #fieldOfView;
+    /**
+     * Camera frustum aspect ratio
+     * @type {number}
+     * 
+     */
     #aspectRatio;
+    /**
+     * Camera frustum near plane
+     * @type {number}
+     */
     #zNear;
+    /**
+     * Camera frustum far plane
+     * @type {number}
+     */
     #zFar;
     /**
      * Creates a perspective camera
      * @param {number} fieldOfView - camera frustum vertical field of view,
      * in radians, default is 1
      * @param {number} aspectRatio - camera frustum aspect ratio, default is 1
-     * @param {number} zNear - the minimal distance between the camera and a 
-     * visible surface, default is 0.1
-     * @param {number} zFar - the maximal distance between the camera and a
-     * visible surface, default is 100
+     * @param {number} zNear - camera frustum near plane, default is 0.1
+     * @param {number} zFar - camera frustum far plane, default is 100
      */
     constructor(
         fieldOfView = 1, aspectRatio = 1, zNear = 0.1, zFar = 100
@@ -28,9 +44,9 @@ export default class PerspectiveCamera extends Camera {
             fieldOfView, aspectRatio, zNear, zFar
         );
     }
-    
+
     /**
-     * camera frustum vertical field of view, in radians
+     * Camera frustum vertical field of view, in radians
      * @type {number}
      */
     get fieldOfView() {
@@ -44,7 +60,7 @@ export default class PerspectiveCamera extends Camera {
     }
 
     /**
-     * camera frustum aspect ratio
+     * Camera frustum aspect ratio
      * @type {number}
      */
     get aspectRatio() {
@@ -58,7 +74,7 @@ export default class PerspectiveCamera extends Camera {
     }
 
     /**
-     * the minimal distance between the camera and a visible surface
+     * Camera frustum near plane
      * @type {number}
      */
     get zNear() {
@@ -72,7 +88,7 @@ export default class PerspectiveCamera extends Camera {
     }
 
     /**
-     * the maximal distance between the camera and a visible surface
+     * Camera frustum far plane
      * @type {number}
      */
     get zFar() {
@@ -90,17 +106,15 @@ export default class PerspectiveCamera extends Camera {
      * @param {number} fieldOfView - camera frustum vertical field of view,
      * in radians
      * @param {number} aspectRatio - camera frustum aspect ratio
-     * @param {number} zNear - the minimal distance between the camera and a 
-     * visible surface
-     * @param {number} zFar - the maximal distance between the camera and a
-     * visible surface
+     * @param {number} zNear - camera frustum near plane
+     * @param {number} zFar - camera frustum far plane
      */
     setProjectionMatrix(fieldOfView, aspectRatio, zNear, zFar) {
         this.#fieldOfView = fieldOfView;
         this.#aspectRatio = aspectRatio;
         this.#zNear = zNear;
         this.#zFar = zFar;
-        
+
         this.projectionMatrix = Matrix4x4.perspective(
             this.#fieldOfView,
             this.#aspectRatio,
@@ -109,6 +123,6 @@ export default class PerspectiveCamera extends Camera {
         );
     }
 
-  
+
 
 }

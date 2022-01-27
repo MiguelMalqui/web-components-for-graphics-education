@@ -5,11 +5,35 @@ import Camera from "../core/camera.js";
  * Class representing a orthographic camera
  */
 export default class OrthographicCamera extends Camera {
+    /**
+     * Camera frustum left plane
+     * @type {number}
+     */
     #left;
+    /**
+     * Camera frustum right plane
+     * @type {number}
+     */
     #right;
+    /**
+     * Camera frustum bottom plane
+     * @type {number}
+     */
     #bottom;
+    /**
+     * Camera frustum top plane
+     * @type {number}
+     */
     #top;
+    /**
+     * Camera frustum near plane
+     * @type {number}
+     */
     #zNear;
+    /**
+     * Camera frustum far plane
+     * @type {number}
+     */
     #zFar;
     /**
      * Creates a orthographic camera
@@ -17,10 +41,8 @@ export default class OrthographicCamera extends Camera {
      * @param {number} right - camera frustum right plane, default is 1
      * @param {number} bottom - camera frustum bottom plane, default is -1
      * @param {number} top - camera frustum top plane, default is 1
-     * @param {number} zNear - the minimal distance between the camera and a 
-     * visible surface, default is 0.1
-     * @param {number} zFar - the maximal distance between the camera and a
-     * visible surface, default is 100
+     * @param {number} zNear - camera frustum near plane, default is 0.1
+     * @param {number} zFar - camera frustum near plane, default is 100
      */
     constructor(
         left = -1, right = 1, bottom = -1, top = 1, zNear = 0.1, zFar = 100
@@ -33,7 +55,7 @@ export default class OrthographicCamera extends Camera {
     }
 
     /**
-     * camera frustum left plane
+     * Camera frustum left plane
      * @type {number}
      */
     get left() {
@@ -47,7 +69,7 @@ export default class OrthographicCamera extends Camera {
     }
 
     /**
-     * camera frustum right plane
+     * Camera frustum right plane
      * @type {number}
      */
     get right() {
@@ -61,7 +83,7 @@ export default class OrthographicCamera extends Camera {
     }
 
     /**
-     * camera frustum bottom plane
+     * Camera frustum bottom plane
      * @type {number}
      */
     get bottom() {
@@ -75,7 +97,7 @@ export default class OrthographicCamera extends Camera {
     }
 
     /**
-     * camera frustum top plane
+     * Camera frustum top plane
      * @type {number}
      */
     get top() {
@@ -89,7 +111,7 @@ export default class OrthographicCamera extends Camera {
     }
 
     /**
-     * the minimal distance between the camera and a visible surface
+     * Camera frustum near plane
      * @type {number} 
      */
     get zNear() {
@@ -103,7 +125,7 @@ export default class OrthographicCamera extends Camera {
     }
 
     /**
-     * the maximal distance between the camera and a visible surface
+     * Camera frustum far plane
      * @type {number} 
      */
     get zFar() {
@@ -122,10 +144,8 @@ export default class OrthographicCamera extends Camera {
      * @param {number} right - camera frustum right plane
      * @param {number} bottom - camera frustum bottom plane
      * @param {number} top - camera frustum top plane
-     * @param {number} zNear - the minimal distance between the camera and a 
-     * visible surface
-     * @param {number} zFar - the maximal distance between the camera and a
-     * visible surface
+     * @param {number} zNear - camera frustum near plane
+     * @param {number} zFar - camera frustum far plane
      */
     setProjectionMatrix(left, right, bottom, top, zNear, zFar) {
         this.#left = left;

@@ -8,12 +8,12 @@ import Vector3 from "../math/vector3.js";
 export default class Camera {
     constructor() {
         /**
-         * the view matrix of the camera
+         * Projection matrix of the camera
          * @type {Matrix4x4}
          */
         this.projectionMatrix = new Matrix4x4();
         /**
-         * the view matrix of the camera
+         * View matrix of the camera
          * @type {Matrix4x4}
          */
         this.viewMatrix = new Matrix4x4();

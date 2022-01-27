@@ -1,6 +1,14 @@
 import Geometry from "../core/geometry.js";
 
+/**
+ * Class representing a plane geometry
+ */
 export default class PlaneGeometry extends Geometry {
+    /**
+     * Creates a plane geometry
+     * @param {number} width width of the plane, default is 1
+     * @param {number} depth depth of the plane, default is 1
+     */
     constructor(width = 1, depth = 1) {
         super(
             PlaneGeometry.#createPositions(width, depth),
@@ -8,10 +16,12 @@ export default class PlaneGeometry extends Geometry {
         );
 
         /**
+         * Width of the plane
          * @type {number}
          */
         this.width = width;
         /**
+         * Depth of the plane
          * @type {number}
          */
         this.depth = depth;

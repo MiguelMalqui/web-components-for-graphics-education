@@ -172,7 +172,9 @@ export default class Vector4 {
      */
     normalize() {
         const length = this.length();
-        return new Vector4(this.x / length, this.y / length, this.z / length, this.w / length);
+        return new Vector4(
+            this.x / length, this.y / length, this.z / length, this.w / length
+        );
     }
 
     /**
