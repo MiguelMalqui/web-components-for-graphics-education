@@ -1,13 +1,14 @@
-import Matrix4x4 from "../helpers/maths/matrix4x4.js"
-import Vector3 from "../helpers/maths/vector3.js";
-import PerspectiveCamera from "../helpers/camera/perspective-camera.js";
-import SceneRenderer from "../helpers/renderers/scene-renderer.js";
+import Matrix4x4 from "../framework3d/math/matrix4x4.js";
+import Vector3 from "../framework3d/math/vector3.js";
+import OrthographicCamera from "../framework3d/cameras/orthographic-camera.js";
+import PerspectiveCamera from "../framework3d/cameras/perspective-camera.js";
+import SceneRenderer from "../framework3d/renderer/scene-renderer.js";
+import Object3D from "../framework3d/core/object-3d.js";
+import BoxGeometry from "../framework3d/geometries/box-geometry.js";
+import PlaneGeometry from "../framework3d/geometries/plane-geometry.js";
+import UVSphereGeometry from "../framework3d/geometries/uv-sphere-geometry.js"
+
 import CameraControler from "../helpers/camera/camera-controler.js";
-import Scene from "../helpers/scene.js";
-import OrthograficCamera from "../helpers/camera/orthographic-camera.js";
-import CubeModel from "../helpers/models/cube-model.js";
-import Pyramid from "../helpers/models/pyramid.js"
-import PlaneModel from "../helpers/models/plane-model.js"
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -83,11 +84,11 @@ input[type=number] {
             </div>
             <div>
                 <label>zNear</label>
-                <input type="number" value="0.1" step="0.01" id="znear">
+                <input type="number" value="1.0" step="0.01" id="znear">
             </div>
             <div>
                 <label>zFar</label>
-                <input type="number" value="100" step="0.01" id="zfar">
+                <input type="number" value="10" step="0.01" id="zfar">
             </div>
         </div>
         <div class="container" id="ortho">
@@ -182,7 +183,7 @@ export class TypesOfCameras extends HTMLElement {
 
         this.addListeners();
 
-        this.updatePerpectiveProj();
+        // this.updatePerpectiveProj();
         this.updateOrthographicProj();
         this.updateViewLookAt();
     }
@@ -194,27 +195,94 @@ export class TypesOfCameras extends HTMLElement {
     animate() {
         requestAnimationFrame(() => { this.animate() });
         this.sceneView.render(this.cameraSceneView);
+
+        // const gl = this.sceneView.context;
+        // const program = this.sceneView.program;
+        // gl.useProgram(program);
+
+        // gl.uniformMatrix4fv(this.sceneView.modelMatrixLoc, false, this.cameraCameraView.model.transform.data);
+        // // const m =  new Matrix4x4().translate(0,0,5);
+        // // // console.log('----------------')
+        // // // console.log(m.data);
+        // // // console.log(this.cameraCameraView.model.transform.data);
+        // // gl.uniformMatrix4fv(this.sceneView.modelMatrixLoc, false, m.data);
+
+        // const posVBO = gl.createBuffer();
+        // gl.bindBuffer(gl.ARRAY_BUFFER, posVBO);
+        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.cameraCameraView.model.positions), gl.STATIC_DRAW);
+        // gl.vertexAttribPointer(this.sceneView.positionLoc, 3, gl.FLOAT, false, 0, 0);
+        // gl.enableVertexAttribArray(this.sceneView.positionLoc);
+        // const colVBO = gl.createBuffer();
+        // gl.bindBuffer(gl.ARRAY_BUFFER, colVBO);
+        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.cameraCameraView.model.colors), gl.STATIC_DRAW);
+        // gl.vertexAttribPointer(this.sceneView.colorLoc, 3, gl.FLOAT, false, 0, 0);
+        // gl.enableVertexAttribArray(this.sceneView.colorLoc);
+        // gl.drawArrays(gl.LINES, 0, this.cameraCameraView.model.numVertices);
+
         this.cameraView.render(this.cameraCameraView);
     }
 
     initScene() {
-        const scene = new Scene();
-        const c1 = new CubeModel(); c1.transform.translate(-1, 0.5, 1);
-        const p1 = new Pyramid(); p1.transform.translate(1, 0.5, -1);
-        const t1 = new PlaneModel(); t1.transform.scale(4, 1, 4);
-        scene.addModel(c1); scene.addModel(p1); scene.addModel(t1);
+        const cube = new Object3D(new BoxGeometry()); cube.transform = Matrix4x4.translation(-1, 0.5, 1);
+        const plane = new Object3D(new PlaneGeometry()); plane.transform = Matrix4x4.scaling(4, 1, 4);
+        const octahedron = new Object3D(new UVSphereGeometry(0.5, 4, 2)); octahedron.transform = Matrix4x4.translation(1, 0.5, -1)
 
         let canvas = this.shadowRoot.querySelector("#scene-view");
-        this.sceneView = new SceneRenderer(canvas, { scene, drawWorldAxes: true, autoClear: true });
-        this.cameraSceneView = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
-        new CameraControler(this.cameraSceneView, canvas, { distance: 5, theta: 0.2 });
+        this.sceneView = new SceneRenderer(canvas, { drawWorldAxes: true, autoClear: true })
+        this.sceneView.addObject(cube);
+        this.sceneView.addObject(plane);
+        this.sceneView.addObject(octahedron);
+
+        this.cameraSceneView = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+        new CameraControler(this.cameraSceneView, canvas, { distance: 5, theta: 0.5, psi : 2.5 });
 
         canvas = this.shadowRoot.querySelector("#camera-view");
-        this.cameraView = new SceneRenderer(canvas, { scene, autoClear: true });
-        this.cameraP = new PerspectiveCamera();
-        this.cameraO = new OrthograficCamera()
+        this.cameraView = new SceneRenderer(canvas, { autoClear: true });
+        this.cameraView.addObject(cube);
+        this.cameraView.addObject(plane);
+        this.cameraView.addObject(octahedron);
 
+        this.cameraP = new PerspectiveCamera(
+            this.getNumberFromInput("#fov"),
+            this.getNumberFromInput('#ra'),
+            this.getNumberFromInput("#znear"),
+            this.getNumberFromInput('#zfar')
+        );
+        this.cameraO = new OrthographicCamera(
+            this.getNumberFromInput("#left"),
+            this.getNumberFromInput("#right"),
+            this.getNumberFromInput("#bottom"),
+            this.getNumberFromInput("#top"),
+            this.getNumberFromInput("#znear"),
+            this.getNumberFromInput('#zfar')
+        );
         this.cameraCameraView = this.cameraP;
+
+
+
+
+        // const scene = new Scene();
+        // const c1 = new CubeModel(); c1.transform = Matrix4x4.translation(-1, 0.5, 1);
+        // const p1 = new Pyramid(); p1.transform = Matrix4x4.translation(1, 0.5, -1);
+        // const t1 = new PlaneModel(); t1.transform = Matrix4x4.scaling(4, 1, 4);
+        // scene.addModel(c1); scene.addModel(p1); scene.addModel(t1);
+
+        // let canvas = this.shadowRoot.querySelector("#scene-view");
+        // this.sceneView = new SceneRenderer(canvas, { scene, drawWorldAxes: true, autoClear: true });
+        // this.cameraSceneView = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+        // new CameraControler(this.cameraSceneView, canvas, { distance: 5, theta: 0.5, psi : 2.5 });
+
+        // canvas = this.shadowRoot.querySelector("#camera-view");
+        // this.cameraView = new SceneRenderer(canvas, { scene, autoClear: true });
+        // this.cameraP = new PerspectiveCamera(
+        //     this.getNumberFromInput("#fov"),
+        //     this.getNumberFromInput('#ra'),
+        //     this.getNumberFromInput("#znear"),
+        //     this.getNumberFromInput('#zfar')
+        // );
+        // this.cameraO = new OrthograficCamera()
+
+        // this.cameraCameraView = this.cameraP;
     }
 
     addListeners() {
@@ -286,29 +354,29 @@ export class TypesOfCameras extends HTMLElement {
     }
 
     updatePerpectiveProj() {
-        this.cameraP.fov = this.getNumberFromInput("#fov");
-        this.cameraP.ra = this.getNumberFromInput("#ra");
-        this.cameraP.zNear = this.getNumberFromInput("#znear");
-        this.cameraP.zFar = this.getNumberFromInput("#zfar");
-        this.cameraP.updateProjectionMatrix();
+        const fov = this.getNumberFromInput("#fov");
+        const ra = this.getNumberFromInput("#ra");
+        const zNear = this.getNumberFromInput("#znear");
+        const zFar = this.getNumberFromInput("#zfar");
+        this.cameraP.setProjectionMatrix(fov, ra, zNear, zFar);
     }
 
     updateViewLookAt() {
         const obs = this.getOBS();
         const vrp = this.getVRP();
         const up = this.getUP();
-        this.cameraP.updateViewMatrixLookAt(obs, vrp, up);
-        this.cameraO.updateViewMatrixLookAt(obs, vrp, up);
+        this.cameraP.setViewFromLookAt(obs, vrp, up);
+        this.cameraO.setViewFromLookAt(obs, vrp, up);
     }
 
     updateOrthographicProj() {
-        this.cameraO.left = this.getNumberFromInput('#left');
-        this.cameraO.right = this.getNumberFromInput('#right');
-        this.cameraO.bottom = this.getNumberFromInput('#bottom');
-        this.cameraO.top = this.getNumberFromInput('#top');
-        this.cameraO.zNear = this.getNumberFromInput("#znear2");
-        this.cameraO.zFar = this.getNumberFromInput("#zfar2");
-        this.cameraO.updateProjectionMatrix();
+        const left = this.getNumberFromInput('#left');
+        const right = this.getNumberFromInput('#right');
+        const bottom = this.getNumberFromInput('#bottom');
+        const top = this.getNumberFromInput('#top');
+        const zNear = this.getNumberFromInput("#znear2");
+        const zFar = this.getNumberFromInput("#zfar2");
+        this.cameraO.setProjectionMatrix(left, right, bottom, top, zNear, zFar);
     }
 
     updateViewEuler() {
@@ -317,8 +385,8 @@ export class TypesOfCameras extends HTMLElement {
         const theta = this.getNumberFromInput("#theta");
         const psi = this.getNumberFromInput("#psi");
         const vrp = this.getVRP2();
-        this.cameraP.updateVieMatrixEulerAngles(distance, phi, theta, psi, vrp);
-        this.cameraO.updateVieMatrixEulerAngles(distance, phi, theta, psi, vrp);
+        this.cameraP.setViewFromArcBall(distance, phi, theta, psi, vrp);
+        this.cameraO.setViewFromArcBall(distance, phi, theta, psi, vrp);
     }
 
     getOBS() {

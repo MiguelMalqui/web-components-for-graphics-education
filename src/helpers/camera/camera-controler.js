@@ -1,5 +1,5 @@
-import Vector3 from "../maths/vector3.js";
-import Camera from "./camera.js";
+import Vector3 from "../../framework3d/math/vector3.js";
+import Camera from "../../framework3d/core/camera.js";
 
 /**
  * Class representing a camera controler using euler angles
@@ -30,6 +30,9 @@ export default class CameraControler {
      * @param {Vector3} [options.vrp] - the target of the camera, default is (0, 0, 0)
      */
     constructor(camera, element, options = {}) {
+        /**
+         * @type {Camera}
+         */
         this.#camera = camera;
         this.#element = element;
 
@@ -46,9 +49,9 @@ export default class CameraControler {
     }
 
     #updateCameraViewMatrix() {
-        this.#camera.updateVieMatrixEulerAngles(
+        this.#camera.setViewFromArcBall(
             this.#distance,
-            this.#phi, this.#theta, this.#psi,
+            this.#theta, this.#psi, this.#phi,
             this.#vrp
         );
     }

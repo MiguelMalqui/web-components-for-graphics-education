@@ -1,4 +1,4 @@
-import Color from "../../helpers/color.js";
+import Color from "../../framework3d/math/color.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -117,18 +117,18 @@ export default class CMYKSelectionForm extends HTMLElement {
         const thisColor = this.getColor();
         if (!thisColor.equals(color)) {
             const cmyk = color.getCMYK();
-            cmyk.cyan = Math.round(cmyk.cyan * 100);
-            cmyk.magenta = Math.round(cmyk.magenta * 100);
-            cmyk.yellow = Math.round(cmyk.yellow * 100);
-            cmyk.black = Math.round(cmyk.black * 100);
-            this.shadowRoot.querySelector('#cyan-number-field').value = cmyk.cyan;
-            this.shadowRoot.querySelector('#cyan-slider').value = cmyk.cyan;
-            this.shadowRoot.querySelector('#magenta-number-field').value = cmyk.magenta;
-            this.shadowRoot.querySelector('#magenta-slider').value = cmyk.magenta;
-            this.shadowRoot.querySelector('#yellow-number-field').value = cmyk.yellow;
-            this.shadowRoot.querySelector('#yellow-slider').value = cmyk.yellow;
-            this.shadowRoot.querySelector('#black-number-field').value = cmyk.black;
-            this.shadowRoot.querySelector('#black-slider').value = cmyk.black;
+            cmyk.c = Math.round(cmyk.c * 100);
+            cmyk.m = Math.round(cmyk.m * 100);
+            cmyk.y = Math.round(cmyk.y * 100);
+            cmyk.k = Math.round(cmyk.k * 100);
+            this.shadowRoot.querySelector('#cyan-number-field').value = cmyk.c;
+            this.shadowRoot.querySelector('#cyan-slider').value = cmyk.c;
+            this.shadowRoot.querySelector('#magenta-number-field').value = cmyk.m;
+            this.shadowRoot.querySelector('#magenta-slider').value = cmyk.m;
+            this.shadowRoot.querySelector('#yellow-number-field').value = cmyk.y;
+            this.shadowRoot.querySelector('#yellow-slider').value = cmyk.y;
+            this.shadowRoot.querySelector('#black-number-field').value = cmyk.k;
+            this.shadowRoot.querySelector('#black-slider').value = cmyk.k;
         }
     }
 }
