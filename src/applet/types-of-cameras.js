@@ -110,11 +110,11 @@ input[type=number] {
             </div>
             <div>
                 <label>zNear</label>
-                <input type="number" value="0.1" step="0.01" id="znear2">
+                <input type="number" value="1.0" step="0.01" id="znear2">
             </div>
             <div>
                 <label>zFar</label>
-                <input type="number" value="100" step="0.01" id="zfar2">
+                <input type="number" value="10" step="0.01" id="zfar2">
             </div>
         </div>
     </div>
@@ -195,37 +195,154 @@ export class TypesOfCameras extends HTMLElement {
     animate() {
         requestAnimationFrame(() => { this.animate() });
         this.sceneView.render(this.cameraSceneView);
-
-        // const gl = this.sceneView.context;
-        // const program = this.sceneView.program;
-        // gl.useProgram(program);
-
-        // gl.uniformMatrix4fv(this.sceneView.modelMatrixLoc, false, this.cameraCameraView.model.transform.data);
-        // // const m =  new Matrix4x4().translate(0,0,5);
-        // // // console.log('----------------')
-        // // // console.log(m.data);
-        // // // console.log(this.cameraCameraView.model.transform.data);
-        // // gl.uniformMatrix4fv(this.sceneView.modelMatrixLoc, false, m.data);
-
-        // const posVBO = gl.createBuffer();
-        // gl.bindBuffer(gl.ARRAY_BUFFER, posVBO);
-        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.cameraCameraView.model.positions), gl.STATIC_DRAW);
-        // gl.vertexAttribPointer(this.sceneView.positionLoc, 3, gl.FLOAT, false, 0, 0);
-        // gl.enableVertexAttribArray(this.sceneView.positionLoc);
-        // const colVBO = gl.createBuffer();
-        // gl.bindBuffer(gl.ARRAY_BUFFER, colVBO);
-        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.cameraCameraView.model.colors), gl.STATIC_DRAW);
-        // gl.vertexAttribPointer(this.sceneView.colorLoc, 3, gl.FLOAT, false, 0, 0);
-        // gl.enableVertexAttribArray(this.sceneView.colorLoc);
-        // gl.drawArrays(gl.LINES, 0, this.cameraCameraView.model.numVertices);
-
+        this.drawCamera();
         this.cameraView.render(this.cameraCameraView);
     }
 
+    static #cameraColors = new Float32Array([
+        // cone
+        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+        // up
+        0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+        // frustum
+        1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0,
+        1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0,
+        1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0,
+        1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0,
+        1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0,
+        1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0
+    ]);
+
+    #perspectiveCameraPositions() {
+        const camera = this.cameraP;
+        const zN = camera.zNear;
+        const zF = camera.zFar;
+        const a = camera.fieldOfView / 2;
+        const hw = 2 * zN * Math.tan(a);
+        const aw = hw * camera.aspectRatio;
+        const l = -aw / 2;
+        const b = -hw / 2;
+        const r = aw / 2;
+        const t = hw / 2;
+        const hw2 = 2 * zF * Math.tan(a);
+        const aw2 = hw2 * camera.aspectRatio;
+        const l2 = -aw2 / 2;
+        const b2 = -hw2 / 2;
+        const r2 = aw2 / 2;
+        const t2 = hw2 / 2;
+
+        return new Float32Array([
+            // cone
+            0, 0, 0, r, t, -zN,
+            0, 0, 0, l, t, -zN,
+            0, 0, 0, l, b, -zN,
+            0, 0, 0, r, b, -zN,
+            // up
+            l, t + 0.05, -zN,
+            r, t + 0.05, -zN,
+            r, t + 0.05, -zN,
+            l + aw / 2, t + 0.05 + (aw / 4) * Math.tan(60 * Math.PI / 180), -zN,
+            l + aw / 2, t + 0.05 + (aw / 4) * Math.tan(60 * Math.PI / 180), -zN,
+            l, t + 0.05, -zN,
+            // frustum
+            l, t, -zN, r, t, -zN,
+            r, t, -zN, r, b, -zN,
+            r, b, -zN, l, b, -zN,
+            l, b, -zN, l, t, -zN,
+            l, t, -zN, l2, t2, -zF,
+            r, t, -zN, r2, t2, -zF,
+            r, b, -zN, r2, b2, -zF,
+            l, b, -zN, l2, b2, -zF,
+            l2, t2, -zF, r2, t2, -zF,
+            r2, t2, -zF, r2, b2, -zF,
+            r2, b2, -zF, l2, b2, -zF,
+            l2, b2, -zF, l2, t2, -zF,
+        ]);
+    }
+
+    #orthographicCameraPositions() {
+        const camera = this.cameraO;
+        const zN = camera.zNear;
+        const zF = camera.zFar;
+        const l = camera.left;
+        const b = camera.bottom;
+        const r = camera.right;
+        const t = camera.top;
+        const aw = r - l;
+
+        return new Float32Array([
+            // cone
+            0, 0, 0, r, t, -zN,
+            0, 0, 0, l, t, -zN,
+            0, 0, 0, l, b, -zN,
+            0, 0, 0, r, b, -zN,
+            // up
+            l, t + 0.05, -zN,
+            r, t + 0.05, -zN,
+            r, t + 0.05, -zN,
+            l + aw / 2, t + 0.05 + (aw / 4) * Math.tan(60 * Math.PI / 180), -zN,
+            l + aw / 2, t + 0.05 + (aw / 4) * Math.tan(60 * Math.PI / 180), -zN,
+            l, t + 0.05, -zN,
+            // frustum
+            l, t, -zN, r, t, -zN,
+            r, t, -zN, r, b, -zN,
+            r, b, -zN, l, b, -zN,
+            l, b, -zN, l, t, -zN,
+            l, t, -zN, l, t, -zF,
+            r, t, -zN, r, t, -zF,
+            r, b, -zN, r, b, -zF,
+            l, b, -zN, l, b, -zF,
+            l, t, -zF, r, t, -zF,
+            r, t, -zF, r, b, -zF,
+            r, b, -zF, l, b, -zF,
+            l, b, -zF, l, t, -zF,
+        ]);
+    }
+
+    drawCamera() {
+        let positions, transform;
+        const colors = TypesOfCameras.#cameraColors;
+
+        if (this.cameraCameraView instanceof PerspectiveCamera) {
+            positions = this.#perspectiveCameraPositions();
+            transform = this.cameraP.viewMatrix.inverse();
+        } else {
+            positions = this.#orthographicCameraPositions();
+            transform = this.cameraO.viewMatrix.inverse();
+        }
+
+        const gl = this.sceneView.context;
+        const program = this.sceneView.program;
+        gl.useProgram(program);
+
+        const modelLoc = gl.getUniformLocation(program, "modelMatrix");
+        gl.uniformMatrix4fv(modelLoc, false, transform.data);
+
+        const posLoc = gl.getAttribLocation(program, "position");
+        const posVBO = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, posVBO);
+        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(posLoc);
+        
+        const colLoc = gl.getAttribLocation(program, "color");
+        const colVBO = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, colVBO);
+        gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(colLoc, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(colLoc);
+        
+        gl.drawArrays(gl.LINES, 0, positions.length /  3);
+    }
+
     initScene() {
-        const cube = new Object3D(new BoxGeometry()); cube.transform = Matrix4x4.translation(-1, 0.5, 1);
-        const plane = new Object3D(new PlaneGeometry()); plane.transform = Matrix4x4.scaling(4, 1, 4);
-        const octahedron = new Object3D(new UVSphereGeometry(0.5, 4, 2)); octahedron.transform = Matrix4x4.translation(1, 0.5, -1)
+        const cube = new Object3D(new BoxGeometry());
+        cube.transform = Matrix4x4.translation(-1, 0.5, 1);
+        const plane = new Object3D(new PlaneGeometry());
+        plane.transform = Matrix4x4.scaling(4, 1, 4);
+        const octahedron = new Object3D(new UVSphereGeometry(0.5, 4, 2));
+        octahedron.transform = Matrix4x4.translation(1, 0.5, -1)
 
         let canvas = this.shadowRoot.querySelector("#scene-view");
         this.sceneView = new SceneRenderer(canvas, { drawWorldAxes: true, autoClear: true })
@@ -257,32 +374,6 @@ export class TypesOfCameras extends HTMLElement {
             this.getNumberFromInput('#zfar')
         );
         this.cameraCameraView = this.cameraP;
-
-
-
-
-        // const scene = new Scene();
-        // const c1 = new CubeModel(); c1.transform = Matrix4x4.translation(-1, 0.5, 1);
-        // const p1 = new Pyramid(); p1.transform = Matrix4x4.translation(1, 0.5, -1);
-        // const t1 = new PlaneModel(); t1.transform = Matrix4x4.scaling(4, 1, 4);
-        // scene.addModel(c1); scene.addModel(p1); scene.addModel(t1);
-
-        // let canvas = this.shadowRoot.querySelector("#scene-view");
-        // this.sceneView = new SceneRenderer(canvas, { scene, drawWorldAxes: true, autoClear: true });
-        // this.cameraSceneView = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-        // new CameraControler(this.cameraSceneView, canvas, { distance: 5, theta: 0.5, psi : 2.5 });
-
-        // canvas = this.shadowRoot.querySelector("#camera-view");
-        // this.cameraView = new SceneRenderer(canvas, { scene, autoClear: true });
-        // this.cameraP = new PerspectiveCamera(
-        //     this.getNumberFromInput("#fov"),
-        //     this.getNumberFromInput('#ra'),
-        //     this.getNumberFromInput("#znear"),
-        //     this.getNumberFromInput('#zfar')
-        // );
-        // this.cameraO = new OrthograficCamera()
-
-        // this.cameraCameraView = this.cameraP;
     }
 
     addListeners() {
