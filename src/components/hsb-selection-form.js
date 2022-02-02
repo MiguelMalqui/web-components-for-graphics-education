@@ -1,6 +1,6 @@
 import Color from "../framework3d/math/color.js";
 
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 .color-form {
@@ -8,6 +8,8 @@ template.innerHTML = `
 }
 .color-form>label {
     width: 4.5rem;
+    display: flex;
+    align-items: center;
 }
 .color-form>input[type=number] {
     width: 2.5rem;
@@ -21,61 +23,67 @@ template.innerHTML = `
 
 <div class="color-form">
     <label>Hue</label>
-    <input type="number" min="0" max="359" value="0" id="hue-number-field">
+    <input type="number" min="0" max="359" value="0" id="hue-number-input">
     <input type="range" min="0" max="359" value="0" id="hue-slider">
 </div>
 <div class="color-form">
     <label>Saturation</label>
-    <input type="number" min="0" max="100" value="0" id="saturation-number-field">
+    <input type="number" min="0" max="100" value="0" id="saturation-number-input">
     <input type="range" min="0" max="100" value="0" id="saturation-slider">
 </div>
 <div class="color-form">
     <label>Brightness</label>
-    <input type="number" min="0" max="100" value="0" id="brightness-number-field">
+    <input type="number" min="0" max="100" value="0" id="brightness-number-input">
     <input type="range" min="0" max="100" value="0" id="brightness-slider">
 </div>
 `;
 
 export default class HSBSelectionForm extends HTMLElement {
+    #hueNumInput;
+    #saturationNumInput;
+    #brightnessNumInput;
+    #hueSlider;
+    #saturationSlider;
+    #brightnessSlider;
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+        this.#hueNumInput = this.shadowRoot.querySelector("#hue-number-input");
+        this.#saturationNumInput = this.shadowRoot.querySelector("#saturation-number-input");
+        this.#brightnessNumInput = this.shadowRoot.querySelector("#brightness-number-input");
+        this.#hueSlider = this.shadowRoot.querySelector("#hue-slider");
+        this.#saturationSlider = this.shadowRoot.querySelector("#saturation-slider");
+        this.#brightnessSlider = this.shadowRoot.querySelector("#brightness-slider");
+
         this.#addListeners();
     }
 
     #addListeners() {
-        const hNumField = this.shadowRoot.querySelector('#hue-number-field');
-        const sNumField = this.shadowRoot.querySelector('#saturation-number-field');
-        const bNumField = this.shadowRoot.querySelector('#brightness-number-field');
-        const hSlider = this.shadowRoot.querySelector('#hue-slider');
-        const sSlider = this.shadowRoot.querySelector('#saturation-slider');
-        const bSlider = this.shadowRoot.querySelector('#brightness-slider');
-
-        hNumField.addEventListener('change', () => {
-            hNumField.value = HSBSelectionForm.#validateHRange(hNumField.value);
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#hueNumInput.addEventListener("change", () => {
+            this.#hueNumInput.value = HSBSelectionForm.#validateHRange(this.#hueNumInput.value);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        sNumField.addEventListener('change', () => {
-            sNumField.value = HSBSelectionForm.#validateSBRange(sNumField.value);
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#saturationNumInput.addEventListener("change", () => {
+            this.#saturationNumInput.value = HSBSelectionForm.#validateSBRange(this.#saturationNumInput.value);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        bNumField.addEventListener('change', () => {
-            bNumField.value = HSBSelectionForm.#validateSBRange(bNumField.value);
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#brightnessNumInput.addEventListener("change", () => {
+            this.#brightnessNumInput.value = HSBSelectionForm.#validateSBRange(this.#brightnessNumInput.value);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-
-        hSlider.addEventListener('input', () => {
-            hNumField.value = hSlider.value;
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#hueSlider.addEventListener("input", () => {
+            this.#hueNumInput.value = this.#hueSlider.value;
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        sSlider.addEventListener('input', () => {
-            sNumField.value = sSlider.value;
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#saturationSlider.addEventListener("input", () => {
+            this.#saturationNumInput.value = this.#saturationSlider.value;
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        bSlider.addEventListener('input', () => {
-            bNumField.value = bSlider.value;
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#brightnessSlider.addEventListener("input", () => {
+            this.#brightnessNumInput.value = this.#brightnessSlider.value;
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
     }
 
@@ -98,13 +106,21 @@ export default class HSBSelectionForm extends HTMLElement {
         return value;
     }
 
+    /**
+     * 
+     * @returns {Color}
+     */
     getColor() {
-        const h = this.shadowRoot.querySelector('#hue-number-field').value;
-        const s = this.shadowRoot.querySelector('#saturation-number-field').value / 100.0;
-        const b = this.shadowRoot.querySelector('#brightness-number-field').value / 100.0;
+        const h = Number(this.#hueSlider.value);
+        const s = Number(this.#saturationSlider.value / 100);
+        const b = Number(this.#brightnessSlider.value / 100);
         return Color.makeHSB(h, s, b);
     }
 
+    /**
+     * 
+     * @param {Color} color 
+     */
     setColor(color) {
         const thisColor = this.getColor();
         if (!thisColor.equals(color)) {
@@ -112,14 +128,14 @@ export default class HSBSelectionForm extends HTMLElement {
             hsb.h = Math.round(hsb.h);
             hsb.s = Math.round(hsb.s * 100);
             hsb.b = Math.round(hsb.b * 100);
-            this.shadowRoot.querySelector('#hue-number-field').value = hsb.h;
-            this.shadowRoot.querySelector('#hue-slider').value = hsb.h;
-            this.shadowRoot.querySelector('#saturation-number-field').value = hsb.s;
-            this.shadowRoot.querySelector('#saturation-slider').value = hsb.s;
-            this.shadowRoot.querySelector('#brightness-number-field').value = hsb.b;
-            this.shadowRoot.querySelector('#brightness-slider').value = hsb.b;
+            this.#hueNumInput.value = hsb.h;
+            this.#hueSlider.value = hsb.h;
+            this.#saturationNumInput.value = hsb.s;
+            this.#saturationSlider.value = hsb.s;
+            this.#brightnessNumInput.value = hsb.b;
+            this.#brightnessSlider.value = hsb.b;
         }
     }
 }
 
-window.customElements.define('hsb-selection-form', HSBSelectionForm);
+window.customElements.define("hsb-selection-form", HSBSelectionForm);

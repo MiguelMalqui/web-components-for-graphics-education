@@ -1,6 +1,6 @@
 import Color from "../framework3d/math/color.js";
 
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 .color-form {
@@ -8,6 +8,8 @@ template.innerHTML = `
 }
 .color-form>label {
     width: 4.5rem;
+    display: flex;
+    align-items: center;
 }
 .color-form>input[type=number] {
     width: 2.5rem;
@@ -21,61 +23,67 @@ template.innerHTML = `
 
 <div class="color-form">
     <label>Red</label>
-    <input type="number" min="0" max="255" value="0" id="red-number-field">
+    <input type="number" min="0" max="255" value="0" id="red-number-input">
     <input type="range" min="0" max="255" value="0" id="red-slider">
 </div>
 <div class="color-form">
     <label>Green</label>
-    <input type="number" min="0" max="255" value="0" id="green-number-field">
+    <input type="number" min="0" max="255" value="0" id="green-number-input">
     <input type="range" min="0" max="255" value="0" id="green-slider">
 </div>
 <div class="color-form">
     <label>Blue</label>
-    <input type="number" min="0" max="255" value="0" id="blue-number-field">
+    <input type="number" min="0" max="255" value="0" id="blue-number-input">
     <input type="range" min="0" max="255" value="0" id="blue-slider">
 </div>
 `;
 
 export default class RGBSelectionForm extends HTMLElement {
+    #redNumInput;
+    #greenNumInput;
+    #blueNumInput;
+    #redSlider;
+    #greenSlider;
+    #blueSlider;
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+        this.#redNumInput = this.shadowRoot.querySelector("#red-number-input");
+        this.#greenNumInput = this.shadowRoot.querySelector("#green-number-input");
+        this.#blueNumInput = this.shadowRoot.querySelector("#blue-number-input");
+        this.#redSlider = this.shadowRoot.querySelector("#red-slider");
+        this.#greenSlider = this.shadowRoot.querySelector("#green-slider");
+        this.#blueSlider = this.shadowRoot.querySelector("#blue-slider");
+
         this.#addListeners();
     }
 
     #addListeners() {
-        const rNumField = this.shadowRoot.querySelector('#red-number-field');
-        const gNumField = this.shadowRoot.querySelector('#green-number-field');
-        const bNumField = this.shadowRoot.querySelector('#blue-number-field');
-        const rSlider = this.shadowRoot.querySelector('#red-slider');
-        const gSlider = this.shadowRoot.querySelector('#green-slider');
-        const bSlider = this.shadowRoot.querySelector('#blue-slider');
-
-        rNumField.addEventListener('change', () => {
-            rNumField.value = RGBSelectionForm.#validateRGBRange(rNumField.value);
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#redNumInput.addEventListener("change", () => {
+            this.#redNumInput.value = RGBSelectionForm.#validateRGBRange(this.#redNumInput.value);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        gNumField.addEventListener('change', () => {
-            gNumField.value = RGBSelectionForm.#validateRGBRange(gNumField.value);
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#greenNumInput.addEventListener("change", () => {
+            this.#greenNumInput.value = RGBSelectionForm.#validateRGBRange(this.#greenNumInput.value);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        bNumField.addEventListener('change', () => {
-            bNumField.value = RGBSelectionForm.#validateRGBRange(bNumField.value);
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#blueNumInput.addEventListener("change", () => {
+            this.#blueNumInput.value = RGBSelectionForm.#validateRGBRange(this.#blueNumInput.value);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-
-        rSlider.addEventListener('input', () => {
-            rNumField.value = rSlider.value;
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#redSlider.addEventListener("input", () => {
+            this.#redNumInput.value = this.#redSlider.value;
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        gSlider.addEventListener('input', () => {
-            gNumField.value = gSlider.value;
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#greenSlider.addEventListener("input", () => {
+            this.#greenNumInput.value = this.#greenSlider.value;
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
-        bSlider.addEventListener('input', () => {
-            bNumField.value = bSlider.value;
-            this.dispatchEvent(new CustomEvent('change', {detail: {color:this.getColor()}}));
+        this.#blueSlider.addEventListener("input", () => {
+            this.#blueNumInput.value = this.#blueSlider.value;
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
     }
 
@@ -89,21 +97,29 @@ export default class RGBSelectionForm extends HTMLElement {
         return value;
     }
 
+    /**
+     * 
+     * @returns {Color}
+     */
     getColor() {
-        const r = this.shadowRoot.querySelector('#red-number-field').value;
-        const g = this.shadowRoot.querySelector('#green-number-field').value;
-        const b = this.shadowRoot.querySelector('#blue-number-field').value;
+        const r = Number(this.#redSlider.value);
+        const g = Number(this.#greenSlider.value);
+        const b = Number(this.#blueSlider.value);
         return Color.makeRGB(r, g, b);
     }
 
+    /**
+     * 
+     * @param {Color} color 
+     */
     setColor(color) {
-        this.shadowRoot.querySelector('#red-number-field').value = color.r;
-        this.shadowRoot.querySelector('#red-slider').value = color.r;
-        this.shadowRoot.querySelector('#green-number-field').value = color.g;
-        this.shadowRoot.querySelector('#green-slider').value = color.g;
-        this.shadowRoot.querySelector('#blue-number-field').value = color.b;
-        this.shadowRoot.querySelector('#blue-slider').value = color.b;
+        this.#redSlider.value = color.r;
+        this.#greenNumInput.value = color.g;
+        this.#blueNumInput.value = color.b;
+        this.#redSlider.value = color.r;
+        this.#greenSlider.value = color.g;
+        this.#blueSlider.value = color.b;
     }
 }
 
-window.customElements.define('rgb-selection-form', RGBSelectionForm);
+window.customElements.define("rgb-selection-form", RGBSelectionForm);
