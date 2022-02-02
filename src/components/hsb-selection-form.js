@@ -1,4 +1,4 @@
-import Color from "../../framework3d/math/color.js";
+import Color from "../framework3d/math/color.js";
 
 const template = document.createElement('template');
 template.innerHTML = `

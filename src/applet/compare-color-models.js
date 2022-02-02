@@ -1,6 +1,6 @@
 import ColorSwatch from "../components/color-swatch.js";
 import Color from "../framework3d/math/color.js"
-import ColorSelectionForm from "../components/color-selection-form/color-selection-form.js";
+import ColorSelectionForm from "../components/color-selection-form.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
