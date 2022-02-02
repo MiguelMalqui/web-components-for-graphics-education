@@ -5,7 +5,9 @@ import ColorSelectionForm from "../components/color-selection-form.js";
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
-
+color-swatch {
+    height: 10rem;
+}
 </style>
 
 <color-swatch id="selected-color" text="Selected color"></color-swatch>

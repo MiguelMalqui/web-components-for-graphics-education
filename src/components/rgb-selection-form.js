@@ -113,7 +113,7 @@ export default class RGBSelectionForm extends HTMLElement {
      * @param {Color} color 
      */
     setColor(color) {
-        this.#redSlider.value = color.r;
+        this.#redNumInput.value = color.r;
         this.#greenNumInput.value = color.g;
         this.#blueNumInput.value = color.b;
         this.#redSlider.value = color.r;

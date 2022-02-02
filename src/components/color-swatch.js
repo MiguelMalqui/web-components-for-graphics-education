@@ -7,8 +7,9 @@ div {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 4rem;
-    height: 100%;
+    min-height: 3rem;
+    height: inherit;
+    width: inherit;
 }
 </style>
 
@@ -17,6 +18,7 @@ div {
 
 export default class ColorSwatch extends HTMLElement {
     #div;
+    #color;
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
@@ -32,10 +34,20 @@ export default class ColorSwatch extends HTMLElement {
      * @param {Color} color 
      */
     setColor(color) {
+        this.#color = Color.makeRGB(color.r, color.g, color.b, color.a);
         this.#div.style.backgroundColor = color.cssRGBA();
         const luminance = color.luminance();
         const textColor = (luminance > 0.5) ? "black" : "white";
         this.#div.style.color = textColor;
+    }
+
+    /**
+     * 
+     * @returns {Color}
+     */
+    getColor() {
+        return Color.makeRGB(
+            this.#color.r, this.#color.g, this.#color.b, this.#color.a);
     }
 
     /**

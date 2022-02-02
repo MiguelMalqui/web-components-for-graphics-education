@@ -1,19 +1,20 @@
+import Color from "../framework3d/math/color.js";
 import ColorSwatch from "../components/color-swatch.js";
-import Color from "../framework3d/math/color.js"
 import ColorSelectionForm from "../components/color-selection-form.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
+color-swatch {
+    height: 7rem;
+}
 #buttons-container {
     display: flex;
     justify-content: space-between;
 }
 .btn {
     border: 1px solid transparent;
-    // border-radius: 0.25rem;
     padding: 0.375rem 0.75rem;
-    // font-size: 1rem;
     width: 7rem;
 }
 .primary-btn {
@@ -22,13 +23,10 @@ template.innerHTML = `
     border-color: #0d6efd;
 }
 </style>
-<div>
-    <color-swatch id="selected-color" text="Selected color"></color-swatch>
-    <color-swatch id="random-color" text="Random color"></color-swatch>
-</div>
 
+<color-swatch id="random-color" text="Random color"></color-swatch>
+<color-swatch id="selected-color" text="Selected color"></color-swatch>
 <color-selection-form></color-selection-form>
-
 <div id="buttons-container">
     <button id="new-color-button" class="btn">New color</button>
     <button id="check-button" class="btn primary-btn">Check</button>
@@ -36,41 +34,48 @@ template.innerHTML = `
 `;
 
 export class GuessTheColor extends HTMLElement {
+    #selectedColorSwatch;
+    #randomColorSwatch;
+    #colorForm;
+    #newColorBtn;
+    #checkBtn;
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        const selColor = this.shadowRoot.querySelector('#selected-color');
-        const rndColor = this.shadowRoot.querySelector('#random-color');
-        const selForm = this.shadowRoot.querySelector('color-selection-form');
+        this.#selectedColorSwatch = this.shadowRoot.querySelector('#selected-color');
+        this.#randomColorSwatch = this.shadowRoot.querySelector('#random-color');
+        this.#colorForm = this.shadowRoot.querySelector('color-selection-form');
+        this.#newColorBtn = this.shadowRoot.querySelector('#new-color-button');
+        this.#checkBtn = this.shadowRoot.querySelector('#check-button');
 
-        const color1 = Color.makeRandom();
-        selColor.setColor(color1);
-        selForm.setColor(color1);
-        const color2 = Color.makeRandom();
-        rndColor.setColor(color2);
+        this.#addListeners();
 
-        selForm.addEventListener('change', (e) => {
+        this.#newColorBtn.click();
+        this.setColor(Color.makeRandom());
+    }
+
+    #addListeners() {
+        this.#colorForm.addEventListener('change', (e) => {
             this.setColor(e.detail.color);
         });
 
-        const newColorButton = this.shadowRoot.querySelector('#new-color-button');
-        newColorButton.addEventListener('click', () => {
-            rndColor.setColor(Color.makeRandom());
+        this.#newColorBtn.addEventListener('click', () => {
+            this.#randomColorSwatch.setColor(Color.makeRandom());
         });
-        const checkButton = this.shadowRoot.querySelector('#check-button');
-        checkButton.addEventListener('click', () => {
-            const color1 = selColor.getColor();
-            const color2 = rndColor.getColor();
+
+        this.#checkBtn.addEventListener('click', () => {
+            const color1 = this.#selectedColorSwatch.getColor();
+            const color2 = this.#randomColorSwatch.getColor();
             const similarity = Math.round(100 * color1.similarity(color2));
             alert(`Similarity: ${similarity}%`);
-        })
+        });
     }
 
     setColor(color) {
-        this.shadowRoot.querySelector('#selected-color').setColor(color);
-        this.shadowRoot.querySelector('color-selection-form').setColor(color);
+        this.#selectedColorSwatch.setColor(color);
+        this.#colorForm.setColor(color);
     }
 }
 
