@@ -1,8 +1,8 @@
+import Color from "../framework3d/math/color.js";
 import ColorSwatch from "../components/color-swatch.js";
-import Color from "../framework3d/math/color.js"
 import ColorSelectionForm from "../components/color-selection-form.js";
 
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 color-swatch {
@@ -18,29 +18,40 @@ color-swatch {
 `;
 
 export class CompareColorModels extends HTMLElement {
+    #colorForm1;
+    #colorForm2;
+    #colorSwatch;
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.setColor(Color.makeRandom());
-        this.shadowRoot.querySelector('#csf1').setActiveTab(0);
-        this.shadowRoot.querySelector('#csf2').setActiveTab(1);
+        this.#colorForm1 = this.shadowRoot.querySelector("#csf1");
+        this.#colorForm2 = this.shadowRoot.querySelector("#csf2");
+        this.#colorSwatch = this.shadowRoot.querySelector("#selected-color");
 
-        const colorForms = this.shadowRoot.querySelectorAll('color-selection-form');
+        this.#addListeners();
+
+        this.setColor(Color.makeRandom());
+        this.#colorForm1.setActiveTab(0);
+        this.#colorForm2.setActiveTab(1);
+    }
+
+    #addListeners() {
+        const colorForms = this.shadowRoot.querySelectorAll("color-selection-form");
         colorForms.forEach(colorForm => {
-            colorForm.addEventListener('change', (e) => {
+            colorForm.addEventListener("change", (e) => {
                 this.setColor(e.detail.color);
             });
         });
     }
 
     setColor(color) {
-        this.shadowRoot.querySelector('#csf1').setColor(color);
-        this.shadowRoot.querySelector('#csf2').setColor(color);
-        this.shadowRoot.querySelector('#selected-color').setColor(color);
+        this.#colorForm1.setColor(color);
+        this.#colorForm2.setColor(color);
+        this.#colorSwatch.setColor(color);
     }
 }
 
 
-window.customElements.define('compare-color-models', CompareColorModels);
+window.customElements.define("compare-color-models", CompareColorModels);
