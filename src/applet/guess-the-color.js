@@ -1,4 +1,4 @@
-import Swatch from "../components/swatch.js";
+import ColorSwatch from "../components/color-swatch.js";
 import Color from "../framework3d/math/color.js"
 import ColorSelectionForm from "../components/color-selection-form/color-selection-form.js";
 
@@ -23,8 +23,8 @@ template.innerHTML = `
 }
 </style>
 <div>
-    <my-swatch id="selected-color" text="Selected color"></my-swatch>
-    <my-swatch id="random-color" text="Random color"></my-swatch>
+    <color-swatch id="selected-color" text="Selected color"></color-swatch>
+    <color-swatch id="random-color" text="Random color"></color-swatch>
 </div>
 
 <color-selection-form></color-selection-form>
