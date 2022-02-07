@@ -1,5 +1,6 @@
 import Matrix4x4 from "../math/matrix4x4.js";
 import Vector3 from "../math/vector3.js";
+import Vector4 from "../math/vector4.js";
 
 /**
  * Abstract class Camera
@@ -17,6 +18,15 @@ export default class Camera {
          * @type {Matrix4x4}
          */
         this.viewMatrix = new Matrix4x4();
+    }
+
+    /**
+     * Position of the camera
+     * @type {Vector3}
+     */
+    get position() {
+        const inv = this.viewMatrix.inverse().data;
+        return new Vector3(inv[12], inv[13], inv[14]);
     }
 
     /**

@@ -2,9 +2,9 @@ const basicShader = {
 
 vert : `#version 300 es
 in vec3 position;
-in vec3 color;
+in vec4 color;
 
-out vec3 vColor;
+out vec4 vColor;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -19,11 +19,11 @@ void main() {
 frag : `#version 300 es
 precision mediump float;
 
-in vec3 vColor;
+in vec4 vColor;
 out vec4 fragColor;
 
 void main() {
-    fragColor = vec4(vColor.xyz, 1);
+    fragColor = vColor;
 }
 `
 }
