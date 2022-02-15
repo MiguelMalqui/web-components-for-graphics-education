@@ -6,8 +6,7 @@ import PlaneGeometry from "../../framework3d/geometries/plane-geometry.js";
 import UVSphereGeometry from "../../framework3d/geometries/uv-sphere-geometry.js";
 
 import CameraControler from "../../helpers/camera/camera-controler.js";
-// TODO mover esto !!!
-import RGBLightsShader from "../../framework3d/shaders/rbg-lights-shader.js";
+import RGBLightsShader from "./rbg-lights-shader.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
