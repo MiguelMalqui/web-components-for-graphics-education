@@ -71,6 +71,7 @@ export default class CameraControler {
         });
         document.addEventListener('mousemove', (e) => {
             if (this.action == CameraControler.#ACTION.ROTATE) {
+                e.preventDefault();
                 this.#psi -= (e.x - this.xx) * Math.PI / 180;
                 this.xx = e.x;
                 this.#theta += (e.y - this.yy) * Math.PI / 180;
