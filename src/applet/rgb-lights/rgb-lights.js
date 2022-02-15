@@ -11,6 +11,8 @@ import template from "./rgb-light-template.js";
 export class RGBLights extends HTMLElement {
     #intensities;
     #intensitiesLocs;
+    #renderer;
+    #camera;
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
@@ -29,14 +31,14 @@ export class RGBLights extends HTMLElement {
 
     #animate() {
         requestAnimationFrame(() => { this.#animate() });
-        const gl = this.renderer.context;
-        const program = this.renderer.program;
+        const gl = this.#renderer.context;
+        const program = this.#renderer.program;
 
         gl.useProgram(program);
         gl.uniform1f(this.#intensitiesLocs.red, this.#intensities.red);
         gl.uniform1f(this.#intensitiesLocs.green, this.#intensities.green);
         gl.uniform1f(this.#intensitiesLocs.blue, this.#intensities.blue);
-        this.renderer.render(this.camera);
+        this.#renderer.render(this.#camera );
     }
 
     #initIntensities() {
@@ -55,21 +57,21 @@ export class RGBLights extends HTMLElement {
         plane.transform = Matrix4x4.translation(0, -0.5, 0).scale(2, 1, 2);
 
         const canvas = this.shadowRoot.querySelector("canvas");
-        this.renderer = new SceneRenderer(canvas, {
+        this.#renderer = new SceneRenderer(canvas, {
             autoClear: true,
             vShader: RGBLightsShader.vert,
             fShader: RGBLightsShader.frag
         });
 
-        this.renderer.addObject(plane);
-        this.renderer.addObject(sphere);
-        this.camera = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
-        new CameraControler(this.camera, canvas, { distance: 2, theta: 0.5 });
+        this.#renderer.addObject(plane);
+        this.#renderer.addObject(sphere);
+        this.#camera = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
+        new CameraControler(this.#camera , canvas, { distance: 2, theta: 0.5 });
     }
 
     #initIntensitiesLocs() {
-        const gl = this.renderer.context;
-        const program = this.renderer.program;
+        const gl = this.#renderer.context;
+        const program = this.#renderer.program;
 
         this.#intensitiesLocs = {
             red: gl.getUniformLocation(program, "intensityR"),
