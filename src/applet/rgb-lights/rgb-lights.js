@@ -1,13 +1,13 @@
-import Matrix4x4 from "../framework3d/math/matrix4x4.js";
-import PerspectiveCamera from "../framework3d/cameras/perspective-camera.js";
-import SceneRenderer from "../framework3d/renderer/scene-renderer.js";
-import Object3D from "../framework3d/core/object-3d.js";
-import PlaneGeometry from "../framework3d/geometries/plane-geometry.js";
-import UVSphereGeometry from "../framework3d/geometries/uv-sphere-geometry.js";
+import Matrix4x4 from "../../framework3d/math/matrix4x4.js";
+import PerspectiveCamera from "../../framework3d/cameras/perspective-camera.js";
+import SceneRenderer from "../../framework3d/renderer/scene-renderer.js";
+import Object3D from "../../framework3d/core/object-3d.js";
+import PlaneGeometry from "../../framework3d/geometries/plane-geometry.js";
+import UVSphereGeometry from "../../framework3d/geometries/uv-sphere-geometry.js";
 
-import CameraControler from "../helpers/camera/camera-controler.js";
+import CameraControler from "../../helpers/camera/camera-controler.js";
 // TODO mover esto !!!
-import RGBLightsShader from "../framework3d/shaders/rbg-lights-shader.js";
+import RGBLightsShader from "../../framework3d/shaders/rbg-lights-shader.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
