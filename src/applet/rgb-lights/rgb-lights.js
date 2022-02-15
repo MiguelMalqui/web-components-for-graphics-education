@@ -4,57 +4,9 @@ import SceneRenderer from "../../framework3d/renderer/scene-renderer.js";
 import Object3D from "../../framework3d/core/object-3d.js";
 import PlaneGeometry from "../../framework3d/geometries/plane-geometry.js";
 import UVSphereGeometry from "../../framework3d/geometries/uv-sphere-geometry.js";
-
 import CameraControler from "../../helpers/camera/camera-controler.js";
 import RGBLightsShader from "./rbg-lights-shader.js";
-
-const template = document.createElement("template");
-template.innerHTML = `
-<style>
-canvas {
-    width: 100%;
-}
-
-#settings-panel {
-    padding: 0.5rem;
-}
-
-.intensity-form {
-    display: flex;
-}
-.intensity-form>label {
-    width: 8.3rem;
-    display: flex;
-    align-items: center;
-}
-.intensity-form>input[type=number] {
-    width: 2.5rem;
-    margin: 0.2rem 1rem;
-}
-.intensity-form>input[type=range] {
-    flex-grow: 1;
-}
-</style>
-
-<canvas width="1024" height="576"></canvas>
-<div id="settings-panel">
-<div class="intensity-form" id="red-form">
-    <label>Red light intensity</label>
-    <input type="number" min="0" max="1" step="0.01" value="1.0">
-    <input type="range" min="0" max="1" step="0.01" value="1.0">
-</div>
-<div class="intensity-form" id="green-form">
-    <label>Green light intensity</label>
-    <input type="number" min="0" max="1" step="0.01" value="1.0">
-    <input type="range" min="0" max="1" step="0.01" value="1.0">
-</div>
-<div class="intensity-form" id="blue-form">
-    <label>Blue light intensity</label>
-    <input type="number" min="0" max="1" step="0.01" value="1.0">
-    <input type="range" min="0" max="1" step="0.01" value="1.0">
-</div>
-</div>
-`;
+import template from "./rgb-light-template.js";
 
 export class RGBLights extends HTMLElement {
     constructor() {
