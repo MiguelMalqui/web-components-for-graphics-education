@@ -3,7 +3,7 @@ import Vector3 from "../framework3d/math/vector3.js";
 import PerspectiveCamera from "../framework3d/cameras/perspective-camera.js";
 import BoxGeometry from "../framework3d/geometries/box-geometry.js";
 import SceneRenderer from "../framework3d/renderer/scene-renderer.js";
-import CameraControler from "../helpers/camera/camera-controler.js";
+import CameraOrbitController from "../helpers/camera-orbit-controller.js";
 import Object3D from "../framework3d/core/object-3d.js";
 
 const template = document.createElement('template');
@@ -134,7 +134,7 @@ export class GeometricTransformations extends HTMLElement {
 
         const ra = canvas.clientWidth / canvas.clientHeight;
         this.camera = new PerspectiveCamera(1.0, ra, 0.1, 100);
-        new CameraControler(this.camera, canvas, { distance: 5 });
+        new CameraOrbitController(this.camera, canvas, { distance: 5 });
 
         this.renderer = new SceneRenderer(canvas, {
             autoClear: true,

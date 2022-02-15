@@ -4,7 +4,7 @@ import SceneRenderer from "../../framework3d/renderer/scene-renderer.js";
 import Object3D from "../../framework3d/core/object-3d.js";
 import PlaneGeometry from "../../framework3d/geometries/plane-geometry.js";
 import UVSphereGeometry from "../../framework3d/geometries/uv-sphere-geometry.js";
-import CameraControler from "../../helpers/camera/camera-controler.js";
+import CameraOrbitController from "../../helpers/camera-orbit-controller.js";
 import RGBLightsShader from "./rbg-lights-shader.js";
 import template from "./rgb-light-template.js";
 
@@ -66,7 +66,7 @@ export class RGBLights extends HTMLElement {
         this.#renderer.addObject(plane);
         this.#renderer.addObject(sphere);
         this.#camera = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
-        new CameraControler(this.#camera , canvas, { distance: 2, theta: 0.5 });
+        new CameraOrbitController(this.#camera , canvas, { distance: 2, xAngle: 0.5 });
     }
 
     #initIntensitiesLocs() {

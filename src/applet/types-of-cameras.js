@@ -7,8 +7,7 @@ import Object3D from "../framework3d/core/object-3d.js";
 import BoxGeometry from "../framework3d/geometries/box-geometry.js";
 import PlaneGeometry from "../framework3d/geometries/plane-geometry.js";
 import UVSphereGeometry from "../framework3d/geometries/uv-sphere-geometry.js"
-
-import CameraControler from "../helpers/camera/camera-controler.js";
+import CameraOrbitController from "../helpers/camera-orbit-controller.js";
 import CameraDrawer from "../helpers/camera-drawer.js";
 
 const template = document.createElement('template');
@@ -215,7 +214,7 @@ export class TypesOfCameras extends HTMLElement {
         this.sceneView.addObject(octahedron);
 
         this.cameraSceneView = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-        new CameraControler(this.cameraSceneView, canvas, { distance: 5, theta: 0.5, psi : 2.5 });
+        new CameraOrbitController(this.cameraSceneView, canvas, { distance: 5, xAngle: 0.5, yAngle : 2.5 });
 
         canvas = this.shadowRoot.querySelector("#camera-view");
         this.cameraView = new SceneRenderer(canvas, { autoClear: true });
