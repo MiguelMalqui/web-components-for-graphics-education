@@ -30,18 +30,18 @@ canvas {
 <div id="control-panel">
 <div class="intensity-form" id="red-form">
     <label>Red light intensity</label>
-    <input type="number" min="0" max="1" step="0.01" value="1.0">
-    <input type="range" min="0" max="1" step="0.01" value="1.0">
+    <input type="number" min="0" max="1" step="0.01" value="1.0" id="red-input">
+    <input type="range" min="0" max="1" step="0.01" value="1.0" id="red-slider">
 </div>
 <div class="intensity-form" id="green-form">
     <label>Green light intensity</label>
-    <input type="number" min="0" max="1" step="0.01" value="1.0">
-    <input type="range" min="0" max="1" step="0.01" value="1.0">
+    <input type="number" min="0" max="1" step="0.01" value="1.0" id="green-input">
+    <input type="range" min="0" max="1" step="0.01" value="1.0" id="green-slider">
 </div>
 <div class="intensity-form" id="blue-form">
     <label>Blue light intensity</label>
-    <input type="number" min="0" max="1" step="0.01" value="1.0">
-    <input type="range" min="0" max="1" step="0.01" value="1.0">
+    <input type="number" min="0" max="1" step="0.01" value="1.0" id="blue-input">
+    <input type="range" min="0" max="1" step="0.01" value="1.0" id="blue-slider">
 </div>
 </div>
 `;

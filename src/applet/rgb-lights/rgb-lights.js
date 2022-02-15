@@ -9,83 +9,99 @@ import RGBLightsShader from "./rbg-lights-shader.js";
 import template from "./rgb-light-template.js";
 
 export class RGBLights extends HTMLElement {
+    #intensities;
+    #intensitiesLocs;
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.intensities = { red: 1, green: 1, blue: 1 };
+        this.#initIntensities();
+        this.#initScene();
+        this.#initIntensitiesLocs();
 
-        this.initScene();
-
-        this.addListeners();
+        this.#addListeners();
     }
 
     connectedCallback() {
-        this.animate();
+        this.#animate();
     }
 
-    animate() {
-        requestAnimationFrame(() => { this.animate() });
+    #animate() {
+        requestAnimationFrame(() => { this.#animate() });
         const gl = this.renderer.context;
         const program = this.renderer.program;
-        
-        const inetensityRLoc = gl.getUniformLocation(program, "intensityR");
-        const inetensityGLoc = gl.getUniformLocation(program, "intensityG");
-        const inetensityBLoc = gl.getUniformLocation(program, "intensityB");
-        
+
         gl.useProgram(program);
-        gl.uniform1f(inetensityRLoc, this.intensities.red);
-        gl.uniform1f(inetensityGLoc, this.intensities.green);
-        gl.uniform1f(inetensityBLoc, this.intensities.blue);
+        gl.uniform1f(this.#intensitiesLocs.red, this.#intensities.red);
+        gl.uniform1f(this.#intensitiesLocs.green, this.#intensities.green);
+        gl.uniform1f(this.#intensitiesLocs.blue, this.#intensities.blue);
         this.renderer.render(this.camera);
     }
 
-    initScene() {
-        const sphere = new Object3D(new UVSphereGeometry()); // new Sphere(Color.makeRGB(255,0,0), 20, 10);
-        const plane = new Object3D(new PlaneGeometry()); plane.transform = Matrix4x4.translation(0, -0.5, 0).scale(2, 1, 2);// new PlaneModel(); plane.transform = Matrix4x4.translation(0, -0.5, 0).scale(2, 1, 2);
-        // const scene = new Scene();
-        // scene.addModel(sphere); scene.addModel(plane);
+    #initIntensities() {
+        const root = this.shadowRoot;
+
+        this.#intensities = {
+            red: Number(root.querySelector("#red-input").value),
+            green: Number(root.querySelector("#green-input").value),
+            blue: Number(root.querySelector("#blue-input").value)
+        };
+    }
+
+    #initScene() {
+        const sphere = new Object3D(new UVSphereGeometry());
+        const plane = new Object3D(new PlaneGeometry());
+        plane.transform = Matrix4x4.translation(0, -0.5, 0).scale(2, 1, 2);
 
         const canvas = this.shadowRoot.querySelector("canvas");
-        this.renderer = new SceneRenderer(canvas, { 
+        this.renderer = new SceneRenderer(canvas, {
             autoClear: true,
             vShader: RGBLightsShader.vert,
             fShader: RGBLightsShader.frag
         });
 
-        // this.renderer.addObject(sphere);
         this.renderer.addObject(plane);
         this.renderer.addObject(sphere);
         this.camera = new PerspectiveCamera(1.0, canvas.clientWidth / canvas.clientHeight);
-        new CameraControler(this.camera, canvas, { distance: 2, theta: 0.5});
-        // console.log(this.camera);
+        new CameraControler(this.camera, canvas, { distance: 2, theta: 0.5 });
     }
 
-    addListeners() {
-        this.addUpdateIntendityListener("#red-form", "red");
-        this.addUpdateIntendityListener("#green-form", "green");
-        this.addUpdateIntendityListener("#blue-form", "blue");
+    #initIntensitiesLocs() {
+        const gl = this.renderer.context;
+        const program = this.renderer.program;
+
+        this.#intensitiesLocs = {
+            red: gl.getUniformLocation(program, "intensityR"),
+            green: gl.getUniformLocation(program, "intensityG"),
+            blue: gl.getUniformLocation(program, "intensityB")
+        };
     }
 
-    addUpdateIntendityListener(formId, intenrityKey) {
+    #addListeners() {
+        this.#addUpdateIntensityListener("#red-form", "red");
+        this.#addUpdateIntensityListener("#green-form", "green");
+        this.#addUpdateIntensityListener("#blue-form", "blue");
+    }
+
+    #addUpdateIntensityListener(formId, intensityKey) {
         const form = this.shadowRoot.querySelector(formId);
-        const numberField = form.querySelector("input[type=number]");
+        const numberInput = form.querySelector("input[type=number]");
         const slider = form.querySelector("input[type=range]");
 
-        numberField.addEventListener("change", () => {
-            let number = Number(numberField.value);
+        numberInput.addEventListener("change", () => {
+            let number = Number(numberInput.value);
             if (Number.isNaN(number) || number < 0) number = 0;
             else if (number > 1) number = 1;
-            numberField.value = number;
+            numberInput.value = number;
             slider.value = number;
-            this.intensities[intenrityKey] = number;
+            this.#intensities[intensityKey] = number;
         });
 
         slider.addEventListener("input", () => {
             const number = Number(slider.value);
-            numberField.value = number;
-            this.intensities[intenrityKey] = number;
+            numberInput.value = number;
+            this.#intensities[intensityKey] = number;
         });
     }
 }
