@@ -39,6 +39,9 @@ export default class PhongShading extends HTMLElement {
     #matSpecularLoc;
     #matShininessLoc;
 
+    #renderer;
+    #camera;
+
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
@@ -59,8 +62,8 @@ export default class PhongShading extends HTMLElement {
     #animate() {
         requestAnimationFrame(() => { this.#animate() });
 
-        const gl = this.renderer.context;
-        const program = this.renderer.program;
+        const gl = this.#renderer.context;
+        const program = this.#renderer.program;
         gl.useProgram(program);
         gl.uniform1i(this.#isCameraLightLoc, this.#isCameraLight)
         gl.uniform3fv(this.#lightAmbientLoc, this.#lightAmbient);
@@ -71,7 +74,7 @@ export default class PhongShading extends HTMLElement {
         gl.uniform3fv(this.#matDiffuseLoc, this.#matDiffuse);
         gl.uniform3fv(this.#matSpecularLoc, this.#matSpecular);
         gl.uniform1f(this.#matShininessLoc, this.#matShininess);
-        this.renderer.render(this.camera);
+        this.#renderer.render(this.#camera);
     }
 
     #initElementVariables() {
@@ -103,22 +106,22 @@ export default class PhongShading extends HTMLElement {
 
     #initScene() {
         const canvas = this.shadowRoot.querySelector("canvas");
-        this.renderer = new SceneRenderer(canvas, {
+        this.#renderer = new SceneRenderer(canvas, {
             vShader: phongShader.vert,
             fShader: phongShader.frag,
             autoClear: true,
             drawWorldAxes: true
         });
-        this.renderer.addObject(new Object3D(new UVSphereGeometry()));
-        this.camera = new PerspectiveCamera(
+        this.#renderer.addObject(new Object3D(new UVSphereGeometry()));
+        this.#camera = new PerspectiveCamera(
             1.0, canvas.clientWidth / canvas.clientHeight
         );
-        new CameraControler(this.camera, canvas, { distance: 2 });
+        new CameraControler(this.#camera, canvas, { distance: 2 });
     }
 
     #initUniformLocationVariables() {
-        const gl = this.renderer.context;
-        const program = this.renderer.program;
+        const gl = this.#renderer.context;
+        const program = this.#renderer.program;
         this.#isCameraLightLoc = gl.getUniformLocation(program, "isCameraLight");
         this.#lightAmbientLoc = gl.getUniformLocation(program, "lightAmbient");
         this.#lightDiffuseLoc = gl.getUniformLocation(program, "lightDiffuse");
