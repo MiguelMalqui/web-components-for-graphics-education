@@ -91,13 +91,13 @@ export default class PhongShading extends HTMLElement {
 
     #initDataVariables() {
         this.#isCameraLight = this.#lightModeSelect.value == "camera";
-        this.#lightAmbient = this.#hexColorToRGBArray(this.#lightAmbientInput.value);
-        this.#lightDiffuse = this.#hexColorToRGBArray(this.#lightDiffuseInput.value);
-        this.#lightSpecular = this.#hexColorToRGBArray(this.#lightSpecularInput.value);
+        this.#lightAmbient = PhongShading.#hexColorToRGBArray(this.#lightAmbientInput.value);
+        this.#lightDiffuse = PhongShading.#hexColorToRGBArray(this.#lightDiffuseInput.value);
+        this.#lightSpecular = PhongShading.#hexColorToRGBArray(this.#lightSpecularInput.value);
         this.#lightPosition = this.#getLightPosition();
-        this.#matAmbient = this.#hexColorToRGBArray(this.#matAmbientInput.value);
-        this.#matDiffuse = this.#hexColorToRGBArray(this.#matDiffuseInput.value);
-        this.#matSpecular = this.#hexColorToRGBArray(this.#matSpecularInput.value);
+        this.#matAmbient = PhongShading.#hexColorToRGBArray(this.#matAmbientInput.value);
+        this.#matDiffuse = PhongShading.#hexColorToRGBArray(this.#matDiffuseInput.value);
+        this.#matSpecular = PhongShading.#hexColorToRGBArray(this.#matSpecularInput.value);
         this.#matShininess = Number(this.#matShininessInput.value);
     }
 
@@ -131,22 +131,22 @@ export default class PhongShading extends HTMLElement {
     }
 
     #addListeners() {
-        this.#lightModeSelect.addEventListener("change", () => { 
+        this.#lightModeSelect.addEventListener("change", () => {
             const b = this.#lightModeSelect.value == "camera";
             this.#lightPositionInputX.disabled = b;
             this.#lightPositionInputY.disabled = b;
             this.#lightPositionInputZ.disabled = b;
             this.#isCameraLight = b;
         });
-        this.#lightAmbientInput.addEventListener("input", () => { this.#lightAmbient = this.#hexColorToRGBArray(this.#lightAmbientInput.value) });
-        this.#lightDiffuseInput.addEventListener("input", () => { this.#lightDiffuse = this.#hexColorToRGBArray(this.#lightDiffuseInput.value) });
-        this.#lightSpecularInput.addEventListener("input", () => { this.#lightSpecular = this.#hexColorToRGBArray(this.#lightSpecularInput.value) });
+        this.#lightAmbientInput.addEventListener("input", () => { this.#lightAmbient = PhongShading.#hexColorToRGBArray(this.#lightAmbientInput.value) });
+        this.#lightDiffuseInput.addEventListener("input", () => { this.#lightDiffuse = PhongShading.#hexColorToRGBArray(this.#lightDiffuseInput.value) });
+        this.#lightSpecularInput.addEventListener("input", () => { this.#lightSpecular = PhongShading.#hexColorToRGBArray(this.#lightSpecularInput.value) });
         this.#lightPositionInputX.addEventListener("input", () => { this.#lightPosition = this.#getLightPosition() });
         this.#lightPositionInputY.addEventListener("input", () => { this.#lightPosition = this.#getLightPosition() });
         this.#lightPositionInputZ.addEventListener("input", () => { this.#lightPosition = this.#getLightPosition() });
-        this.#matAmbientInput.addEventListener("input", () => { this.#matAmbient = this.#hexColorToRGBArray(this.#matAmbientInput.value) });
-        this.#matDiffuseInput.addEventListener("input", () => { this.#matDiffuse = this.#hexColorToRGBArray(this.#matDiffuseInput.value) });
-        this.#matSpecularInput.addEventListener("input", () => { this.#matSpecular = this.#hexColorToRGBArray(this.#matSpecularInput.value) });
+        this.#matAmbientInput.addEventListener("input", () => { this.#matAmbient = PhongShading.#hexColorToRGBArray(this.#matAmbientInput.value) });
+        this.#matDiffuseInput.addEventListener("input", () => { this.#matDiffuse = PhongShading.#hexColorToRGBArray(this.#matDiffuseInput.value) });
+        this.#matSpecularInput.addEventListener("input", () => { this.#matSpecular = PhongShading.#hexColorToRGBArray(this.#matSpecularInput.value) });
         this.#matShininessInput.addEventListener("input", () => { this.#matShininess = Number(this.#matShininessInput.value) });
     }
 
@@ -158,7 +158,7 @@ export default class PhongShading extends HTMLElement {
         ];
     }
 
-    #hexColorToRGBArray(string) {
+    static #hexColorToRGBArray(string) {
         const r = parseInt(string.substring(1, 3), 16) / 255;
         const g = parseInt(string.substring(3, 5), 16) / 255;
         const b = parseInt(string.substring(5, 7), 16) / 255;
