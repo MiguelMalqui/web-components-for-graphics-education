@@ -3,7 +3,7 @@ import SceneRenderer from "../../framework3d/renderer/scene-renderer.js";
 import UVSphereGeometry from "../../framework3d/geometries/uv-sphere-geometry.js";
 import template from "./template.js";
 import PerspectiveCamera from "../../framework3d/cameras/perspective-camera.js";
-import CameraControler from "../../helpers/camera/camera-controler.js";
+import CameraOrbitController from "../../helpers/camera-orbit-controller.js";
 import phongShader from "./phong-shader.js";
 
 export default class PhongShading extends HTMLElement {
@@ -116,7 +116,7 @@ export default class PhongShading extends HTMLElement {
         this.#camera = new PerspectiveCamera(
             1.0, canvas.clientWidth / canvas.clientHeight
         );
-        new CameraControler(this.#camera, canvas, { distance: 2 });
+        new CameraOrbitController(this.#camera, canvas, { distance: 2 });
     }
 
     #initUniformLocationVariables() {
