@@ -21,7 +21,7 @@ void main(){
     vNEyeSpace = normalMatrix * normal;
     vPositionEyeSpace = (modelViewMatrix * vec4(position, 1.0)).xyz;
     if (isCameraLight) {
-        vLightPositionEyeSpace = vec3(0.0, 0.0, 0.0);
+        vLightPositionEyeSpace = lightPosition;
     } else {
         vLightPositionEyeSpace = (viewMatrix * vec4(lightPosition, 1.0)).xyz;
     }
