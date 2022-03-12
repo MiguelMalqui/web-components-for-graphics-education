@@ -134,13 +134,7 @@ export default class PhongShading extends HTMLElement {
     }
 
     #addListeners() {
-        this.#lightModeSelect.addEventListener("change", () => {
-            const b = this.#lightModeSelect.value == "camera";
-            this.#lightPositionInputX.disabled = b;
-            this.#lightPositionInputY.disabled = b;
-            this.#lightPositionInputZ.disabled = b;
-            this.#isCameraLight = b;
-        });
+        this.#lightModeSelect.addEventListener("change", () => { this.#isCameraLight = this.#lightModeSelect.value == "camera" });
         this.#lightAmbientInput.addEventListener("input", () => { this.#lightAmbient = PhongShading.#hexColorToRGBArray(this.#lightAmbientInput.value) });
         this.#lightDiffuseInput.addEventListener("input", () => { this.#lightDiffuse = PhongShading.#hexColorToRGBArray(this.#lightDiffuseInput.value) });
         this.#lightSpecularInput.addEventListener("input", () => { this.#lightSpecular = PhongShading.#hexColorToRGBArray(this.#lightSpecularInput.value) });
