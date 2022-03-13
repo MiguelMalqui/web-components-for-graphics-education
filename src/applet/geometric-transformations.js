@@ -142,7 +142,7 @@ export class GeometricTransformations extends HTMLElement {
             drawObjectsAxes: true
         });
 
-        this.cube = new Object3D(new BoxGeometry(1,1.5,0.25));
+        this.cube = new Object3D(new BoxGeometry(1, 1.5, 0.25));
         this.renderer.addObject(this.cube);
     }
 
@@ -175,10 +175,14 @@ export class GeometricTransformations extends HTMLElement {
     }
 
     addDragGeomTransListener(geomTrans) {
-        geomTrans.addEventListener('dragstart', () => {
-            geomTrans.classList.add('dragging');
-        });
+        geomTrans.addEventListener('dragstart', () => geomTrans.classList.add('dragging'));
         geomTrans.addEventListener('dragend', () => {
+            geomTrans.classList.remove('dragging');
+            this.updateModelTransformation();
+        });
+
+        geomTrans.addEventListener('touchstart', () => geomTrans.classList.add('dragging'));
+        geomTrans.addEventListener('touchend', () => {
             geomTrans.classList.remove('dragging');
             this.updateModelTransformation();
         });
@@ -199,17 +203,20 @@ export class GeometricTransformations extends HTMLElement {
     }
 
     addDragListListeners() {
-        const container = this.shadowRoot.querySelector('#geom-trans-container');
-        container.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            const afterElement = this.getDragAfterElement(e.clientY);
+        const dragHandler = (event, clientY) => {
+            event.preventDefault();
+            const afterElement = this.getDragAfterElement(clientY);
             const draggingElement = this.shadowRoot.querySelector('.dragging');
             if (!afterElement) {
                 container.appendChild(draggingElement);
             } else {
                 container.insertBefore(draggingElement, afterElement);
             }
-        });
+        }
+
+        const container = this.shadowRoot.querySelector('#geom-trans-container');
+        container.addEventListener('dragover', (e) => dragHandler(e, e.clientY));
+        container.addEventListener('touchmove', (e) => dragHandler(e, e.touches[0].clientY));
     }
 
     getDragAfterElement(y) {
