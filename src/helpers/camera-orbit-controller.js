@@ -15,12 +15,14 @@ export default class CameraOrbitController {
     #target;
 
     #action;
-    #xPos;
-    #yPos;
+    #oldX;
+    #oldY;
+    #oldTouchesDistance;
 
     static #ACTION = {
         NONE: 0,
-        ROTATE: 1
+        ROTATE: 1,
+        ZOOM: 3
     };
 
     /**
@@ -64,23 +66,25 @@ export default class CameraOrbitController {
     #addListeners() {
         this.#addMoveAroundTargetListener();
         this.#addZoomListener();
+        this.#addZoomTouchListener();
+        this.#addMoveAroundTargetTouchListener();
     }
 
     #addMoveAroundTargetListener() {
         this.#element.addEventListener('mousedown', (e) => {
             if (e.button == 0) {
-                this.#xPos = e.x;
-                this.#yPos = e.y;
+                this.#oldX = e.x;
+                this.#oldY = e.y;
                 this.#action = CameraOrbitController.#ACTION.ROTATE;
             }
         });
         document.addEventListener('mousemove', (e) => {
             if (this.#action == CameraOrbitController.#ACTION.ROTATE) {
                 e.preventDefault();
-                this.#yAngle -= (e.x - this.#xPos) * Math.PI / 180;
-                this.#xPos = e.x;
-                this.#xAngle += (e.y - this.#yPos) * Math.PI / 180;
-                this.#yPos = e.y;
+                this.#yAngle -= (e.x - this.#oldX) * Math.PI / 180;
+                this.#xAngle += (e.y - this.#oldY) * Math.PI / 180;
+                this.#oldX = e.x;
+                this.#oldY = e.y;
                 this.#updateCameraViewMatrix();
             }
         });
@@ -99,6 +103,55 @@ export default class CameraOrbitController {
                 this.#distance += 0.1;
                 this.#updateCameraViewMatrix();
             }
+        });
+    }
+
+    #addZoomTouchListener() {
+        this.#element.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                this.#action = CameraOrbitController.#ACTION.ZOOM;
+                this.#oldTouchesDistance = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY);
+            }
+        });
+        this.#element.addEventListener('touchmove', (e) => {
+            if (this.#action == CameraOrbitController.#ACTION.ZOOM) {
+                e.preventDefault();
+                const touchesDistance = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY);
+                this.#distance -= (touchesDistance - this.#oldTouchesDistance) / 100;
+                this.#oldTouchesDistance = touchesDistance;
+                this.#updateCameraViewMatrix();
+            }
+        });
+        this.#element.addEventListener('touchend', (e) => {
+            this.#action = CameraOrbitController.#ACTION.NONE;
+        });
+    }
+
+    #addMoveAroundTargetTouchListener() {
+        this.#element.addEventListener('touchstart', (e) => {
+            if (e.touches.length == 1) {
+                this.#oldX = e.touches[0].pageX;
+                this.#oldY = e.touches[0].pageY;
+                this.#action = CameraOrbitController.#ACTION.ROTATE;
+            }
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (this.#action == CameraOrbitController.#ACTION.ROTATE) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                this.#yAngle -= (e.touches[0].pageX - this.#oldX) * Math.PI / 180;
+                this.#xAngle += (e.touches[0].pageY - this.#oldY) * Math.PI / 180;
+                this.#oldX = e.touches[0].pageX;
+                this.#oldY = e.touches[0].pageY;
+                this.#updateCameraViewMatrix();
+            }
+        }, { passive: false });
+        document.addEventListener('touchend', () => {
+            this.#action = CameraOrbitController.#ACTION.NONE;
         });
     }
 
