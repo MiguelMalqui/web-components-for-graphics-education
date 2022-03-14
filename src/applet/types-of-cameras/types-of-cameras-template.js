@@ -50,7 +50,6 @@ input[type=number] {
 }
 </style>
 
-<!--<canvas style="width: 100%;" width="1920" height="720"></canvas>-->
 <div id="canvases-container">
     <canvas id="scene-view" width="640" height="480"></canvas>
     <canvas id="camera-view" width="640" height="480"></canvas>
@@ -138,15 +137,15 @@ input[type=number] {
             </div>
             <div class="euler-angles-form">
                 <div>
-                    <label>phi</label>
+                    <label>Rx</label>
                     <input type="number" value="0" step="0.01" id="phi">
                 </div>
                 <div>
-                    <label>theta</label>
+                    <label>Ry</label>
                     <input type="number" value="0" step="0.01" id="theta">
                 </div>
                 <div>
-                    <label>psi</label>
+                    <label>Rz</label>
                     <input type="number" value="0" step="0.01" id="psi">
                 </div>
             </div>
