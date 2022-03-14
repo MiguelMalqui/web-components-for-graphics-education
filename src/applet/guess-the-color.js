@@ -5,6 +5,9 @@ import ColorSelectionForm from "../components/color-selection-form.js";
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
+#container {
+    max-width: 540px;
+}
 color-swatch {
     height: 7rem;
 }
@@ -24,12 +27,14 @@ color-swatch {
 }
 </style>
 
-<color-swatch id="random-color" text="Random color"></color-swatch>
-<color-swatch id="selected-color" text="Selected color"></color-swatch>
-<color-selection-form></color-selection-form>
-<div id="buttons-container">
-    <button id="new-color-button" class="btn">New color</button>
-    <button id="check-button" class="btn primary-btn">Check</button>
+<div id="container">
+    <color-swatch id="random-color" text="Random color"></color-swatch>
+    <color-swatch id="selected-color" text="Selected color"></color-swatch>
+    <color-selection-form></color-selection-form>
+    <div id="buttons-container">
+        <button id="new-color-button" class="btn">New color</button>
+        <button id="check-button" class="btn primary-btn">Check</button>
+    </div>
 </div>
 `;
 

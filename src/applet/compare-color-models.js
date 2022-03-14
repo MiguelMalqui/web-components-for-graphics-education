@@ -5,16 +5,23 @@ import ColorSelectionForm from "../components/color-selection-form.js";
 const template = document.createElement("template");
 template.innerHTML = `
 <style>
+#container {
+    max-width: 540px;
+}
 color-swatch {
     height: 10rem;
 }
 </style>
 
-<color-swatch id="selected-color" text="Selected color"></color-swatch>
-<div>
-    <color-selection-form id="csf1"></color-selection-form>
-    <color-selection-form id="csf2"></color-selection-form>
+
+<div id="container">
+    <color-swatch id="selected-color" text="Selected color"></color-swatch>
+    <div>
+        <color-selection-form id="csf1"></color-selection-form>
+        <color-selection-form id="csf2"></color-selection-form>
+    </div>
 </div>
+
 `;
 
 export class CompareColorModels extends HTMLElement {
