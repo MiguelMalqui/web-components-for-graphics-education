@@ -15,7 +15,7 @@ canvas {
 
 #formula-container {
     text-align: center;
-    padding: 2rem;
+    padding: 1.2rem;
 }
 
 .delete-button {
@@ -142,7 +142,7 @@ export class GeometricTransformations extends HTMLElement {
             drawObjectsAxes: true
         });
 
-        this.cube = new Object3D(new BoxGeometry(1, 1.5, 0.25));
+        this.cube = new Object3D(new BoxGeometry());
         this.renderer.addObject(this.cube);
     }
 
