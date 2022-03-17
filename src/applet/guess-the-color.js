@@ -74,7 +74,9 @@ export class GuessTheColor extends HTMLElement {
             const color1 = this.#selectedColorSwatch.getColor();
             const color2 = this.#randomColorSwatch.getColor();
             const similarity = Math.round(100 * color1.similarity(color2));
-            alert(`Similarity: ${similarity}%`);
+            const message = `Random color: (R,G,B)=(${color2.r},${color2.g},${color2.b})\n`
+                + `Similarity: ${similarity}%`;
+            alert(message);
         });
     }
 
