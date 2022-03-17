@@ -120,10 +120,10 @@ export default class CMYKSelectionForm extends HTMLElement {
      * @returns {Color}
      */
     getColor() {
-        const c = Number(this.#cyanSlider.value / 100);
-        const m = Number(this.#magentaSlider.value / 100);
-        const y = Number(this.#yellowSlider.value / 100);
-        const k = Number(this.#blackSlider.value / 100);
+        const c = Number(this.#cyanSlider.value) / 100;
+        const m = Number(this.#magentaSlider.value) / 100;
+        const y = Number(this.#yellowSlider.value) / 100;
+        const k = Number(this.#blackSlider.value) / 100;
         return Color.makeCMYK(c, m, y, k);
     }
 

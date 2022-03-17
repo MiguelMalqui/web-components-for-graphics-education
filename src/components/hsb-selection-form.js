@@ -108,8 +108,8 @@ export default class HSBSelectionForm extends HTMLElement {
      */
     getColor() {
         const h = Number(this.#hueNumInput.value);
-        const s = Number(this.#saturationNumInput.value / 100);
-        const b = Number(this.#brightnessNumInput.value / 100);
+        const s = Number(this.#saturationNumInput.value) / 100;
+        const b = Number(this.#brightnessNumInput.value) / 100;
         return Color.makeHSB(h, s, b);
     }
 
