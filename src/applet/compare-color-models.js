@@ -45,14 +45,20 @@ export class CompareColorModels extends HTMLElement {
     }
 
     #addListeners() {
-        const colorForms = this.shadowRoot.querySelectorAll("color-selection-form");
-        colorForms.forEach(colorForm => {
-            colorForm.addEventListener("change", (e) => {
-                this.setColor(e.detail.color);
-            });
+        this.#colorForm1.addEventListener("change", (e) => {
+            this.#colorSwatch.setColor(e.detail.color);
+            this.#colorForm2.setColor(e.detail.color);
+        });
+        this.#colorForm2.addEventListener("change", (e) => {
+            this.#colorSwatch.setColor(e.detail.color);
+            this.#colorForm1.setColor(e.detail.color);
         });
     }
 
+    /**
+     * Sets the color of this element
+     * @param {Color} color 
+     */
     setColor(color) {
         this.#colorForm1.setColor(color);
         this.#colorForm2.setColor(color);

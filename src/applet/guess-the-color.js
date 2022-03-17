@@ -2,7 +2,7 @@ import Color from "../framework3d/math/color.js";
 import ColorSwatch from "../components/color-swatch.js";
 import ColorSelectionForm from "../components/color-selection-form.js";
 
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 #container {
@@ -46,14 +46,14 @@ export class GuessTheColor extends HTMLElement {
     #checkBtn;
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.#selectedColorSwatch = this.shadowRoot.querySelector('#selected-color');
-        this.#randomColorSwatch = this.shadowRoot.querySelector('#random-color');
-        this.#colorForm = this.shadowRoot.querySelector('color-selection-form');
-        this.#newColorBtn = this.shadowRoot.querySelector('#new-color-button');
-        this.#checkBtn = this.shadowRoot.querySelector('#check-button');
+        this.#selectedColorSwatch = this.shadowRoot.querySelector("#selected-color");
+        this.#randomColorSwatch = this.shadowRoot.querySelector("#random-color");
+        this.#colorForm = this.shadowRoot.querySelector("color-selection-form");
+        this.#newColorBtn = this.shadowRoot.querySelector("#new-color-button");
+        this.#checkBtn = this.shadowRoot.querySelector("#check-button");
 
         this.#addListeners();
 
@@ -62,15 +62,15 @@ export class GuessTheColor extends HTMLElement {
     }
 
     #addListeners() {
-        this.#colorForm.addEventListener('change', (e) => {
-            this.setColor(e.detail.color);
+        this.#colorForm.addEventListener("change", (e) => {
+            this.#selectedColorSwatch.setColor(e.detail.color);
         });
 
-        this.#newColorBtn.addEventListener('click', () => {
+        this.#newColorBtn.addEventListener("click", () => {
             this.#randomColorSwatch.setColor(Color.makeRandom());
         });
 
-        this.#checkBtn.addEventListener('click', () => {
+        this.#checkBtn.addEventListener("click", () => {
             const color1 = this.#selectedColorSwatch.getColor();
             const color2 = this.#randomColorSwatch.getColor();
             const similarity = Math.round(100 * color1.similarity(color2));
@@ -78,6 +78,10 @@ export class GuessTheColor extends HTMLElement {
         });
     }
 
+    /**
+     * Sets the color of this element
+     * @param {Color} color 
+     */
     setColor(color) {
         this.#selectedColorSwatch.setColor(color);
         this.#colorForm.setColor(color);
@@ -85,4 +89,4 @@ export class GuessTheColor extends HTMLElement {
 }
 
 
-window.customElements.define('guess-the-color', GuessTheColor);
+window.customElements.define("guess-the-color", GuessTheColor);

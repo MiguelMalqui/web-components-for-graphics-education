@@ -61,16 +61,26 @@ export default class RGBSelectionForm extends HTMLElement {
     }
 
     #addListeners() {
+        const validateRGBRange = (value) => { 
+            value = Math.floor(value);
+            if (value < 0) value = 0;
+            else if (value > 255) value = 255;
+            return value || 0;
+        }
+
         this.#redNumInput.addEventListener("change", () => {
-            this.#redNumInput.value = RGBSelectionForm.#validateRGBRange(this.#redNumInput.value);
+            this.#redNumInput.value = validateRGBRange(this.#redNumInput.value);
+            this.#redSlider.value = this.#redNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#greenNumInput.addEventListener("change", () => {
-            this.#greenNumInput.value = RGBSelectionForm.#validateRGBRange(this.#greenNumInput.value);
+            this.#greenNumInput.value = validateRGBRange(this.#greenNumInput.value);
+            this.#greenSlider.value = this.#greenNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#blueNumInput.addEventListener("change", () => {
-            this.#blueNumInput.value = RGBSelectionForm.#validateRGBRange(this.#blueNumInput.value);
+            this.#blueNumInput.value = validateRGBRange(this.#blueNumInput.value);
+            this.#blueSlider.value = this.#blueNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#redSlider.addEventListener("input", () => {
@@ -87,29 +97,19 @@ export default class RGBSelectionForm extends HTMLElement {
         });
     }
 
-    static #validateRGBRange(value) {
-        value = Math.floor(value);
-        if (value < 0) {
-            value = 0;
-        } else if (value > 255) {
-            value = 255;
-        }
-        return value;
-    }
-
     /**
-     * 
+     * Returns the color of this form
      * @returns {Color}
      */
     getColor() {
-        const r = Number(this.#redSlider.value);
-        const g = Number(this.#greenSlider.value);
-        const b = Number(this.#blueSlider.value);
+        const r = Number(this.#redNumInput.value);
+        const g = Number(this.#greenNumInput.value);
+        const b = Number(this.#blueNumInput.value);
         return Color.makeRGB(r, g, b);
     }
 
     /**
-     * 
+     * Sets the color of this form
      * @param {Color} color 
      */
     setColor(color) {

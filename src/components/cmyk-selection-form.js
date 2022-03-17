@@ -70,20 +70,31 @@ export default class CMYKSelectionForm extends HTMLElement {
     }
 
     #addListeners() {
+        const validateCMYKRange = (value) => {
+            value = Math.floor(value);
+            if (value < 0) value = 0;
+            else if (value > 100) value = 100;
+            return value || 0;
+        }
+
         this.#cyanNumInput.addEventListener("change", () => {
-            this.#cyanNumInput.value = CMYKSelectionForm.#validateCMYKRange(this.#cyanNumInput.value);
+            this.#cyanNumInput.value = validateCMYKRange(this.#cyanNumInput.value);
+            this.#cyanSlider.value = this.#cyanNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#magentaNumInput.addEventListener("change", () => {
-            this.#magentaNumInput.value = CMYKSelectionForm.#validateCMYKRange(this.#magentaNumInput.value);
+            this.#magentaNumInput.value = validateCMYKRange(this.#magentaNumInput.value);
+            this.#magentaSlider.value = this.#magentaNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#yellowNumInput.addEventListener("change", () => {
-            this.#yellowNumInput.value = CMYKSelectionForm.#validateCMYKRange(this.#yellowNumInput.value);
+            this.#yellowNumInput.value = validateCMYKRange(this.#yellowNumInput.value);
+            this.#yellowSlider.value = this.#yellowNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#blackNumInput.addEventListener("change", () => {
-            this.#blackNumInput.value = CMYKSelectionForm.#validateCMYKRange(this.#blackNumInput.value);
+            this.#blackNumInput.value = validateCMYKRange(this.#blackNumInput.value);
+            this.#blackSlider.value = this.#blackNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#cyanSlider.addEventListener("input", () => {
@@ -104,30 +115,20 @@ export default class CMYKSelectionForm extends HTMLElement {
         });
     }
 
-    static #validateCMYKRange(value) {
-        value = Math.floor(value);
-        if (value < 0) {
-            value = 0;
-        } else if (value > 100) {
-            value = 100;
-        }
-        return value;
-    }
-
     /**
-     * 
+     * Returns the color of this form
      * @returns {Color}
      */
     getColor() {
-        const c = Number(this.#cyanSlider.value / 100);
-        const m = Number(this.#magentaSlider.value / 100);
-        const y = Number(this.#yellowSlider.value / 100);
-        const k = Number(this.#blackSlider.value / 100);
+        const c = Number(this.#cyanSlider.value) / 100;
+        const m = Number(this.#magentaSlider.value) / 100;
+        const y = Number(this.#yellowSlider.value) / 100;
+        const k = Number(this.#blackSlider.value) / 100;
         return Color.makeCMYK(c, m, y, k);
     }
 
     /**
-     * 
+     * Sets the color of this form
      * @param {Color} color 
      */
     setColor(color) {

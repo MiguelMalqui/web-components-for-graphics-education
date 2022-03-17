@@ -81,19 +81,40 @@ export default class ColorSelectionForm extends HTMLElement {
     }
 
     #addColorFormsListeners() {
-        this.#colorForms.forEach(colorForm => {
-            colorForm.addEventListener("change", (e) => {
-                this.dispatchEvent(new CustomEvent("change", { detail: { color: e.detail.color } }));
-            });
+        const rgbForm = this.shadowRoot.querySelector("#rgb");
+        const hsbForm = this.shadowRoot.querySelector("#hsb");
+        const cmykForm = this.shadowRoot.querySelector("#cmyk");
+        rgbForm.addEventListener("change", (e) => {
+            hsbForm.setColor(e.detail.color);
+            cmykForm.setColor(e.detail.color);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: e.detail.color } }));
+        });
+        hsbForm.addEventListener("change", (e) => {
+            rgbForm.setColor(e.detail.color);
+            cmykForm.setColor(e.detail.color);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: e.detail.color } }));
+        });
+        cmykForm.addEventListener("change", (e) => {
+            rgbForm.setColor(e.detail.color);
+            hsbForm.setColor(e.detail.color);
+            this.dispatchEvent(new CustomEvent("change", { detail: { color: e.detail.color } }));
         });
     }
 
+    /**
+     * Sets the active tab of this form to index
+     * @param {number} index 
+     */
     setActiveTab(index) {
         if (index < 0) index = 0;
         else if (index >= this.#tabs.length) index = this.#tabs.length - 1;
         this.#tabs[index].click();
     }
 
+    /**
+     * Sets the color of this form
+     * @param {Color} color 
+     */
     setColor(color) {
         this.#colorForms.forEach(selectionForm => {
             selectionForm.setColor(color);

@@ -61,16 +61,31 @@ export default class HSBSelectionForm extends HTMLElement {
     }
 
     #addListeners() {
+        const validateHRange = (value) => {
+            value = Math.floor(value) % 360;
+            if (value < 0)  value += 360;
+            return value || 0;
+        }
+        const validateSBRange = (value) => {
+            value = Math.floor(value);
+            if (value < 0) value = 0;
+            else if (value > 100) value = 100;
+            return value || 0;
+        }
+
         this.#hueNumInput.addEventListener("change", () => {
-            this.#hueNumInput.value = HSBSelectionForm.#validateHRange(this.#hueNumInput.value);
+            this.#hueNumInput.value = validateHRange(this.#hueNumInput.value);
+            this.#hueSlider.value = this.#hueNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#saturationNumInput.addEventListener("change", () => {
-            this.#saturationNumInput.value = HSBSelectionForm.#validateSBRange(this.#saturationNumInput.value);
+            this.#saturationNumInput.value = validateSBRange(this.#saturationNumInput.value);
+            this.#saturationSlider.value = this.#saturationNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#brightnessNumInput.addEventListener("change", () => {
-            this.#brightnessNumInput.value = HSBSelectionForm.#validateSBRange(this.#brightnessNumInput.value);
+            this.#brightnessNumInput.value = validateSBRange(this.#brightnessNumInput.value);
+            this.#brightnessSlider.value = this.#brightnessNumInput.value;
             this.dispatchEvent(new CustomEvent("change", { detail: { color: this.getColor() } }));
         });
         this.#hueSlider.addEventListener("input", () => {
@@ -87,38 +102,19 @@ export default class HSBSelectionForm extends HTMLElement {
         });
     }
 
-    static #validateHRange(value) {
-        value = Math.floor(value);
-        value = value % 360;
-        if (value < 0) {
-            value += 360;
-        }
-        return value;
-    }
-
-    static #validateSBRange(value) {
-        value = Math.floor(value);
-        if (value < 0) {
-            value = 0;
-        } else if (value > 100) {
-            value = 100;
-        }
-        return value;
-    }
-
     /**
-     * 
+     * Returns the color of this form
      * @returns {Color}
      */
     getColor() {
-        const h = Number(this.#hueSlider.value);
-        const s = Number(this.#saturationSlider.value / 100);
-        const b = Number(this.#brightnessSlider.value / 100);
+        const h = Number(this.#hueNumInput.value);
+        const s = Number(this.#saturationNumInput.value) / 100;
+        const b = Number(this.#brightnessNumInput.value) / 100;
         return Color.makeHSB(h, s, b);
     }
 
     /**
-     * 
+     * Sets the color of this form
      * @param {Color} color 
      */
     setColor(color) {
