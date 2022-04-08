@@ -14,9 +14,6 @@ function initWebGL2Context(canvas) {
         throw new Error('Error creating WebGL context');
     }
 
-    console.log(gl.getParameter(gl.VERSION));
-    console.log(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
-
     return gl;
 }
 
